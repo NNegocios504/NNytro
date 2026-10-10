@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Portfolio de proyectos del Archivo CRT." />
+    <title>Portfolio — Archivo CRT</title>
+    <link rel="stylesheet" href="./styles.css?v=unified-inner-header-1" />
+    <link rel="stylesheet" href="./gallery.css?v=gallery-title-aligned-1" />
+      <link rel="stylesheet" href="./effects.css?v=interaction-effects-1" />
+      <link rel="stylesheet" href="./life.css" />
+  </head>
+  <body>
+    <video class="page-background-video" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1"><source src="./assets/fondos/portfolio.mp4" type="video/mp4" /></video>
+    <main class="gallery-page">
+      
+      <header class="unified-site-header" aria-label="Navegación de PORTFOLIO">
+        <a class="unified-site-brand" href="./galeria.html">NNYTRO <span>/ PORTFOLIO</span></a>
+        <nav class="unified-site-nav" aria-label="Otras páginas">
+          <a href="./inicio.html">Sobre mí</a>
+          <a href="./musica.html">Música</a>
+          <a href="./contacto.html">Contacto</a>
+        </nav>
+        <a class="unified-site-menu" href="./index.html">← Volver al menú</a>
+      </header>
+      <h1 class="gallery-title gallery-page-title">Portfolio</h1>
+
+      <section class="gallery-toolbar" aria-label="Filtros del portfolio">
+        <p class="gallery-count" id="gallery-count">cargando recursos...</p>
+        <div class="gallery-filters" id="gallery-filters"></div>
+      </section>
+
+      <section class="gallery-grid" id="gallery-grid" aria-live="polite"></section>
+    </main>
+
+    <div class="gallery-modal" id="gallery-modal" hidden role="dialog" aria-modal="true" aria-labelledby="gallery-modal-title">
+      <div class="gallery-modal-backdrop" data-close-gallery></div>
+      <section class="gallery-modal-card">
+        <button class="gallery-modal-close" type="button" data-close-gallery aria-label="Cerrar proyecto">×</button>
+        <div class="gallery-modal-media" id="gallery-modal-media"></div>
+        <div class="gallery-modal-info">
+          <p class="detail-kicker" id="gallery-modal-category">categoría</p>
+          <h2 id="gallery-modal-title">Proyecto</h2>
+          <p id="gallery-modal-description" class="gallery-modal-description" hidden></p>
+          <p id="gallery-modal-type">imagen</p>
+        </div>
+      </section>
+    </div>
+
+    <script src="./gallery.js?v=project-descriptions-4"></script>
+      <script src="./effects.js?v=interaction-effects-1" defer></script>
+  </body>
+</html>
+
+
+
+
+

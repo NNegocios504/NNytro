@@ -1,0 +1,68 @@
+@font-face{font-family:Crosner;src:url('./assets/Crosner-Regular.ttf') format('truetype');font-display:swap}
+@font-face{font-family:Comico;src:url('./assets/Comico-Regular.otf') format('opentype');font-display:swap}
+:root{--gallery-ink:#08051b;--gallery-violet:#b894ff;--gallery-cyan:#75e8ff;--gallery-line:rgba(191,164,255,.35)}
+*{box-sizing:border-box}
+body{margin:0;background:#08051b;color:#f7f4ff;font-family:'Comico',sans-serif}
+.gallery-page{position:relative;isolation:isolate;min-height:100vh;min-height:100svh;padding:clamp(1rem,3vw,2.6rem) clamp(1rem,4vw,4rem) 5rem;background:radial-gradient(ellipse at 50% 0,rgba(113,55,203,.35),transparent 50rem),linear-gradient(180deg,rgba(4,4,20,.79),rgba(4,5,20,.92)),url('./assets/portfolio-fondo.png') center 43%/100% 100vh fixed;background-size:auto,auto,cover;background-repeat:no-repeat;color:#fff}
+.gallery-page::before{position:fixed;inset:0;z-index:-1;content:"";pointer-events:none;background:repeating-linear-gradient(0deg,rgba(206,193,255,.035) 0 1px,transparent 1px 4px),radial-gradient(ellipse at center,transparent 45%,rgba(0,0,15,.34))}
+.gallery-header,.gallery-toolbar,.gallery-grid{width:min(100%,1440px);margin-inline:auto}
+.gallery-header{display:flex;align-items:flex-end;justify-content:space-between;min-height:3.2rem;padding-bottom:1rem;border-bottom:1px solid var(--gallery-line)}
+.back-link{display:inline-flex;align-items:center;min-height:2.3rem;padding:.55rem .8rem;border:1px solid rgba(171,147,255,.55);background:rgba(9,9,31,.72);color:#e7dcff;text-decoration:none;font:10px/1.2 ui-monospace,monospace;letter-spacing:.13em;text-transform:uppercase;transition:color .2s,border-color .2s,box-shadow .2s}
+.back-link:hover,.back-link:focus-visible{color:white;border-color:var(--gallery-cyan);box-shadow:0 0 16px #68ddff55;outline:none}
+.gallery-kicker,.detail-kicker{margin:.95rem 0 .3rem;color:var(--gallery-cyan);font:9px/1.5 ui-monospace,monospace;letter-spacing:.22em;text-transform:uppercase;text-shadow:0 0 12px #59dfff66}
+.gallery-title{margin:.15rem 0 0;color:#fff;font:clamp(3.5rem,9vw,7rem)/.88 'Crosner','Comico',sans-serif;letter-spacing:-.025em;text-shadow:3px 4px 0 #160932,0 0 30px #975cff66}
+.gallery-toolbar{display:flex;align-items:center;justify-content:space-between;gap:1.1rem;flex-wrap:wrap;padding:1.4rem 0 1rem}
+.gallery-count{margin:0;color:#c9c0e5;font:10px/1.5 ui-monospace,monospace;letter-spacing:.11em;text-transform:uppercase}
+.gallery-filters{display:flex;flex-wrap:wrap;gap:.45rem}
+.gallery-filter{min-height:2rem;padding:.45rem .72rem;border:1px solid rgba(185,162,255,.35);background:rgba(8,9,31,.72);color:#d4c9f1;font:9px/1.2 ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .18s ease}
+.gallery-filter:hover,.gallery-filter:focus-visible,.gallery-filter.is-active{border-color:var(--gallery-cyan);background:linear-gradient(120deg,#50309b99,#07516b99);color:#fff;box-shadow:0 0 15px #64dcff35;outline:none}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,245px),1fr));align-items:stretch;gap:clamp(.8rem,1.6vw,1.3rem)}
+.gallery-card{display:flex;min-width:0;flex-direction:column;overflow:hidden;padding:0;border:1px solid rgba(174,156,238,.35);background:linear-gradient(145deg,rgba(20,16,48,.96),rgba(5,8,25,.96));color:inherit;text-align:left;cursor:pointer;box-shadow:0 14px 32px #0006,inset 0 0 0 1px #ffffff08;transition:transform .22s,border-color .22s,box-shadow .22s}
+.gallery-card:hover,.gallery-card:focus-visible{z-index:1;transform:translateY(-4px);border-color:#78e6ffb0;box-shadow:0 18px 38px #0008,0 0 23px #8a58ff3b;outline:none}
+.gallery-card-media{position:relative;display:flex;min-height:150px;aspect-ratio:4/3;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(ellipse,#211541,#050716 72%)}
+.gallery-card-media img,.gallery-card-media video{display:block;width:100%;height:100%;max-height:380px;object-fit:contain;transition:transform .35s ease,filter .35s ease}
+.gallery-card-media img{position:absolute;inset:0;object-fit:cover}
+.gallery-card:hover .gallery-card-media img{transform:scale(1.035);filter:saturate(1.08)}
+.gallery-card-group,.gallery-card-play{position:absolute;right:.6rem;bottom:.6rem;z-index:1;padding:.38rem .55rem;border:1px solid #d5c7ff66;background:#090719d9;color:#fff;font:9px/1.2 ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;backdrop-filter:blur(8px)}
+.gallery-card-play{right:auto;left:.6rem;color:var(--gallery-cyan)}
+.gallery-card-meta{display:grid;gap:.35rem;min-height:4rem;padding:.7rem .8rem .8rem;border-top:1px solid #bca8ff24}
+.gallery-card-title{overflow-wrap:anywhere;color:#fff;font:clamp(1rem,1.35vw,1.25rem)/1.15 'Crosner','Comico',sans-serif}
+.gallery-card-category{color:#a9a0c5;font:8px/1.4 ui-monospace,monospace;letter-spacing:.09em;text-transform:uppercase}
+.gallery-empty{grid-column:1/-1;padding:3rem 1rem;border:1px dashed var(--gallery-line);color:#ded5f4;text-align:center}
+.gallery-modal[hidden],.gallery-image-viewer[hidden]{display:none!important}
+.gallery-modal,.gallery-image-viewer{position:fixed;inset:0;z-index:9000;display:grid;place-items:center;padding:clamp(.5rem,2.2vw,2rem)}
+.gallery-modal-backdrop,.gallery-image-viewer-backdrop{position:absolute;inset:0;width:100%;height:100%;border:0;background:rgba(2,3,17,.82);backdrop-filter:blur(10px);cursor:pointer}
+.gallery-modal-card{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(13rem,20rem);width:min(100%,1240px);height:min(92dvh,900px);overflow:hidden;border:1px solid rgba(157,212,255,.42);background:linear-gradient(145deg,rgba(15,12,37,.99),rgba(3,7,23,.99));box-shadow:0 25px 80px #000b,0 0 30px #773bff33}
+.gallery-modal-close,.gallery-image-viewer-close{position:absolute;z-index:4;top:.7rem;right:.7rem;display:grid;width:2.6rem;height:2.6rem;place-items:center;border:1px solid #d6caff88;background:#090719e8;color:#fff;font:1.7rem/1 Arial,sans-serif;cursor:pointer}
+.gallery-modal-close:hover,.gallery-image-viewer-close:hover{border-color:var(--gallery-cyan);color:var(--gallery-cyan)}
+.gallery-modal-media{display:flex;min-width:0;min-height:0;align-items:center;justify-content:center;overflow:auto;padding:clamp(1rem,3vw,2.5rem);overscroll-behavior:contain}
+.gallery-modal-media>img,.gallery-modal-media>video{display:block;max-width:100%;max-height:100%;object-fit:contain}
+.gallery-modal-media--collection{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));align-content:start;align-items:start;gap:1rem;overflow:auto;padding:3rem clamp(.75rem,2vw,1.5rem) 1.5rem}
+.gallery-modal-piece{min-width:0;margin:0;padding:.55rem;border:1px solid #b8a4ff4a;background:linear-gradient(145deg,#161130eF,#07091beF);box-shadow:0 8px 20px #0006}
+.gallery-modal-image-button{display:flex;width:100%;min-height:130px;max-height:52vh;align-items:center;justify-content:center;overflow:hidden;padding:0;border:0;background:#060716;cursor:zoom-in}
+.gallery-modal-image-button img{display:block;width:100%;height:auto;max-height:52vh;object-fit:contain;transition:filter .2s}
+.gallery-modal-image-button:hover img{filter:brightness(1.12)}
+.gallery-modal-piece video{display:block;width:100%;max-height:52vh;background:#050510;object-fit:contain}
+.gallery-modal-piece figcaption{padding:.55rem .2rem .15rem;color:#e8e1fa;font: .9rem/1.35 'Comico',sans-serif;overflow-wrap:anywhere}
+.gallery-modal-info{align-self:stretch;overflow:auto;padding:clamp(1.2rem,3vw,2rem);border-left:1px solid #c4adff2c;background:linear-gradient(165deg,#171035,#080b20 66%)}
+.gallery-modal-info h2{margin:.5rem 0 1rem;color:#fff;font:clamp(2rem,4vw,3.5rem)/.95 'Crosner','Comico',sans-serif;text-shadow:0 0 22px #9562ff55;overflow-wrap:anywhere}
+.gallery-modal-info>p:last-child{color:#c3bbd8;font:10px/1.6 ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase}
+.gallery-image-viewer{z-index:9100}
+.gallery-image-viewer-panel{position:relative;z-index:1;display:flex;width:min(100%,1500px);height:min(94dvh,1100px);flex-direction:column;overflow:hidden;border:1px solid #a9eaff88;background:#050612;box-shadow:0 25px 90px #000d,0 0 38px #68cfff30}
+.gallery-image-viewer-controls{position:relative;z-index:2;display:flex;justify-content:center;gap:.45rem;padding:.7rem 4rem .7rem .7rem;border-bottom:1px solid #c9b5ff35;background:#100d28}
+.gallery-image-viewer-controls button{min-width:2.5rem;min-height:2.35rem;padding:.4rem .8rem;border:1px solid #bba1ff7a;background:linear-gradient(145deg,#362064,#11142e);color:#fff;font:1rem/1 'Crosner','Comico',sans-serif;cursor:pointer}
+.gallery-image-viewer-controls button:hover,.gallery-image-viewer-controls button:focus-visible{border-color:var(--gallery-cyan);box-shadow:0 0 13px #61dfff55;outline:none}
+.gallery-image-viewer-viewport{display:grid;min-height:0;flex:1;place-items:center;overflow:auto;background:radial-gradient(ellipse,#16112d,#03040d 78%);overscroll-behavior:contain;touch-action:pan-x pan-y}
+.gallery-image-viewer-viewport img{display:block;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;transform-origin:center center;transition:transform .12s ease-out}
+body.modal-open{overflow:hidden}
+@media(max-width:760px){.gallery-page{padding-inline:1rem;background-attachment:scroll}.gallery-toolbar{align-items:flex-start;flex-direction:column}.gallery-modal-card{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;height:min(94dvh,1000px)}.gallery-modal-info{max-height:30dvh;border-top:1px solid #c4adff2c;border-left:0;padding:1rem 1.2rem}.gallery-modal-media--collection{grid-template-columns:repeat(auto-fit,minmax(min(100%,185px),1fr));padding-top:3.5rem}.gallery-modal-piece{padding:.4rem}.gallery-modal-image-button img{max-height:38vh}}
+@media(max-width:430px){.gallery-title{font-size:clamp(3rem,17vw,4.2rem)}.gallery-card-media{aspect-ratio:1/1}.gallery-modal-media--collection{grid-template-columns:1fr 1fr;gap:.55rem}.gallery-modal-piece figcaption{font-size:.77rem}.gallery-modal-info h2{font-size:2rem}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}
+
+.gallery-card-description{display:-webkit-box;overflow:hidden;color:#d8d0ea;font: .78rem/1.45 'Comico',sans-serif;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+.gallery-modal-description{margin:.7rem 0 1rem;color:#e4dcf7;font:clamp(.9rem,1vw,1rem)/1.65 'Comico',sans-serif;letter-spacing:0;text-transform:none;white-space:pre-line}
+.gallery-item-description{margin:.25rem 0 0;color:#bdb3d4;font:.78rem/1.5 'Comico',sans-serif;white-space:pre-line}
+
+/* Alinea el título con filtros y tarjetas del portfolio. */
+.gallery-page .gallery-title.gallery-page-title { display:block; width:min(100%,1440px); margin:.8rem auto 0; }
+

@@ -1,0 +1,128 @@
+:root { --life-violet:#b99aff; --life-blue:#67c8ff; }
+html { scroll-behavior:smooth; }
+::selection { color:#fff; background:rgba(117,69,206,.78); }
+.home-page { background-color:#08051c; }
+.home-page::after { position:absolute; inset:0; z-index:0; content:''; pointer-events:none; background:radial-gradient(ellipse at 50% 53%,transparent 35%,rgba(3,2,20,.18) 100%); box-shadow:inset 0 0 0 1px rgba(184,154,255,.08),inset 0 0 80px rgba(63,34,130,.12); }
+.home-brand { transition:color 180ms ease,text-shadow 180ms ease; }
+.home-brand:hover,.home-brand:focus-visible { color:#fff; text-shadow:0 0 5px #fff,0 0 18px rgba(111,194,255,.8),2px 2px 0 #392477; outline:none; }
+.home-intro { border-left:2px solid rgba(185,154,255,.72); padding-left:clamp(.9rem,1.5vw,1.35rem); }
+.home-intro h1 { text-shadow:0 2px 2px rgba(0,0,0,.8),0 0 24px rgba(147,103,255,.28); }
+.home-link { isolation:isolate; box-shadow:0 5px 13px rgba(0,0,25,.42),0 0 0 1px rgba(190,165,255,.18); }
+.home-link::after { position:absolute; inset:2px; z-index:-1; content:''; pointer-events:none; opacity:0; background:linear-gradient(105deg,transparent 15%,rgba(255,255,255,.28) 48%,transparent 78%); transform:translateX(-35%); transition:opacity 160ms ease,transform 420ms ease; }
+.home-link:hover::after,.home-link:focus-visible::after { opacity:.8; transform:translateX(35%); }
+.home-link:focus-visible { outline:2px solid #fff; outline-offset:4px; }
+.home-tv-screen { filter:drop-shadow(0 0 11px rgba(100,159,255,.19)); }
+.home-tv-screen::after { position:absolute; inset:0; border:1px solid rgba(157,202,255,.16); border-radius:inherit; content:''; pointer-events:none; box-shadow:inset 0 0 18px rgba(102,69,255,.12); }
+.detail-shell:not(.about-page) { background-color:#070515; background-image:radial-gradient(ellipse at 50% 35%,rgba(92,56,174,.2),transparent 55%),url('./assets/fondogaleria.png'); background-size:auto,cover; }
+.detail-shell.about-page { min-height:100vh; min-height:100svh; background-color:#08071b; background-image:linear-gradient(90deg,rgba(5,4,24,.3) 0%,rgba(5,4,24,.62) 48%,rgba(5,4,24,.76) 100%),url('./assets/about-fondo.png'); background-position:center; background-repeat:no-repeat; background-size:auto,cover; background-attachment:fixed; }
+.detail-kicker { text-shadow:0 0 12px rgba(126,179,255,.42); }
+.detail-header { padding-bottom:.9rem; border-bottom:1px solid rgba(190,161,255,.2); }
+.back-link { display:inline-flex; align-items:center; gap:.4rem; min-height:2.4rem; padding:.55rem .8rem; border:1px solid rgba(179,153,255,.34); background:linear-gradient(135deg,rgba(35,23,75,.75),rgba(9,10,34,.72)); box-shadow:inset 1px 1px 0 rgba(255,255,255,.08),0 4px 15px rgba(0,0,0,.22); transition:border-color 160ms ease,background 160ms ease,transform 160ms ease,box-shadow 160ms ease; }
+.back-link:hover,.back-link:focus-visible { color:#fff; border-color:rgba(190,161,255,.85); background:linear-gradient(135deg,rgba(80,47,150,.85),rgba(15,27,78,.9)); box-shadow:0 0 18px rgba(139,92,246,.22); transform:translateY(-2px); outline:2px solid rgba(219,204,255,.75); outline-offset:2px; }
+.detail-title { text-shadow:0 3px 0 rgba(4,2,19,.7),0 0 26px rgba(135,87,227,.3); }
+.detail-visual { border-color:rgba(180,148,255,.48); box-shadow:0 22px 70px rgba(0,0,0,.46),0 0 25px rgba(91,55,176,.16),inset 0 0 35px rgba(115,84,214,.08); }
+.detail-visual::before { animation:life-scan-drift 18s linear infinite; }
+.detail-visual::after { box-shadow:0 0 20px rgba(174,143,255,.22); }
+.gallery-page::before { background-image:radial-gradient(circle at 12% 18%,rgba(176,125,255,.12) 0 1px,transparent 2px),radial-gradient(circle at 83% 39%,rgba(90,174,255,.13) 0 1px,transparent 2px); background-size:31px 37px,43px 47px; opacity:.28; animation:life-grain-shift 38s linear infinite; }
+.gallery-toolbar { border-color:rgba(187,157,255,.32); }
+.gallery-filter { border-color:rgba(184,154,255,.42); color:rgba(240,233,255,.82); }
+.gallery-filter:hover,.gallery-filter:focus-visible,.gallery-filter.is-active { border-color:#c4a9ff; background:linear-gradient(135deg,rgba(80,45,145,.7),rgba(19,50,111,.62)); box-shadow:0 0 16px rgba(165,119,255,.24); }
+.gallery-card { border-color:rgba(181,155,255,.29); background:linear-gradient(150deg,rgba(18,12,44,.96),rgba(3,8,24,.96)); box-shadow:inset 0 1px 0 rgba(255,255,255,.045); }
+.gallery-card:hover,.gallery-card:focus-visible { border-color:rgba(198,172,255,.88); box-shadow:0 14px 32px rgba(0,0,0,.48),0 0 22px rgba(129,84,221,.28); }
+.gallery-card-title { text-shadow:0 1px 8px rgba(0,0,0,.55); }
+.gallery-card-group { border:1px solid rgba(202,178,255,.38); backdrop-filter:blur(5px); }
+.gallery-modal-card,.gallery-image-viewer-panel { border-color:rgba(192,161,255,.68); box-shadow:0 26px 90px rgba(0,0,0,.76),0 0 34px rgba(118,76,205,.24); }
+.gallery-modal-close:focus-visible { outline:2px solid #d5c5ff; outline-offset:3px; }
+.about-window,.xp-social-window { transition:transform 180ms ease,box-shadow 180ms ease,filter 180ms ease; }
+.about-portrait-stack:hover .about-window { transform:translateY(-3px) rotate(-.5deg); box-shadow:0 12px 35px rgba(81,47,160,.22); }
+.xp-social:hover .xp-social-window,.xp-social:focus-visible .xp-social-window { transform:translateY(-3px) rotate(-2deg); box-shadow:inset 1px 1px 0 rgba(255,255,255,.9),inset -2px -2px 0 rgba(16,45,100,.55),0 0 18px rgba(155,120,255,.38); }
+.xp-social:focus-visible { outline:2px solid #d9ccff; outline-offset:4px; }
+.modal-card,.gallery-modal-card { animation:life-window-in 220ms cubic-bezier(.2,.8,.2,1) both; }
+.modal-action,.demo-button { transition:transform 150ms ease,filter 150ms ease,box-shadow 150ms ease; }
+.modal-action:hover,.modal-action:focus-visible,.demo-button:hover,.demo-button:focus-visible { transform:translateY(-2px); filter:brightness(1.13); box-shadow:0 0 16px rgba(161,125,255,.25); }
+@keyframes life-window-in { from { opacity:0; transform:translateY(8px) scale(.99); } to { opacity:1; transform:translateY(0) scale(1); } }
+@keyframes life-scan-drift { from { background-position:0 0; } to { background-position:0 36px; } }
+@keyframes life-grain-shift { from { background-position:0 0,0 0; } to { background-position:31px 37px,-43px 47px; } }
+@media (max-width:700px) { .detail-shell.about-page { background-attachment:scroll; } .detail-header { align-items:flex-start; } .gallery-card:hover,.gallery-card:focus-visible { transform:translateY(-2px); } }
+@media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; scroll-behavior:auto!important; transition-duration:.01ms!important; } }
+/* About copy: expose the artwork and soften the oversized title. */
+.about-copy { max-width:37rem; padding:0; border:0; background:transparent; box-shadow:none; backdrop-filter:none; }
+.about-title { font-size:clamp(3.8rem,7.2vw,6.4rem); line-height:.98; letter-spacing:0; text-shadow:0 2px 0 rgba(24,11,66,.72),0 0 18px rgba(149,107,255,.24); }
+@media (max-width:700px) { .about-copy { padding:0; } .about-title { font-size:clamp(3.7rem,16vw,5.4rem); line-height:.96; } }
+
+/* Keep the layered portrait crisp; no halo over the face or frame. */
+.about-portrait { filter:none; }
+.about-portrait:hover { filter:none; }
+.about-window,.about-person { filter:none; }
+.about-portrait:hover .about-window { box-shadow:none; }
+.about-portrait:hover .about-person { filter:none; }
+
+/* Home menu buttons: clean raster edges, larger targets, and labels kept inside the artwork. */
+.home-menu { width:min(30%,36rem); grid-auto-rows:5.45rem; gap:.85rem; }
+.home-link {
+  height:5.45rem;
+  border:0;
+  padding-left:clamp(1.3rem,2vw,2rem);
+  box-shadow:none;
+  background-size:100% 100%;
+}
+.home-link span {
+  position:relative;
+  z-index:1;
+  display:block;
+  max-width:calc(100% - 2.5rem);
+  overflow:hidden;
+  white-space:nowrap;
+  line-height:1;
+  font-size:clamp(1.2rem,1.8vw,1.7rem);
+}
+.home-link:focus-visible { outline:2px solid #fff; outline-offset:2px; }
+@media (max-width:700px) {
+  .home-menu { width:min(100%,30rem); grid-auto-rows:4.2rem; }
+  .home-link { height:4.2rem; padding-left:1.2rem; }
+  .home-link span { max-width:calc(100% - 1.8rem); font-size:clamp(.95rem,4.4vw,1.3rem); }
+}
+@media (max-width:440px) {
+  .home-menu { grid-template-columns:1fr; width:calc(100% - 84px); }
+}
+/* Soft violet-pink glow follows the transparent silhouette of each menu PNG. */
+.home-link:hover,
+.home-link:focus-visible,
+.home-link[aria-current="page"] {
+  filter:drop-shadow(0 0 7px rgba(226,91,255,.72)) drop-shadow(0 0 19px rgba(137,73,255,.48));
+}
+/* Optical alignment for the two labels whose PNG ribbons have different edge slopes. */
+.home-link:nth-child(1) span { transform:translateY(.45rem); }
+.home-link:nth-child(3) span { transform:translateY(.45rem); }
+
+/* Center the home television content in the open area and balance left/right whitespace. */
+.home-tv-image { left:7%; }
+.home-tv-copy { left:7%; width:82%; }
+
+/* Crosner: subtle dark edging and more breathing room across the site. */
+.home-brand,
+.home-intro h1,
+.home-link,
+.home-tv-title,
+.detail-title,
+.about-title,
+.xp-guns-logo,
+.tipazo-modal-content h2,
+.modal-action,
+.gallery-title,
+.gallery-card-title,
+.gallery-modal-info h2,
+.gallery-image-viewer-controls button,
+.music-brand,
+.music-hero h1,
+.music-cta,
+.console-frequency,
+.music-section-heading h2,
+.music-note h2,
+.cover-card strong,
+.channel-icon--guns,
+.channel-copy strong,
+.contact-sticker span {
+  -webkit-text-stroke:.3px rgba(0,0,0,.82) !important;
+  letter-spacing:.04em !important;
+}

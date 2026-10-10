@@ -1,0 +1,99 @@
+/* Optional visual/audio layer. Add data-analog-tv to a positioned TV screen or its wrapper. */
+:root {
+  --xp-pointer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='36' viewBox='0 0 32 36'%3E%3Cpath d='M3 2v25l6-6 5 12 5-2-5-11 9 1z' fill='%23fff' stroke='%23000' stroke-width='3' stroke-linejoin='round'/%3E%3Cpath d='M4 4v20l5-5 5 11 2-1-5-12 9 1z' fill='%230b59d6' stroke='%23fff' stroke-width='1'/%3E%3C/svg%3E") 3 2, auto;
+}
+
+/* Familiar blue XP-style arrow, with native pointer fallbacks. */
+html.xp-cursor,
+html.xp-cursor body,
+html.xp-cursor body * { cursor: var(--xp-pointer); }
+html.xp-cursor a,
+html.xp-cursor button,
+html.xp-cursor [role="button"],
+html.xp-cursor input[type="button"],
+html.xp-cursor input[type="submit"] { cursor: pointer; }
+html.xp-cursor input,
+html.xp-cursor textarea,
+html.xp-cursor [contenteditable="true"] { cursor: text; }
+
+/* The wrapper needs to contain the screen/media element and have overflow hidden. */
+[data-analog-tv] {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transform: translateZ(0);
+  filter: saturate(1.04) contrast(1.025);
+}
+[data-analog-tv]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(to bottom, rgba(4, 4, 14, .15) 0 1px, transparent 1px 4px),
+    linear-gradient(90deg, rgba(255, 20, 90, .055), transparent 28%, rgba(0, 220, 255, .045));
+  box-shadow: inset 0 0 24px rgba(0, 0, 0, .24);
+}
+[data-analog-tv] > img,
+[data-analog-tv] > video,
+[data-analog-tv] > iframe { display: block; }
+[data-analog-tv] > video,
+[data-analog-tv] > img { filter: drop-shadow(1px 0 rgba(255, 0, 90, .12)) drop-shadow(-1px 0 rgba(0, 220, 255, .10)); }
+.analog-tv-jitter { animation: analog-tv-jitter 7s steps(1, end) infinite; }
+@keyframes analog-tv-jitter {
+  0%, 96%, 100% { transform: translate3d(0, 0, 0); }
+  96.2% { transform: translate3d(1px, 0, 0); }
+  96.4% { transform: translate3d(-1px, 1px, 0); }
+  96.6% { transform: translate3d(0, 0, 0); }
+}
+
+/* Accessible toggle inserted by effects.js; it stays compact and keyboard operable. */
+.site-sound-toggle {
+  position: fixed;
+  z-index: 10000;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  display: grid;
+  width: 46px;
+  height: 46px;
+  min-height: 46px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgba(190, 226, 255, .85);
+  border-radius: 50%;
+  background: linear-gradient(145deg, #54dfff, #3151c9 58%, #31154f);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(65, 188, 255, .4), 0 3px 9px #0009;
+  cursor: pointer;
+  transition: transform .18s ease, filter .18s ease;
+}
+.site-sound-toggle:hover { transform: scale(1.08); filter: brightness(1.12); }
+.site-sound-toggle:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.site-sound-toggle svg { width: 23px; height: 23px; }
+.site-sound-toggle .sound-speaker { fill: currentColor; }
+.site-sound-toggle .sound-wave,
+.site-sound-toggle .sound-muted-mark { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.site-sound-toggle .sound-wave { display: none; }
+.site-sound-toggle[data-enabled="true"] .sound-wave { display: block; }
+.site-sound-toggle[data-enabled="true"] .sound-muted-mark { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .analog-tv-jitter { animation: none !important; }
+  [data-analog-tv] { scroll-behavior: auto; }
+}
+
+/* Site-wide polish: short page arrival, gentle reveals and clear hover feedback. */
+.fx-page-enter { animation:fx-page-arrive .48s cubic-bezier(.2,.75,.3,1) both; }
+.fx-reveal { opacity:0; filter:blur(4px); transition:opacity .48s ease var(--fx-delay,0ms),filter .48s ease var(--fx-delay,0ms); }
+.fx-reveal.fx-visible { opacity:1; filter:blur(0); }
+.gallery-card,.contact-channel,.music-youtube-card,.unified-site-menu,.unified-site-nav a,.gallery-filter,.music-platform-heading a { transition-property:transform,opacity,color,background,border-color,box-shadow,filter; transition-duration:.18s; }
+.gallery-card:hover,.gallery-card:focus-visible { filter:brightness(1.08); }
+.gallery-filter:hover,.gallery-filter:focus-visible { transform:translateY(-1px); }
+.unified-site-nav a:hover,.unified-site-nav a:focus-visible { filter:drop-shadow(0 0 5px rgba(114,234,255,.5)); }
+.unified-site-menu:hover,.unified-site-menu:focus-visible { transform:translateY(-1px); box-shadow:0 0 17px rgba(114,234,255,.2); }
+.music-youtube-card:hover,.music-youtube-card:focus-visible { transform:translateY(-3px); }
+.site-sound-toggle[data-enabled="true"] { animation:fx-sound-ready 2.8s ease-in-out infinite; }
+@keyframes fx-page-arrive { from { opacity:0; filter:brightness(.78); } to { opacity:1; filter:brightness(1); } }
+@keyframes fx-sound-ready { 0%,100% { box-shadow:0 0 12px rgba(65,188,255,.4),0 3px 9px #0009; } 50% { box-shadow:0 0 20px rgba(65,188,255,.72),0 0 30px rgba(142,91,255,.38),0 3px 9px #0009; } }
+@media(prefers-reduced-motion:reduce) { .fx-page-enter,.fx-reveal,.site-sound-toggle[data-enabled="true"] { animation:none!important; transition:none!important; opacity:1!important; filter:none!important; } }

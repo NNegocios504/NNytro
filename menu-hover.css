@@ -1,0 +1,62 @@
+/* Cada arte queda anclado a la misma caja, recorte e inclinación del botón normal. */
+.home-link:hover,
+.home-link:focus-visible,
+.home-link[aria-current="page"] {
+  color: #fff;
+  background-origin: border-box;
+  background-clip: border-box;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-color: transparent;
+  box-shadow: none;
+  clip-path: none;
+  filter: none;
+  outline: none;
+}
+.home-link:nth-child(1):hover,
+.home-link:nth-child(1):focus-visible,
+.home-link:nth-child(1)[aria-current="page"] {
+  background-image: url('./assets/botones menu/seleccionados/boton sobre mi1.png');
+  background-size: 100% 100%;
+}
+.home-link:nth-child(2):hover,
+.home-link:nth-child(2):focus-visible,
+.home-link:nth-child(2)[aria-current="page"] {
+  background-image: url('./assets/botones menu/seleccionados/boton portfolio 2.png');
+  background-size: 100% 100%;
+}
+.home-link:nth-child(3):hover,
+.home-link:nth-child(3):focus-visible,
+.home-link:nth-child(3)[aria-current="page"] {
+  background-image: url('./assets/botones menu/seleccionados/boton musica 3.png');
+  background-size: 100% 100%;
+}
+.home-link:nth-child(4):hover,
+.home-link:nth-child(4):focus-visible,
+.home-link:nth-child(4)[aria-current="page"] {
+  background-image: url('./assets/botones menu/seleccionados/boton contacto 4.png');
+  background-size: 100% 100%;
+}
+.home-link:hover b,
+.home-link:focus-visible b,
+.home-link[aria-current="page"] b { opacity: 0; }
+
+/* Un solo halo basado en la transparencia real del PNG inclinado. */
+.home-link:hover,
+.home-link:focus-visible,
+.home-link[aria-current="page"] {
+  filter:drop-shadow(0 0 10px rgba(160,76,255,.72));
+}
+
+/* Al seleccionar, cada pestaña conserva su tamaño, inclinación y posición normal. */
+.home-link:nth-child(odd):hover,
+.home-link:nth-child(odd):focus-visible,
+.home-link:nth-child(odd)[aria-current="page"] { transform:translateX(.65rem) rotate(-.8deg); }
+.home-link:nth-child(even):hover,
+.home-link:nth-child(even):focus-visible,
+.home-link:nth-child(even)[aria-current="page"] { transform:translateX(-.2rem) rotate(.7deg); }
+@media (max-width: 700px) {
+  .home-link:nth-child(n):hover,
+  .home-link:nth-child(n):focus-visible,
+  .home-link:nth-child(n)[aria-current="page"] { transform: none; }
+}

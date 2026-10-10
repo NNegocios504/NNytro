@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Demo calavera — Archivo CRT</title>
+    <link rel="stylesheet" href="./styles.css" />
+      <link rel="stylesheet" href="./effects.css?v=interaction-effects-1" />
+      <link rel="stylesheet" href="./life.css" />
+  </head
+  <body>
+    <main class="skull-demo-page">
+      <header class="skull-demo-header">
+        <span class="detail-kicker">sprite test / 7 frames</span>
+        <a class="back-link" href="./index.html">← volver al televisor</a>
+      </header>
+
+      <section class="skull-demo-layout">
+        <div>
+          <p class="detail-kicker">animación 001</p>
+          <h1 class="detail-title">Calavera</h1>
+          <p class="detail-description">Vista aislada del sprite para revisar el ritmo de la mandíbula y el brillo de los ojos antes de llevarlo a la pantalla del televisor.</p>
+          <div class="skull-demo-actions">
+            <button class="demo-button" id="play-skull" type="button">reproducir</button>
+            <button class="demo-button demo-button--secondary" id="pause-skull" type="button">pausar</button>
+            <button class="demo-button demo-button--secondary" id="restart-skull" type="button">reiniciar</button>
+          </div>
+        </div>
+
+        <div class="skull-demo-stage">
+          <div class="skull-demo-card">
+            <div class="skull-demo-sprite is-playing" id="skull-demo-sprite" aria-label="Animación de calavera"></div>
+          </div>
+          <span class="skull-demo-label">calavera / 7 cuadros / loop</span>
+        </div>
+      </section>
+    </main>
+
+    <script src="./calavera-demo.js"></script>
+      <script src="./effects.js?v=interaction-effects-1" defer></script>
+  </body>
+</html>
+

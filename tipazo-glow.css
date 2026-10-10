@@ -1,0 +1,31 @@
+.tipazo-link::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 28%;
+  left: 56%;
+  width: 8%;
+  aspect-ratio: 1;
+  pointer-events: none;
+  opacity: .12;
+  clip-path: polygon(50% 0%, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%);
+  background: radial-gradient(circle, #fff 0 9%, rgba(255,255,255,.9) 10% 16%, transparent 38%);
+  filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 5px rgba(255,248,196,.8));
+  transform: scale(.72);
+  animation: tipazo-bald-glint 5.8s ease-in-out infinite;
+}
+.tipazo-link:hover::after,.tipazo-link:focus-visible::after { opacity: .95; animation-duration: 2.6s; }
+@keyframes tipazo-bald-glint {
+  0%, 60% { opacity: .08; transform: scale(.65) rotate(0); }
+  72% { opacity: .95; transform: scale(1.12) rotate(18deg); }
+  82% { opacity: .62; transform: scale(.82) rotate(30deg); }
+  100% { opacity: .08; transform: scale(.65) rotate(45deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tipazo-link::after { animation: none; opacity: .42; transform: scale(.75); }
+}
+
+/* Keep the Polaroid edge crisp; reserve glow for the bald-head sparkle. */
+.tipazo-link { box-shadow:none; }
+.tipazo-link img { filter:none; }
+.tipazo-link:hover,.tipazo-link:focus-visible { filter:none; }
