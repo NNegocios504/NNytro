@@ -2,19 +2,19 @@
   const root = document.documentElement;
   root.classList.add('xp-cursor');
 
-  // Show one short CRT tuning animation while the visible page assets settle.
+  // The loading screen is only present on the menu; other pages open directly.
+  const isHome = document.querySelector('.home-page') !== null;
   const pageLoader = document.querySelector('.site-loader');
   if (pageLoader) {
     const startedAt = performance.now();
     document.body.setAttribute('aria-busy', 'true');
-    const isHome = document.querySelector('.home-page') !== null;
     const visibleImages = [...document.querySelectorAll('main img')]
       .filter((image) => {
         const bounds = image.getBoundingClientRect();
         return bounds.width > 0 && bounds.height > 0 && bounds.top < innerHeight && bounds.bottom > 0;
       })
       .slice(0, 5);
-    const activeVideo = document.querySelector('body > video, .home-background-video');
+    const activeVideo = document.querySelector('.home-background-video');
     const ready = (element, eventName) => {
       if (!element) return Promise.resolve();
       if (eventName === 'loadeddata' && element.readyState >= 2) return Promise.resolve();
@@ -29,48 +29,46 @@
       ...visibleImages.map((image) => ready(image, 'load')),
       Promise.race([Promise.resolve(document.fonts?.ready).catch(() => {}), new Promise((resolve) => setTimeout(resolve, 700))])
     ]);
-    const minimumTime = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 180 : 480;
-    Promise.race([criticalAssets, new Promise((resolve) => setTimeout(resolve, 1350))])
+    const minimumTime = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 180 : 700;
+    Promise.race([criticalAssets, new Promise((resolve) => setTimeout(resolve, 1500))])
       .then(() => new Promise((resolve) => setTimeout(resolve, Math.max(0, minimumTime - (performance.now() - startedAt)))))
       .then(() => {
         document.body.removeAttribute('aria-busy');
         pageLoader.classList.add('site-loader--leaving');
-        setTimeout(() => pageLoader.remove(), 1660);
+        setTimeout(() => pageLoader.remove(), 2260);
       });
-
-    // Warm each section's HTML, styles, scripts, and background video metadata from the menu.
-    if (isHome) {
-      const warmSections = () => {
-        const routes = [...document.querySelectorAll('.home-link')].map((link) => link.href);
-        const warmVideo = (src) => {
-          if (!src || document.querySelector(`video[src="${src}"]`)) return;
-          const video = document.createElement('video');
-          video.preload = 'metadata';
-          video.muted = true;
-          video.setAttribute('aria-hidden', 'true');
-          video.src = src;
-          video.load();
-          video.addEventListener('loadedmetadata', () => { video.pause(); }, { once: true });
-        };
-        const warmResource = (url) => fetch(url, { cache: 'force-cache', credentials: 'same-origin' }).catch(() => null);
-        routes.forEach((route) => {
-          warmResource(route).then((response) => response?.text()).then((html) => {
-            if (!html) return;
-            const page = new DOMParser().parseFromString(html, 'text/html');
-            page.querySelectorAll('link[rel="stylesheet"][href], script[src]').forEach((asset) => {
-              warmResource(new URL(asset.getAttribute(asset.tagName === 'LINK' ? 'href' : 'src'), route).href);
-            });
-            page.querySelectorAll('video source[src]').forEach((source) => {
-              warmVideo(new URL(source.getAttribute('src'), route).href);
-            });
-          });
-        });
-      };
-      if ('requestIdleCallback' in window) requestIdleCallback(warmSections, { timeout: 1000 });
-      else setTimeout(warmSections, 350);
-    }
   }
 
+  // Warm every section's HTML, styles, scripts, and background video metadata from the menu.
+  if (isHome) {
+    const warmSections = () => {
+      const routes = [...document.querySelectorAll('.home-link')].map((link) => link.href);
+      const warmVideo = (src) => {
+        if (!src) return;
+        const video = document.createElement('video');
+        video.preload = 'metadata';
+        video.muted = true;
+        video.src = src;
+        video.load();
+        video.addEventListener('loadedmetadata', () => video.pause(), { once: true });
+      };
+      const warmResource = (url) => fetch(url, { cache: 'force-cache', credentials: 'same-origin' }).catch(() => null);
+      routes.forEach((route) => {
+        warmResource(route).then((response) => response?.text()).then((html) => {
+          if (!html) return;
+          const page = new DOMParser().parseFromString(html, 'text/html');
+          page.querySelectorAll('link[rel="stylesheet"][href], script[src]').forEach((asset) => {
+            warmResource(new URL(asset.getAttribute(asset.tagName === 'LINK' ? 'href' : 'src'), route).href);
+          });
+          page.querySelectorAll('video source[src]').forEach((source) => {
+            warmVideo(new URL(source.getAttribute('src'), route).href);
+          });
+        });
+      });
+    };
+    if ('requestIdleCallback' in window) requestIdleCallback(warmSections, { timeout: 1000 });
+    else setTimeout(warmSections, 350);
+  }
   const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
   document.querySelectorAll('[data-analog-tv]').forEach((screen) => {
     if (!reduceMotion) screen.classList.add('analog-tv-jitter');
