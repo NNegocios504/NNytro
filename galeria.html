@@ -7,11 +7,16 @@
     <title>Portfolio — Archivo CRT</title>
     <link rel="stylesheet" href="./styles.css?v=unified-inner-header-1" />
     <link rel="stylesheet" href="./gallery.css?v=gallery-title-aligned-1" />
-      <link rel="stylesheet" href="./effects.css?v=interaction-effects-1" />
+      <link rel="stylesheet" href="./effects.css?v=site-loader-prefetch-1" />
       <link rel="stylesheet" href="./life.css" />
   </head>
   <body>
-    <video class="page-background-video" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1"><source src="./assets/fondos/portfolio.mp4" type="video/mp4" /></video>
+    <div class="site-loader" role="status" aria-live="polite" aria-label="Cargando página">
+      <div class="site-loader-screen" aria-hidden="true"><span class="site-loader-orbit"></span><span class="site-loader-core">N</span></div>
+      <span class="site-loader-label">Sintonizando</span>
+      <span class="site-loader-progress" aria-hidden="true"><i></i></span>
+    </div>
+    <video class="page-background-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1"><source src="./assets/fondos/portfolio.mp4" type="video/mp4" /></video>
     <main class="gallery-page">
       
       <header class="unified-site-header" aria-label="Navegación de PORTFOLIO">
@@ -48,7 +53,7 @@
     </div>
 
     <script src="./gallery.js?v=project-descriptions-4"></script>
-      <script src="./effects.js?v=interaction-effects-1" defer></script>
+      <script src="./effects.js?v=site-loader-prefetch-1" defer></script>
   </body>
 </html>
 
