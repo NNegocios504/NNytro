@@ -35,7 +35,7 @@
       .then(() => {
         document.body.removeAttribute('aria-busy');
         pageLoader.classList.add('site-loader--leaving');
-        setTimeout(() => pageLoader.remove(), 760);
+        setTimeout(() => pageLoader.remove(), 1660);
       });
 
     // Warm each section's HTML, styles, scripts, and background video metadata from the menu.
