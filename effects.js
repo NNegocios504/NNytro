@@ -2,9 +2,89 @@
   const root = document.documentElement;
   root.classList.add('xp-cursor');
 
-  // The loading screen is only present on the menu; other pages open directly.
+  // Only the menu uses the loader. From there, warm every page shell and its direct assets.
   const isHome = document.querySelector('.home-page') !== null;
   const pageLoader = document.querySelector('.site-loader');
+  const progressBar = pageLoader?.querySelector('.site-loader-progress');
+  const progressFill = progressBar?.querySelector('i');
+  const setLoadProgress = (value) => {
+    if (!progressBar || !progressFill) return;
+    const percent = Math.max(0, Math.min(100, value));
+    progressFill.style.width = `${percent}%`;
+    progressBar.setAttribute('aria-valuenow', String(Math.round(percent)));
+  };
+  const warmSections = async () => {
+    const routes = [...document.querySelectorAll('.home-link')].map((link) => link.href);
+    const retainedVideos = [];
+    const warmResource = async (url) => {
+      try {
+        const response = await fetch(url, { cache: 'force-cache', credentials: 'same-origin' });
+        if (response.ok) await response.arrayBuffer();
+      } catch { /* A failed resource should not block entry. */ }
+    };
+    const warmVideoMetadata = (url) => new Promise((resolve) => {
+      const video = document.createElement('video');
+      retainedVideos.push(video);
+      video.preload = 'metadata';
+      video.muted = true;
+      const finish = () => { video.pause(); resolve(); };
+      video.addEventListener('loadedmetadata', finish, { once: true });
+      video.addEventListener('error', finish, { once: true });
+      setTimeout(finish, 3500);
+      video.src = url;
+      video.load();
+    });
+
+    let routesLoaded = 0;
+    const documents = await Promise.all(routes.map(async (route) => {
+      try {
+        const response = await fetch(route, { cache: 'force-cache', credentials: 'same-origin' });
+        routesLoaded += 1;
+        setLoadProgress((routesLoaded / routes.length) * 30);
+        if (!response.ok) return null;
+        return { route, html: await response.text() };
+      } catch {
+        routesLoaded += 1;
+        setLoadProgress((routesLoaded / routes.length) * 30);
+        return null;
+      }
+    }));
+
+    const assets = new Set();
+    const videos = new Set();
+    documents.filter(Boolean).forEach(({ route, html }) => {
+      const page = new DOMParser().parseFromString(html, 'text/html');
+      page.querySelectorAll('link[rel="stylesheet"][href], script[src], img[src]').forEach((asset) => {
+        const value = asset.getAttribute(asset.tagName === 'LINK' ? 'href' : 'src');
+        if (!value) return;
+        const url = new URL(value, route);
+        if (url.origin === location.origin) assets.add(url.href);
+      });
+      page.querySelectorAll('video source[src]').forEach((source) => {
+        const url = new URL(source.getAttribute('src'), route);
+        if (url.origin === location.origin) videos.add(url.href);
+      });
+    });
+
+    const assetList = [...assets];
+    let assetsLoaded = 0;
+    await Promise.all(assetList.map(async (url) => {
+      await warmResource(url);
+      assetsLoaded += 1;
+      setLoadProgress(30 + (assetsLoaded / Math.max(1, assetList.length)) * 55);
+    }));
+
+    const videoList = [...videos];
+    let videosLoaded = 0;
+    await Promise.all(videoList.map(async (url) => {
+      await warmVideoMetadata(url);
+      videosLoaded += 1;
+      setLoadProgress(85 + (videosLoaded / Math.max(1, videoList.length)) * 15);
+    }));
+    setLoadProgress(100);
+  };
+  const pageWarmup = isHome ? warmSections() : Promise.resolve();
+
   if (pageLoader) {
     const startedAt = performance.now();
     document.body.setAttribute('aria-busy', 'true');
@@ -29,45 +109,16 @@
       ...visibleImages.map((image) => ready(image, 'load')),
       Promise.race([Promise.resolve(document.fonts?.ready).catch(() => {}), new Promise((resolve) => setTimeout(resolve, 700))])
     ]);
-    const minimumTime = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 180 : 700;
-    Promise.race([criticalAssets, new Promise((resolve) => setTimeout(resolve, 1500))])
+    const minimumTime = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 180 : 900;
+    Promise.race([Promise.all([criticalAssets, pageWarmup]), new Promise((resolve) => setTimeout(resolve, 7000))])
       .then(() => new Promise((resolve) => setTimeout(resolve, Math.max(0, minimumTime - (performance.now() - startedAt)))))
       .then(() => {
         document.body.removeAttribute('aria-busy');
-        pageLoader.classList.add('site-loader--leaving');
-        setTimeout(() => pageLoader.remove(), 2260);
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          pageLoader.classList.add('site-loader--leaving');
+          setTimeout(() => pageLoader.remove(), 2560);
+        }));
       });
-  }
-
-  // Warm every section's HTML, styles, scripts, and background video metadata from the menu.
-  if (isHome) {
-    const warmSections = () => {
-      const routes = [...document.querySelectorAll('.home-link')].map((link) => link.href);
-      const warmVideo = (src) => {
-        if (!src) return;
-        const video = document.createElement('video');
-        video.preload = 'metadata';
-        video.muted = true;
-        video.src = src;
-        video.load();
-        video.addEventListener('loadedmetadata', () => video.pause(), { once: true });
-      };
-      const warmResource = (url) => fetch(url, { cache: 'force-cache', credentials: 'same-origin' }).catch(() => null);
-      routes.forEach((route) => {
-        warmResource(route).then((response) => response?.text()).then((html) => {
-          if (!html) return;
-          const page = new DOMParser().parseFromString(html, 'text/html');
-          page.querySelectorAll('link[rel="stylesheet"][href], script[src]').forEach((asset) => {
-            warmResource(new URL(asset.getAttribute(asset.tagName === 'LINK' ? 'href' : 'src'), route).href);
-          });
-          page.querySelectorAll('video source[src]').forEach((source) => {
-            warmVideo(new URL(source.getAttribute('src'), route).href);
-          });
-        });
-      });
-    };
-    if ('requestIdleCallback' in window) requestIdleCallback(warmSections, { timeout: 1000 });
-    else setTimeout(warmSections, 350);
   }
   const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
   document.querySelectorAll('[data-analog-tv]').forEach((screen) => {

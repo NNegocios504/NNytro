@@ -99,7 +99,7 @@ html.xp-cursor [contenteditable="true"] { cursor: text; }
 @media(prefers-reduced-motion:reduce) { .fx-page-enter,.fx-reveal,.site-sound-toggle[data-enabled="true"] { animation:none!important; transition:none!important; opacity:1!important; filter:none!important; } }
 
 /* Short CRT tuning screen shown while the first visible assets appear. */
-.site-loader { position:fixed; inset:0; z-index:20000; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.8rem; color:#e9e6ff; background:radial-gradient(ellipse at 50% 46%,rgba(28,47,146,.94),rgba(3,5,25,.985) 68%); opacity:1; transform:scale(1); filter:blur(0); transition:opacity 2.2s ease,transform 2.2s cubic-bezier(.2,.7,.2,1),filter 2.2s ease; }
+.site-loader { position:fixed; inset:0; z-index:20000; display:flex; will-change:opacity,transform,filter; flex-direction:column; align-items:center; justify-content:center; gap:.8rem; color:#e9e6ff; background:radial-gradient(ellipse at 50% 46%,rgba(28,47,146,.94),rgba(3,5,25,.985) 68%); opacity:1; transform:scale(1); filter:blur(0); transition:opacity 2.5s linear,transform 2.5s ease,filter 2.5s ease; }
 .site-loader::before { position:absolute; inset:0; content:""; pointer-events:none; background:repeating-linear-gradient(0deg,rgba(188,210,255,.09) 0 1px,transparent 1px 4px),linear-gradient(90deg,transparent 49.8%,rgba(86,210,255,.12) 50%,transparent 50.2%); }
 .site-loader--leaving { opacity:0; transform:scale(1.035); filter:blur(7px); pointer-events:none; }
 .site-loader-screen { position:relative; display:grid; width:4.4rem; aspect-ratio:1; place-items:center; overflow:hidden; border:1px solid rgba(159,214,255,.75); border-radius:12px; background:linear-gradient(145deg,#152866,#08091e 70%); box-shadow:0 0 24px rgba(64,146,255,.46),inset 0 0 18px rgba(83,191,255,.24); }
@@ -107,9 +107,10 @@ html.xp-cursor [contenteditable="true"] { cursor: text; }
 .site-loader-core { z-index:1; color:white; font:2.3rem/1 'Comico','Crosner',sans-serif; text-shadow:0 0 14px #69ddff; animation:site-loader-flicker 1s steps(2,end) infinite; }
 .site-loader-orbit { position:absolute; inset:-25%; border:2px solid transparent; border-top-color:#8af3ff; border-radius:50%; box-shadow:0 -2px 12px #58cfff; animation:site-loader-spin .9s linear infinite; }
 .site-loader-label { z-index:1; font:10px/1.2 ui-monospace,SFMono-Regular,monospace; letter-spacing:.2em; text-transform:uppercase; text-shadow:0 0 10px rgba(117,203,255,.8); }
-.site-loader-progress { z-index:1; width:6.2rem; height:3px; overflow:hidden; background:rgba(197,211,255,.22); }
-.site-loader-progress i { display:block; width:38%; height:100%; background:linear-gradient(90deg,#6e81ff,#8ff5ff); box-shadow:0 0 9px #68ddff; animation:site-loader-progress 1s ease-in-out infinite; }
+.site-loader-progress { z-index:1; width:min(12rem,48vw); height:5px; overflow:hidden; background:rgba(197,211,255,.24); box-shadow:0 0 12px rgba(104,221,255,.2); }
+.site-loader-progress i { display:block; width:0; height:100%; background:linear-gradient(90deg,#6e81ff,#8ff5ff); box-shadow:0 0 12px #68ddff; transition:width .22s ease; position:relative; overflow:hidden; }
+.site-loader-progress i::after { position:absolute; inset:0; content:""; background:linear-gradient(105deg,transparent 20%,rgba(255,255,255,.8) 50%,transparent 80%); background-size:200% 100%; animation:site-loader-progress 650ms linear infinite; }
 @keyframes site-loader-spin { to { transform:rotate(360deg); } }
-@keyframes site-loader-progress { from { transform:translateX(-110%); } to { transform:translateX(280%); } }
+@keyframes site-loader-progress { from { background-position:100% 0; } to { background-position:-100% 0; } }
 @keyframes site-loader-flicker { 0%,90%,100% { opacity:1; } 92% { opacity:.55; } }
-@media(prefers-reduced-motion:reduce) { .site-loader-screen,.site-loader-core,.site-loader-progress i { animation:none!important; } }
+@media(prefers-reduced-motion:reduce) { .site-loader-screen,.site-loader-core,.site-loader-progress i::after { animation:none!important; } .site-loader { transition-duration:.35s!important; } }
