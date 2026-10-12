@@ -114,6 +114,84 @@
     await videoWarmup;
     setLoadProgress(100);
   };
+  // Warm a section immediately when the pointer or keyboard focus shows intent to open it.
+  const hoverWarmups = new Map();
+  const warmPageOnIntent = (route) => {
+    if (hoverWarmups.has(route)) return hoverWarmups.get(route);
+    const warmup = (async () => {
+      const warmResource = async (url) => {
+        try {
+          const response = await fetch(url, { cache: 'force-cache', credentials: 'same-origin' });
+          if (!response.ok) return '';
+          if (response.headers.get('content-type')?.includes('text/css')) return await response.text();
+          await response.arrayBuffer();
+        } catch { /* Navigation still works if a resource cannot be warmed. */ }
+        return '';
+      };
+      try {
+        const response = await fetch(route, { cache: 'force-cache', credentials: 'same-origin' });
+        if (!response.ok) return;
+        const page = new DOMParser().parseFromString(await response.text(), 'text/html');
+        const assets = new Set();
+        page.querySelectorAll('link[rel="stylesheet"][href], script[src], img[src], img[data-src], video[poster]').forEach((asset) => {
+          const value = asset.tagName === 'LINK' ? asset.getAttribute('href') : asset.tagName === 'VIDEO' || asset.hasAttribute('poster') ? asset.getAttribute('poster') : asset.getAttribute('src') || asset.getAttribute('data-src');
+          if (!value) return;
+          const url = new URL(value, route);
+          if (url.origin === location.origin) assets.add(url.href);
+        });
+        const pending = [...assets];
+        let next = 0;
+        const warmNext = async () => {
+          while (next < pending.length) {
+            const url = pending[next++];
+            const css = await warmResource(url);
+            if (!css) continue;
+            [...css.matchAll(/url\(\s*(?:(['"])(.*?)\1|([^)]*))\s*\)/gi)].forEach((match) => {
+              const value = (match[2] || match[3] || '').trim();
+              if (!value || value.startsWith('data:') || value.startsWith('#')) return;
+              try {
+                const nested = new URL(value, url);
+                if (nested.origin === location.origin && !assets.has(nested.href)) {
+                  assets.add(nested.href);
+                  pending.push(nested.href);
+                }
+              } catch { /* Ignore malformed CSS URLs. */ }
+            });
+          }
+        };
+        const jobs = [warmNext(), warmNext(), warmNext(), warmNext()];
+        if (new URL(route).pathname.endsWith('/galeria.html') && !navigator.connection?.saveData) {
+          jobs.push((async () => {
+            try {
+              const manifest = await fetch(new URL('./portfolio-covers.json', location.href), { cache: 'force-cache', credentials: 'same-origin' });
+              if (!manifest.ok) return;
+              const covers = await manifest.json();
+              let index = 0;
+              const warmCovers = async () => {
+                while (index < covers.length) {
+                  const cover = new URL(covers[index++], location.href);
+                  if (cover.origin === location.origin) await warmResource(cover.href);
+                }
+              };
+              await Promise.all([warmCovers(), warmCovers()]);
+            } catch { /* Covers can load normally when the portfolio opens. */ }
+          })());
+        }
+        await Promise.all(jobs);
+      } catch { /* The actual navigation remains available if preloading fails. */ }
+    })();
+    hoverWarmups.set(route, warmup);
+    return warmup;
+  };
+  const warmButtonTarget = (event) => {
+    const link = event.target.closest?.('.home-link');
+    if (link) warmPageOnIntent(link.href);
+  };
+  document.addEventListener('pointerover', (event) => {
+    if (event.pointerType === 'mouse') warmButtonTarget(event);
+  }, { passive: true });
+  document.addEventListener('focusin', warmButtonTarget);
+
   const pageWarmup = firstMenuVisit ? warmSections() : Promise.resolve();
 
   if (pageLoader) {
