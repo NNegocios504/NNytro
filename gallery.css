@@ -3,7 +3,7 @@
 :root{--gallery-ink:#08051b;--gallery-violet:#b894ff;--gallery-cyan:#75e8ff;--gallery-line:rgba(191,164,255,.35)}
 *{box-sizing:border-box}
 body{margin:0;background:#08051b;color:#f7f4ff;font-family:'Comico',sans-serif}
-.gallery-page{position:relative;isolation:isolate;min-height:100vh;min-height:100svh;padding:clamp(1rem,3vw,2.6rem) clamp(1rem,4vw,4rem) 5rem;background:radial-gradient(ellipse at 50% 0,rgba(113,55,203,.35),transparent 50rem),linear-gradient(180deg,rgba(4,4,20,.79),rgba(4,5,20,.92)),url('./assets/portfolio-fondo.png') center 43%/100% 100vh fixed;background-size:auto,auto,cover;background-repeat:no-repeat;color:#fff}
+.gallery-page{position:relative;isolation:isolate;min-height:100vh;min-height:100svh;padding:clamp(1rem,3vw,2.6rem) clamp(1rem,4vw,4rem) 5rem;background-color:#08051b;background-image:radial-gradient(ellipse at 50% 0,rgba(113,55,203,.35),transparent 50rem),linear-gradient(180deg,rgba(4,4,20,.79),rgba(4,5,20,.92));background-repeat:no-repeat;color:#fff}
 .gallery-page::before{position:fixed;inset:0;z-index:-1;content:"";pointer-events:none;background:repeating-linear-gradient(0deg,rgba(206,193,255,.035) 0 1px,transparent 1px 4px),radial-gradient(ellipse at center,transparent 45%,rgba(0,0,15,.34))}
 .gallery-header,.gallery-toolbar,.gallery-grid{width:min(100%,1440px);margin-inline:auto}
 .gallery-header{display:flex;align-items:flex-end;justify-content:space-between;min-height:3.2rem;padding-bottom:1rem;border-bottom:1px solid var(--gallery-line)}

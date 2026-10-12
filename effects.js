@@ -192,7 +192,12 @@
   }, { passive: true });
   document.addEventListener('focusin', warmButtonTarget);
 
-  const pageWarmup = firstMenuVisit ? warmSections() : Promise.resolve();
+  // Keep the first viewport responsive; preload the remaining sections after it has settled.
+  const pageWarmup = firstMenuVisit ? new Promise((resolve) => {
+    const startWarmup = () => setTimeout(() => warmSections().finally(resolve), 6500);
+    if (document.readyState === 'complete') startWarmup();
+    else window.addEventListener('load', startWarmup, { once: true });
+  }) : Promise.resolve();
 
   if (pageLoader) {
     if (!firstMenuVisit) {

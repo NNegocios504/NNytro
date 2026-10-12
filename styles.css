@@ -12,7 +12,7 @@ img,svg { max-width:100%; }
 :focus-visible { outline:2px solid #c8f7ff; outline-offset:4px; }
 
 /* Inicio: escena CRT y menú de navegación */
-.home-page { position:relative; isolation:isolate; display:flex; min-height:100vh; min-height:100svh; flex-direction:column; overflow:hidden; padding:clamp(1rem,3vw,2.4rem) clamp(1rem,4vw,4rem); background-color:#061344; background-image:url('./assets/fondiux.png'); background-position:center; background-size:cover; background-repeat:no-repeat; }
+.home-page { position:relative; isolation:isolate; display:flex; min-height:100vh; min-height:100svh; flex-direction:column; overflow:hidden; padding:clamp(1rem,3vw,2.4rem) clamp(1rem,4vw,4rem); background-color:#061344; }
 .home-background-video { position:fixed; inset:0; z-index:0; display:block; width:100vw; height:100vh; height:100svh; object-fit:cover; object-position:center; pointer-events:none; }
 .home-page::before,.home-page::after { position:absolute; inset:0; z-index:0; content:''; pointer-events:none; }
 .home-page::before { z-index:1; background:linear-gradient(90deg,rgba(2,5,30,.72),transparent 44%,rgba(3,4,30,.3)),radial-gradient(ellipse at 50% 50%,transparent 28%,rgba(2,4,25,.4)); }
@@ -50,8 +50,7 @@ img,svg { max-width:100%; }
 .tipazo-link:hover,.tipazo-link:focus-visible { transform:rotate(-2deg) scale(1.08); filter:drop-shadow(0 0 14px rgba(166,218,255,.7)); outline:none; }
 
 /* Páginas de detalle y Sobre mí */
-.detail-shell { position:relative; isolation:isolate; min-height:100vh; min-height:100svh; padding:1.4rem clamp(1rem,4vw,4rem) 2rem; color:#f7f4ff; background:radial-gradient(ellipse at 72% 40%,rgba(75,43,160,.3),transparent 34rem),linear-gradient(120deg,rgba(3,4,22,.83),rgba(5,8,30,.72)),url('./assets/fondogaleria.png') center/100% 100vh fixed;
-  background-size:auto,auto,cover; }
+.detail-shell { position:relative; isolation:isolate; min-height:100vh; min-height:100svh; padding:1.4rem clamp(1rem,4vw,4rem) 2rem; color:#f7f4ff; background-color:#070515; background-image:radial-gradient(ellipse at 72% 40%,rgba(75,43,160,.3),transparent 34rem),linear-gradient(120deg,rgba(3,4,22,.83),rgba(5,8,30,.72)); background-size:auto,auto; }
 .detail-shell::after { position:fixed; inset:0; z-index:0; content:''; pointer-events:none; background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 4px); }
 .detail-header,.detail-layout,.about-layout { position:relative; z-index:1; }
 .detail-header { display:flex; align-items:center; justify-content:space-between; gap:1rem; min-height:2.5rem; }
@@ -65,7 +64,7 @@ img,svg { max-width:100%; }
 .detail-visual::before { position:absolute; inset:8%; border:1px solid rgba(227,220,255,.25); content:''; }
 .detail-visual--musica { --detail-background:radial-gradient(circle at 50% 50%,rgba(110,226,255,.72),transparent 16%),linear-gradient(135deg,#080b30,#6d2ca0 52%,#08194c); }
 .detail-visual--contacto { --detail-background:linear-gradient(115deg,rgba(255,255,255,.12) 0 2%,transparent 2% 9%,rgba(160,120,255,.42) 9% 10%,transparent 10% 18%),linear-gradient(135deg,#120a36,#513196 48%,#020617); }
-.about-page { min-height:100vh; min-height:100svh; background-color:#08071b; background-image:linear-gradient(90deg,rgba(5,4,24,.3) 0%,rgba(5,4,24,.62) 48%,rgba(5,4,24,.76) 100%),url('./assets/about-fondo.png'); background-position:center; background-size:auto,cover; background-repeat:no-repeat; }
+.about-page { min-height:100vh; min-height:100svh; background-color:#08071b; background-image:linear-gradient(90deg,rgba(5,4,24,.3) 0%,rgba(5,4,24,.62) 48%,rgba(5,4,24,.76) 100%); background-position:center; background-size:auto; background-repeat:no-repeat; }
 .about-layout { display:grid; grid-template-columns:minmax(240px,.9fr) minmax(280px,1fr); align-items:center; gap:clamp(2rem,8vw,7rem); width:min(100%,1120px); min-height:calc(100vh - 5rem); min-height:calc(100svh - 5rem); margin:0 auto; padding:2rem 0; }
 .about-portrait-stack { display:grid; justify-items:center; gap:1.15rem; min-width:0; }
 @media (min-width:761px) { .about-portrait-stack { align-self:start; } }
@@ -109,7 +108,7 @@ img,svg { max-width:100%; }
 .modal-action:hover,.modal-action:focus-visible { background:rgba(112,73,184,.8); outline:2px solid #d3baff; }
 
 /* Portafolio: reglas de respaldo para mantener legible la página si falta su hoja propia */
-.gallery-page { position:relative; min-height:100vh; min-height:100svh; padding:1.5rem clamp(1rem,4vw,4rem) 4rem; color:#f7f4ff; background:linear-gradient(120deg,rgba(4,3,25,.83),rgba(8,5,29,.6)),url('./assets/portfolio-fondo.png') center/cover fixed; }
+.gallery-page { position:relative; min-height:100vh; min-height:100svh; padding:1.5rem clamp(1rem,4vw,4rem) 4rem; color:#f7f4ff; background-color:#08051b; background-image:linear-gradient(120deg,rgba(4,3,25,.83),rgba(8,5,29,.6)); }
 .gallery-header,.gallery-toolbar,.gallery-grid { position:relative; z-index:1; width:min(100%,1320px); margin-right:auto; margin-left:auto; }
 .gallery-header { min-height:6rem; }
 .gallery-title { margin:.4rem 0; color:#fff; font:clamp(3.5rem,8vw,6.8rem)/.98 'Crosner','Comico',sans-serif; text-shadow:0 3px 0 #130833,0 0 22px rgba(162,117,255,.38); }
