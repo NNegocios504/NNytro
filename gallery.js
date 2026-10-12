@@ -877,10 +877,12 @@ function fitViewerImage() {
   viewerBaseWidth = viewerImage.naturalWidth * fit;
   viewerBaseHeight = viewerImage.naturalHeight * fit;
   viewerZoom = 1;
+  viewerStage.style.width = viewerBaseWidth + 'px';
+  viewerStage.style.height = viewerBaseHeight + 'px';
   viewerImage.style.width = viewerBaseWidth + 'px';
   viewerImage.style.height = viewerBaseHeight + 'px';
-  viewerStage.style.width = viewerViewport.clientWidth + 'px';
-  viewerStage.style.height = viewerViewport.clientHeight + 'px';
+  viewerImage.style.left = Math.max(0, (viewerStage.clientWidth - viewerBaseWidth) / 2) + 'px';
+  viewerImage.style.top = Math.max(0, (viewerStage.clientHeight - viewerBaseHeight) / 2) + 'px';
   viewerViewport.scrollTo({ left: 0, top: 0 });
   viewerViewport.classList.remove('is-zoomed');
 }
@@ -891,8 +893,8 @@ function updateViewerZoom(nextZoom, focusX = viewerViewport.clientWidth / 2, foc
   const previous = viewerZoom;
   const previousWidth = viewerBaseWidth * previous;
   const previousHeight = viewerBaseHeight * previous;
-  const previousOffsetX = Math.max(0, (viewerStage.clientWidth - previousWidth) / 2);
-  const previousOffsetY = Math.max(0, (viewerStage.clientHeight - previousHeight) / 2);
+  const previousOffsetX = Number.parseFloat(viewerImage.style.left) || 0;
+  const previousOffsetY = Number.parseFloat(viewerImage.style.top) || 0;
   const imageX = (viewerViewport.scrollLeft + focusX - previousOffsetX) / previous;
   const imageY = (viewerViewport.scrollTop + focusY - previousOffsetY) / previous;
   const nextWidth = viewerBaseWidth * next;
@@ -900,13 +902,20 @@ function updateViewerZoom(nextZoom, focusX = viewerViewport.clientWidth / 2, foc
   viewerZoom = next;
   viewerImage.style.width = nextWidth + 'px';
   viewerImage.style.height = nextHeight + 'px';
-  viewerStage.style.width = Math.max(viewerViewport.clientWidth, nextWidth) + 'px';
-  viewerStage.style.height = Math.max(viewerViewport.clientHeight, nextHeight) + 'px';
+  viewerStage.style.width = nextWidth + 'px';
+  viewerStage.style.height = nextHeight + 'px';
+  viewerImage.style.left = Math.max(0, (viewerStage.clientWidth - nextWidth) / 2) + 'px';
+  viewerImage.style.top = Math.max(0, (viewerStage.clientHeight - nextHeight) / 2) + 'px';
   if (next === 1) {
     viewerViewport.scrollTo({ left: 0, top: 0 });
+    viewerViewport.classList.remove('is-zoomed');
+    requestAnimationFrame(() => {
+      if (!imageViewer.hidden && viewerZoom === 1) fitViewerImage();
+    });
+    return;
   } else {
-    const nextOffsetX = Math.max(0, (viewerStage.clientWidth - nextWidth) / 2);
-    const nextOffsetY = Math.max(0, (viewerStage.clientHeight - nextHeight) / 2);
+    const nextOffsetX = Number.parseFloat(viewerImage.style.left) || 0;
+    const nextOffsetY = Number.parseFloat(viewerImage.style.top) || 0;
     viewerViewport.scrollLeft = Math.max(0, nextOffsetX + imageX * next - focusX);
     viewerViewport.scrollTop = Math.max(0, nextOffsetY + imageY * next - focusY);
   }
@@ -922,8 +931,10 @@ function openImageViewer(item, trigger) {
   viewerBaseHeight = 0;
   viewerImage.style.width = '';
   viewerImage.style.height = '';
-  viewerStage.style.width = '100%';
-  viewerStage.style.height = '100%';
+  viewerImage.style.left = '';
+  viewerImage.style.top = '';
+  viewerStage.style.width = '';
+  viewerStage.style.height = '';
   viewerViewport.scrollTo(0, 0);
   imageViewer.hidden = false;
   requestAnimationFrame(fitViewerImage);
@@ -983,7 +994,7 @@ viewerViewport.addEventListener('wheel', (event) => {
 viewerImage.addEventListener('load', fitViewerImage);
 window.addEventListener('resize', fitViewerImage);
 viewerViewport.addEventListener('pointerdown', (event) => {
-  if (event.button !== 0 || viewerZoom <= 1) return;
+  if (event.button !== 0 || viewerZoom <= 1 || (viewerViewport.scrollWidth <= viewerViewport.clientWidth && viewerViewport.scrollHeight <= viewerViewport.clientHeight)) return;
   viewerDrag = { id: event.pointerId, x: event.clientX, y: event.clientY, left: viewerViewport.scrollLeft, top: viewerViewport.scrollTop };
   viewerViewport.setPointerCapture(event.pointerId);
   viewerViewport.classList.add('is-dragging');
