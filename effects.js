@@ -20,18 +20,21 @@
     const warmResource = async (url) => {
       try {
         const response = await fetch(url, { cache: 'force-cache', credentials: 'same-origin' });
-        if (response.ok) await response.arrayBuffer();
+        if (!response.ok) return '';
+        if (response.headers.get('content-type')?.includes('text/css')) return await response.text();
+        await response.arrayBuffer();
+        return '';
       } catch { /* A failed resource should not block entry. */ }
     };
     const warmVideoMetadata = (url) => new Promise((resolve) => {
       const video = document.createElement('video');
       retainedVideos.push(video);
-      video.preload = 'metadata';
+      video.preload = 'auto';
       video.muted = true;
       const finish = () => { video.pause(); resolve(); };
-      video.addEventListener('loadedmetadata', finish, { once: true });
+      video.addEventListener('loadeddata', finish, { once: true });
       video.addEventListener('error', finish, { once: true });
-      setTimeout(finish, 3500);
+      setTimeout(finish, 8000);
       video.src = url;
       video.load();
     });
@@ -55,8 +58,8 @@
     const videos = new Set();
     documents.filter(Boolean).forEach(({ route, html }) => {
       const page = new DOMParser().parseFromString(html, 'text/html');
-      page.querySelectorAll('link[rel="stylesheet"][href], script[src], img[src]').forEach((asset) => {
-        const value = asset.getAttribute(asset.tagName === 'LINK' ? 'href' : 'src');
+      page.querySelectorAll('link[rel="stylesheet"][href], script[src], img[src], img[data-src], video[poster]').forEach((asset) => {
+        const value = asset.tagName === 'LINK' ? asset.getAttribute('href') : asset.tagName === 'VIDEO' || asset.hasAttribute('poster') ? asset.getAttribute('poster') : asset.getAttribute('src') || asset.getAttribute('data-src');
         if (!value) return;
         const url = new URL(value, route);
         if (url.origin === location.origin) assets.add(url.href);
@@ -67,21 +70,32 @@
       });
     });
 
-    const assetList = [...assets];
+    const videoWarmup = Promise.all([...videos].map(warmVideoMetadata));
     let assetsLoaded = 0;
-    await Promise.all(assetList.map(async (url) => {
-      await warmResource(url);
-      assetsLoaded += 1;
-      setLoadProgress(30 + (assetsLoaded / Math.max(1, assetList.length)) * 55);
-    }));
-
-    const videoList = [...videos];
-    let videosLoaded = 0;
-    await Promise.all(videoList.map(async (url) => {
-      await warmVideoMetadata(url);
-      videosLoaded += 1;
-      setLoadProgress(55 + (videosLoaded / Math.max(1, videoList.length)) * 10);
-    }));
+    const pendingAssets = [...assets];
+    let nextAsset = 0;
+    const warmNextAsset = async () => {
+      while (nextAsset < pendingAssets.length) {
+        const url = pendingAssets[nextAsset++];
+        const css = await warmResource(url);
+        if (css) {
+          [...css.matchAll(/url\(\s*(?:(['"])(.*?)\1|([^)]*))\s*\)/gi)].forEach((match) => {
+            const value = (match[2] || match[3] || '').trim();
+            if (!value || value.startsWith('data:') || value.startsWith('#')) return;
+            try {
+              const nested = new URL(value, url);
+              if (nested.origin === location.origin && !assets.has(nested.href)) {
+                assets.add(nested.href);
+                pendingAssets.push(nested.href);
+              }
+            } catch { /* Ignore malformed CSS URLs. */ }
+          });
+        }
+        assetsLoaded += 1;
+        setLoadProgress(30 + (assetsLoaded / Math.max(1, pendingAssets.length)) * 55);
+      }
+    };
+    await Promise.all([warmNextAsset(), warmNextAsset(), warmNextAsset(), warmNextAsset()]);
     try {
       const response = await fetch('./portfolio-covers.json', { cache: 'force-cache', credentials: 'same-origin' });
       const coverPaths = response.ok ? await response.json() : [];
@@ -97,6 +111,7 @@
       };
       if (!navigator.connection?.saveData) await Promise.all([warmNextCover(), warmNextCover()]);
     } catch { /* Card covers can load normally when the portfolio opens. */ }
+    await videoWarmup;
     setLoadProgress(100);
   };
   const pageWarmup = firstMenuVisit ? warmSections() : Promise.resolve();
