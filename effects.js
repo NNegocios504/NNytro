@@ -5,6 +5,7 @@
   // Only the menu uses the loader. From there, warm every page shell and its direct assets.
   const isHome = document.querySelector('.home-page') !== null;
   const pageLoader = document.querySelector('.site-loader');
+  const firstMenuVisit = isHome && !root.classList.contains('nnytro-menu-return');
   const progressBar = pageLoader?.querySelector('.site-loader-progress');
   const progressFill = progressBar?.querySelector('i');
   const setLoadProgress = (value) => {
@@ -79,46 +80,59 @@
     await Promise.all(videoList.map(async (url) => {
       await warmVideoMetadata(url);
       videosLoaded += 1;
-      setLoadProgress(85 + (videosLoaded / Math.max(1, videoList.length)) * 15);
+      setLoadProgress(55 + (videosLoaded / Math.max(1, videoList.length)) * 10);
     }));
+    try {
+      const response = await fetch('./portfolio-covers.json', { cache: 'force-cache', credentials: 'same-origin' });
+      const coverPaths = response.ok ? await response.json() : [];
+      let nextCover = 0;
+      let coversLoaded = 0;
+      const warmNextCover = async () => {
+        while (nextCover < coverPaths.length) {
+          const url = new URL(coverPaths[nextCover++], location.href).href;
+          await warmResource(url);
+          coversLoaded += 1;
+          setLoadProgress(65 + (coversLoaded / Math.max(1, coverPaths.length)) * 35);
+        }
+      };
+      if (!navigator.connection?.saveData) await Promise.all([warmNextCover(), warmNextCover()]);
+    } catch { /* Card covers can load normally when the portfolio opens. */ }
     setLoadProgress(100);
   };
-  const pageWarmup = isHome ? warmSections() : Promise.resolve();
+  const pageWarmup = firstMenuVisit ? warmSections() : Promise.resolve();
 
   if (pageLoader) {
-    const startedAt = performance.now();
-    document.body.setAttribute('aria-busy', 'true');
-    const visibleImages = [...document.querySelectorAll('main img')]
-      .filter((image) => {
-        const bounds = image.getBoundingClientRect();
-        return bounds.width > 0 && bounds.height > 0 && bounds.top < innerHeight && bounds.bottom > 0;
-      })
-      .slice(0, 5);
-    const activeVideo = document.querySelector('.home-background-video');
-    const ready = (element, eventName) => {
-      if (!element) return Promise.resolve();
-      if (eventName === 'loadeddata' && element.readyState >= 2) return Promise.resolve();
-      if (eventName === 'load' && element.complete && element.naturalWidth > 0) return Promise.resolve();
-      return new Promise((resolve) => {
-        element.addEventListener(eventName, resolve, { once: true });
-        element.addEventListener('error', resolve, { once: true });
-      });
-    };
-    const criticalAssets = Promise.all([
-      ready(activeVideo, 'loadeddata'),
-      ...visibleImages.map((image) => ready(image, 'load')),
-      Promise.race([Promise.resolve(document.fonts?.ready).catch(() => {}), new Promise((resolve) => setTimeout(resolve, 700))])
-    ]);
-    const minimumTime = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 180 : 900;
-    Promise.race([Promise.all([criticalAssets, pageWarmup]), new Promise((resolve) => setTimeout(resolve, 7000))])
-      .then(() => new Promise((resolve) => setTimeout(resolve, Math.max(0, minimumTime - (performance.now() - startedAt)))))
-      .then(() => {
-        document.body.removeAttribute('aria-busy');
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          pageLoader.classList.add('site-loader--leaving');
-          setTimeout(() => pageLoader.remove(), 2560);
-        }));
-      });
+    if (!firstMenuVisit) {
+      pageLoader.remove();
+    } else {
+      const startedAt = performance.now();
+      const activeVideo = document.querySelector('.home-background-video');
+      const activeImage = document.querySelector('.home-tv-frame');
+      const criticalReady = Promise.all([
+        activeVideo?.readyState >= 2 ? Promise.resolve() : new Promise((resolve) => {
+          if (!activeVideo) return resolve();
+          activeVideo.addEventListener('loadeddata', resolve, { once: true });
+          activeVideo.addEventListener('error', resolve, { once: true });
+        }),
+        activeImage?.complete ? Promise.resolve() : new Promise((resolve) => {
+          if (!activeImage) return resolve();
+          activeImage.addEventListener('load', resolve, { once: true });
+          activeImage.addEventListener('error', resolve, { once: true });
+        })
+      ]);
+      Promise.race([criticalReady, new Promise((resolve) => setTimeout(resolve, 450))])
+        .then(() => new Promise((resolve) => setTimeout(resolve, Math.max(0, 550 - (performance.now() - startedAt)))))
+        .then(() => {
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            pageLoader.classList.add('site-loader--leaving');
+            document.body.removeAttribute('aria-busy');
+            pageLoader.addEventListener('transitionend', (event) => {
+              if (event.propertyName === 'opacity') pageLoader.remove();
+            }, { once: true });
+            setTimeout(() => pageLoader.remove(), 1460);
+          }));
+        });
+    }
   }
   const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
   document.querySelectorAll('[data-analog-tv]').forEach((screen) => {
