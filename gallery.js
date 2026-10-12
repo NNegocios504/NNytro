@@ -205,6 +205,41 @@ const galleryItems = [
     "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/McGucket Gravity Core.webp"
   },
   {
+    "category": "modeloss blockbench",
+    "title": "Borramentes Gravity Core",
+    "type": "image",
+    "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/Borramentes Gravity Core.webp",
+    "thumbSrc": "./assets/gallery/modeloss blockbench/modeloss blockbench/Borramentes Gravity Core.thumb.webp"
+  },
+  {
+    "category": "modeloss blockbench",
+    "title": "Gnomo Gravity Core 1",
+    "type": "image",
+    "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/Gnomo Gravity Core 1.webp",
+    "thumbSrc": "./assets/gallery/modeloss blockbench/modeloss blockbench/Gnomo Gravity Core 1.thumb.webp"
+  },
+  {
+    "category": "modeloss blockbench",
+    "title": "Gnomo Gravity Core 2",
+    "type": "image",
+    "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/Gnomo Gravity Core 2.webp",
+    "thumbSrc": "./assets/gallery/modeloss blockbench/modeloss blockbench/Gnomo Gravity Core 2.thumb.webp"
+  },
+  {
+    "category": "modeloss blockbench",
+    "title": "Pacifica Gravity Core",
+    "type": "image",
+    "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/Pacifica Gravity Core.webp",
+    "thumbSrc": "./assets/gallery/modeloss blockbench/modeloss blockbench/Pacifica Gravity Core.thumb.webp"
+  },
+  {
+    "category": "modeloss blockbench",
+    "title": "Diarios Gravity Core",
+    "type": "image",
+    "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/Diarios Gravity Core.webp",
+    "thumbSrc": "./assets/gallery/modeloss blockbench/modeloss blockbench/Diarios Gravity Core.thumb.webp"
+  },
+  {
     "category": "portadas",
     "title": "444",
     "type": "image",
@@ -572,7 +607,7 @@ function customProjectFor(item) {
     'mini-yo': 'Edición sencilla de una foto mía de chiquito para la canción Mini Yo.',
     'portadas-spotify': 'Más artes de tapa de diferentes canciones. Disfruto mucho hacer las portadas; es mi parte favorita de hacer temas y me gustó mucho cómo quedaron estas.',
     'reset': 'Arte de portada para mi amigo Wasabi y su canción Reset. Temazo.',
-    'gravity-core': 'Hice varias cosas para el evento de Minecraft Gravity Core. Diseñé los Fancy Menus, los botones y los fondos, y edité las imágenes hasta llegar al resultado que quería. También adapté los libros de Gravity Falls a modelos cúbicos de gnomos de Minecraft: hice dos versiones y agregué un foco lateral para activar la luz UV y revelar dibujos de tinta invisible. Además, creé los modelos y variaciones de los gnomos, el Gobblewonker y McGucket. Me gustó mucho cómo quedaron, sobre todo las animaciones y el Gobblewonker.',
+    'gravity-core': 'Hice varias cosas para el evento de Minecraft Gravity Core. Diseñé los Fancy Menus, los botones y los fondos, y edité las imágenes hasta llegar al resultado que quería. También adapté los libros de Gravity Falls a modelos cúbicos de gnomos de Minecraft: hice dos versiones y agregué un foco lateral para activar la luz UV y revelar dibujos de tinta invisible. Además, modelé a Pacifica, el Borramentes y los diarios, junto con los gnomos, el Gobblewonker y McGucket. Me gustó mucho cómo quedaron, sobre todo las animaciones y el Gobblewonker.',
     'zona-0': 'Render hecho en Blender para el evento de un amigo, Zona 0. Lo hice rápido; no es mi mejor render, pero me gustó mucho cómo quedó.',
     'woody-rongo': 'Bocetos rápidos de algunos integrantes de Woody y Rongo para un dibujo que nunca terminé.',
     'chica-alien': 'Este dibujo me gustó mucho cómo quedó. Es un lindo OC, hecho en Krita.',
