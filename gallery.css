@@ -52,11 +52,14 @@ body{margin:0;background:#08051b;color:#f7f4ff;font-family:'Comico',sans-serif}
 .gallery-image-viewer-controls{position:relative;z-index:2;display:flex;justify-content:center;gap:.45rem;padding:.7rem 4rem .7rem .7rem;border-bottom:1px solid #c9b5ff35;background:#100d28}
 .gallery-image-viewer-controls button{min-width:2.5rem;min-height:2.35rem;padding:.4rem .8rem;border:1px solid #bba1ff7a;background:linear-gradient(145deg,#362064,#11142e);color:#fff;font:1rem/1 'Crosner','Comico',sans-serif;cursor:pointer}
 .gallery-image-viewer-controls button:hover,.gallery-image-viewer-controls button:focus-visible{border-color:var(--gallery-cyan);box-shadow:0 0 13px #61dfff55;outline:none}
-.gallery-image-viewer-viewport{display:grid;min-height:0;flex:1;place-items:center;overflow:hidden;background:radial-gradient(ellipse,#16112d,#03040d 78%);overscroll-behavior:contain;touch-action:none;cursor:default}
+.gallery-image-viewer-viewport{display:block;min-width:0;min-height:0;flex:1;overflow:auto;background:radial-gradient(ellipse,#16112d,#03040d 78%);overscroll-behavior:contain;touch-action:none;cursor:default;scrollbar-width:thin;scrollbar-color:#9d79ed #100d28}
+.gallery-image-viewer-viewport::-webkit-scrollbar{width:12px;height:12px}
+.gallery-image-viewer-viewport::-webkit-scrollbar-track{background:#100d28;border:1px solid #bba1ff30}
+.gallery-image-viewer-viewport::-webkit-scrollbar-thumb{border:2px solid #100d28;border-radius:8px;background:linear-gradient(135deg,#9d79ed,#61dfff)}
+.gallery-image-viewer-stage{display:grid;min-width:100%;min-height:100%;place-items:center}
 .gallery-image-viewer-viewport.is-zoomed{cursor:grab}
 .gallery-image-viewer-viewport.is-dragging{cursor:grabbing}
-.gallery-image-viewer-viewport img{display:block;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;transform-origin:center center;transition:transform .12s ease-out;user-select:none;-webkit-user-drag:none;pointer-events:none}
-.gallery-image-viewer-viewport.is-dragging img{transition:none}
+.gallery-image-viewer-viewport img{display:block;max-width:none;max-height:none;object-fit:fill;user-select:none;-webkit-user-drag:none;pointer-events:none}
 body.modal-open{overflow:hidden}
 @media(max-width:760px){.gallery-page{padding-inline:1rem;background-attachment:scroll}.gallery-toolbar{align-items:flex-start;flex-direction:column}.gallery-modal-card{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;height:min(94dvh,1000px)}.gallery-modal-info{max-height:30dvh;border-top:1px solid #c4adff2c;border-left:0;padding:1rem 1.2rem}.gallery-modal-media--collection{grid-template-columns:repeat(auto-fit,minmax(min(100%,185px),1fr));padding-top:3.5rem}.gallery-modal-piece{padding:.4rem}.gallery-modal-image-button img{max-height:38vh}}
 @media(max-width:430px){.gallery-title{font-size:clamp(3rem,17vw,4.2rem)}.gallery-card-media{aspect-ratio:1/1}.gallery-modal-media--collection{grid-template-columns:1fr 1fr;gap:.55rem}.gallery-modal-piece figcaption{font-size:.77rem}.gallery-modal-info h2{font-size:2rem}}

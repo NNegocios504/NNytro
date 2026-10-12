@@ -196,10 +196,10 @@ img,svg { max-width:100%; }
   box-shadow: none;
   clip-path: none;
 }
-.home-link:nth-child(1) { background-image: url('./assets/botones menu/boton sobre mi.png'); }
-.home-link:nth-child(2) { background-image: url('./assets/botones menu/boton portfolio.png'); }
-.home-link:nth-child(3) { background-image: url('./assets/botones menu/boton musica.png'); }
-.home-link:nth-child(4) { background-image: url('./assets/botones menu/boton contacto.png'); }
+.home-link:nth-child(1) { background-image: url('./assets/botones menu/boton sobre mi.webp'); }
+.home-link:nth-child(2) { background-image: url('./assets/botones menu/boton portfolio.webp'); }
+.home-link:nth-child(3) { background-image: url('./assets/botones menu/boton musica.webp'); }
+.home-link:nth-child(4) { background-image: url('./assets/botones menu/boton contacto.webp'); }
 
 
 /* Transición nativa al navegar entre las páginas del portafolio. */

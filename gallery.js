@@ -3,519 +3,542 @@ const galleryItems = [
     "category": "under news",
     "title": "UnderNews placa disco",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/UnderNews placa disco.png"
+    "src": "./assets/gallery/under news/under news/UnderNews placa disco.webp"
   },
   {
     "category": "under news",
     "title": "UnderNews mural de periódicos",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/UnderNews mural periodicos.png"
+    "src": "./assets/gallery/under news/under news/UnderNews mural periodicos.webp"
   },
- {
+  {
     "category": "dibujos",
     "title": "Boceto integrantes woody",
     "type": "image",
-    "src": "./assets/gallery/dibujos/dibujos/Boceto integrantes woody.png"
+    "src": "./assets/gallery/dibujos/dibujos/Boceto integrantes woody.webp",
+    "thumbSrc": "./assets/gallery/dibujos/dibujos/Boceto integrantes woody.thumb.webp"
   },
   {
     "category": "dibujos",
     "title": "boceto rongo",
     "type": "image",
-    "src": "./assets/gallery/dibujos/dibujos/boceto rongo.png"
+    "src": "./assets/gallery/dibujos/dibujos/boceto rongo.webp"
   },
   {
     "category": "dibujos",
     "title": "brokencodes Dibujo portada",
     "type": "image",
-    "src": "./assets/gallery/dibujos/dibujos/brokencodes Dibujo portada.png"
+    "src": "./assets/gallery/dibujos/dibujos/brokencodes Dibujo portada.webp"
   },
   {
     "category": "dibujos",
     "title": "Chica alien OC",
     "type": "image",
-    "src": "./assets/gallery/dibujos/dibujos/Chica alien OC.png"
+    "src": "./assets/gallery/dibujos/dibujos/Chica alien OC.webp",
+    "thumbSrc": "./assets/gallery/dibujos/dibujos/Chica alien OC.thumb.webp"
   },
   {
     "category": "dibujos",
     "title": "Boceto Nutria",
     "description": "Dibujo sin terminar de una nutria que anda en negocios peligrosos y porta una pistola de agua, lindo boceto.",
     "type": "image",
-    "src": "./assets/gallery/dibujos/dibujos/cvcf.png"
+    "src": "./assets/gallery/dibujos/dibujos/cvcf.webp",
+    "thumbSrc": "./assets/gallery/dibujos/dibujos/cvcf.thumb.webp"
   },
   {
     "category": "dibujos",
     "title": "dibujo ballena shiden",
     "type": "image",
-    "src": "./assets/gallery/dibujos/dibujos/dibujo ballena shiden.png"
+    "src": "./assets/gallery/dibujos/dibujos/dibujo ballena shiden.webp",
+    "thumbSrc": "./assets/gallery/dibujos/dibujos/dibujo ballena shiden.thumb.webp"
   },
   {
     "category": "dibujos",
     "title": "Dibujos animacion calavera",
     "type": "image",
-    "src": "./assets/gallery/dibujos/dibujos/Dibujos animacion calavera.png"
+    "src": "./assets/gallery/dibujos/dibujos/Dibujos animacion calavera.webp"
   },
   {
     "category": "dibujos",
     "title": "Muertex",
     "type": "video",
-    "src": "./assets/gallery/dibujos/dibujos/Ruleta Calavera/muertex.mp4"
+    "src": "./assets/gallery/dibujos/dibujos/Ruleta Calavera/muertex.webm"
   },
   {
     "category": "dibujos",
     "title": "Lordkai OC",
     "type": "image",
-    "src": "./assets/gallery/dibujos/dibujos/Lordkai OC.png"
+    "src": "./assets/gallery/dibujos/dibujos/Lordkai OC.webp",
+    "thumbSrc": "./assets/gallery/dibujos/dibujos/Lordkai OC.thumb.webp"
   },
   {
     "category": "dibujos",
     "title": "Mapache dibujo",
     "description": "Dibujo que hice muy rápido de un mapache.",
     "type": "image",
-    "src": "./assets/gallery/dibujos/dibujos/Mapache dibujo.png"
+    "src": "./assets/gallery/dibujos/dibujos/Mapache dibujo.webp"
   },
   {
     "category": "dibujos",
     "title": "Nyxza dibujo",
     "type": "image",
-    "src": "./assets/gallery/dibujos/dibujos/Nyxza dibujo OC.jpg"
+    "src": "./assets/gallery/dibujos/dibujos/Nyxza dibujo OC.webp",
+    "thumbSrc": "./assets/gallery/dibujos/dibujos/Nyxza dibujo OC.thumb.webp"
   },
   {
     "category": "dibujos",
     "title": "Tryer OC",
     "type": "image",
-    "src": "./assets/gallery/dibujos/dibujos/Tryer OC.png"
+    "src": "./assets/gallery/dibujos/dibujos/Tryer OC.webp",
+    "thumbSrc": "./assets/gallery/dibujos/dibujos/Tryer OC.thumb.webp"
   },
   {
     "category": "dibujos",
     "title": "Boceto final",
     "type": "image",
-    "src": "./assets/gallery/dibujos/dibujos/Render Anuncio 7Refugio/Boceto final.png"
+    "src": "./assets/gallery/dibujos/dibujos/Render Anuncio 7Refugio/Boceto final.webp"
   },
   {
     "category": "dibujos",
     "title": "Boceto inicial idea",
     "type": "image",
-    "src": "./assets/gallery/dibujos/dibujos/Render Anuncio 7Refugio/Boceto inicial idea.png"
+    "src": "./assets/gallery/dibujos/dibujos/Render Anuncio 7Refugio/Boceto inicial idea.webp"
   },
   {
     "category": "dibujos",
     "title": "boceto",
     "type": "image",
-    "src": "./assets/gallery/dibujos/dibujos/Ruby7TY Dibujo, Portada/boceto.png"
+    "src": "./assets/gallery/dibujos/dibujos/Ruby7TY Dibujo, Portada/boceto.webp"
   },
   {
     "category": "dibujos",
     "title": "final",
     "type": "image",
-    "src": "./assets/gallery/dibujos/dibujos/Ruby7TY Dibujo, Portada/final.png"
+    "src": "./assets/gallery/dibujos/dibujos/Ruby7TY Dibujo, Portada/final.webp",
+    "thumbSrc": "./assets/gallery/dibujos/dibujos/Ruby7TY Dibujo, Portada/final.thumb.webp"
   },
   {
     "category": "dibujos",
     "title": "medio",
     "type": "image",
-    "src": "./assets/gallery/dibujos/dibujos/Ruby7TY Dibujo, Portada/medio.png"
+    "src": "./assets/gallery/dibujos/dibujos/Ruby7TY Dibujo, Portada/medio.webp"
   },
   {
     "category": "dibujos",
     "title": "boceto",
     "type": "image",
-    "src": "./assets/gallery/dibujos/dibujos/Ruleta Calavera/boceto.png"
+    "src": "./assets/gallery/dibujos/dibujos/Ruleta Calavera/boceto.webp"
   },
   {
     "category": "dibujos",
     "title": "diseño ruleta 2",
     "type": "image",
-    "src": "./assets/gallery/dibujos/dibujos/Ruleta Calavera/diseño ruleta 2.png"
+    "src": "./assets/gallery/dibujos/dibujos/Ruleta Calavera/diseño ruleta 2.webp"
   },
   {
     "category": "dibujos",
     "title": "final",
     "type": "image",
-    "src": "./assets/gallery/dibujos/dibujos/Ruleta Calavera/final.png"
+    "src": "./assets/gallery/dibujos/dibujos/Ruleta Calavera/final.webp",
+    "thumbSrc": "./assets/gallery/dibujos/dibujos/Ruleta Calavera/final.thumb.webp"
   },
   {
     "category": "matt",
     "title": "render menu video",
     "type": "video",
-    "src": "./assets/gallery/matt/matt/render menu video.mp4"
+    "src": "./assets/gallery/matt/matt/render menu video.webm"
   },
   {
     "category": "matt",
     "title": "render menu",
     "type": "image",
-    "src": "./assets/gallery/matt/matt/render menu.png"
+    "src": "./assets/gallery/matt/matt/render menu.webp",
+    "thumbSrc": "./assets/gallery/matt/matt/render menu.thumb.webp"
   },
   {
     "category": "menus",
     "title": "GravityCore menu azul",
     "type": "image",
-    "src": "./assets/gallery/menus/menus/GravityCore menu azul.png"
+    "src": "./assets/gallery/menus/menus/GravityCore menu azul.webp"
   },
   {
     "category": "menus",
     "title": "GravityCore menu",
     "type": "image",
-    "src": "./assets/gallery/menus/menus/GravityCore menu.png"
+    "src": "./assets/gallery/menus/menus/GravityCore menu.webp",
+    "thumbSrc": "./assets/gallery/menus/menus/GravityCore menu.thumb.webp"
   },
   {
     "category": "menus",
     "title": "UI UV",
     "type": "image",
-    "src": "./assets/gallery/menus/menus/Menu libro Luz UV.png"
+    "src": "./assets/gallery/menus/menus/Menu libro Luz UV.webp"
   },
   {
     "category": "menus",
     "title": "UI",
     "type": "image",
-    "src": "./assets/gallery/menus/menus/Menu libro.png"
+    "src": "./assets/gallery/menus/menus/Menu libro.webp"
   },
   {
     "category": "modeloss blockbench",
     "title": "Gnomo ataque Gravity Core",
     "type": "image",
-    "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/Gnomo ataque Gravity Core.png"
+    "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/Gnomo ataque Gravity Core.webp"
   },
   {
     "category": "modeloss blockbench",
     "title": "Gnomos Gravity Core",
     "type": "image",
-    "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/Gnomos Gravity Core.png"
+    "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/Gnomos Gravity Core.webp"
   },
   {
     "category": "modeloss blockbench",
     "title": "Gobblewonker Gravity Core",
     "type": "image",
-    "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/Gobblewonker Gravity Core.png"
+    "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/Gobblewonker Gravity Core.webp"
   },
   {
     "category": "modeloss blockbench",
     "title": "McGucket Gravity Core",
     "type": "image",
-    "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/McGucket Gravity Core.png"
+    "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/McGucket Gravity Core.webp"
   },
   {
     "category": "portadas",
     "title": "444",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/444.png"
+    "src": "./assets/gallery/portadas/portadas/444.webp",
+    "thumbSrc": "./assets/gallery/portadas/portadas/444.thumb.webp"
   },
   {
     "category": "portadas",
     "title": "brokencodes Dibujo portada",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/brokencodes Dibujo portada.png"
+    "src": "./assets/gallery/portadas/portadas/brokencodes Dibujo portada.webp",
+    "thumbSrc": "./assets/gallery/portadas/portadas/brokencodes Dibujo portada.thumb.webp"
   },
   {
     "category": "portadas",
     "title": "Codeina portada Spotify",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/Codeina portada Spotify.png"
+    "src": "./assets/gallery/portadas/portadas/Codeina portada Spotify.webp",
+    "thumbSrc": "./assets/gallery/portadas/portadas/Codeina portada Spotify.thumb.webp"
   },
   {
     "category": "portadas",
     "title": "codeina",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/codeina.png"
+    "src": "./assets/gallery/portadas/portadas/codeina.webp"
   },
   {
     "category": "portadas",
     "title": "De Ruta portada",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/De Ruta portada.png"
+    "src": "./assets/gallery/portadas/portadas/De Ruta portada.webp",
+    "thumbSrc": "./assets/gallery/portadas/portadas/De Ruta portada.thumb.webp"
   },
   {
     "category": "portadas",
     "title": "De Ruta Spotify",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/De Ruta Spotify.png"
+    "src": "./assets/gallery/portadas/portadas/De Ruta Spotify.webp"
   },
   {
     "category": "portadas",
     "title": "Death Promess Spotify",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/Death Promess Spotify.png"
+    "src": "./assets/gallery/portadas/portadas/Death Promess Spotify.webp"
   },
   {
     "category": "portadas",
     "title": "Edateros Spotify",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/Edateros Spotify.png"
+    "src": "./assets/gallery/portadas/portadas/Edateros Spotify.webp"
   },
   {
     "category": "portadas",
     "title": "GARCHANDO UNOS PARES Spotify",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/GARCHANDO UNOS PARES Spotify.png"
+    "src": "./assets/gallery/portadas/portadas/GARCHANDO UNOS PARES Spotify.webp"
   },
   {
     "category": "portadas",
     "title": "Imagen inicial Codeina portada",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/Imagen inicial Codeina portada.jpg"
+    "src": "./assets/gallery/portadas/portadas/Imagen inicial Codeina portada.webp"
   },
   {
     "category": "portadas",
     "title": "Jordan Spotify",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/Jordan Spotify.png"
+    "src": "./assets/gallery/portadas/portadas/Jordan Spotify.webp"
   },
   {
     "category": "portadas",
     "title": "MALAYA$ Spotify",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/MALAYA$ Spotify.jpg"
+    "src": "./assets/gallery/portadas/portadas/MALAYA$ Spotify.webp",
+    "thumbSrc": "./assets/gallery/portadas/portadas/MALAYA$ Spotify.thumb.webp"
   },
   {
     "category": "portadas",
     "title": "Mini Yo Portada",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/Mini Yo Portada.png"
+    "src": "./assets/gallery/portadas/portadas/Mini Yo Portada.webp",
+    "thumbSrc": "./assets/gallery/portadas/portadas/Mini Yo Portada.thumb.webp"
   },
   {
     "category": "portadas",
     "title": "No Jodan Mas Spotify",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/No Jodan Mas Spotify.png"
+    "src": "./assets/gallery/portadas/portadas/No Jodan Mas Spotify.webp"
   },
   {
     "category": "portadas",
     "title": "PARA PARA Spotify",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/PARA PARA Spotify.png"
+    "src": "./assets/gallery/portadas/portadas/PARA PARA Spotify.webp"
   },
   {
     "category": "portadas",
     "title": "quien krajo te entiende Spotify",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/quien krajo te entiende Spotify.png"
+    "src": "./assets/gallery/portadas/portadas/quien krajo te entiende Spotify.webp",
+    "thumbSrc": "./assets/gallery/portadas/portadas/quien krajo te entiende Spotify.thumb.webp"
   },
   {
     "category": "portadas",
     "title": "Reset Portada",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/Reset Portada.png"
+    "src": "./assets/gallery/portadas/portadas/Reset Portada.webp",
+    "thumbSrc": "./assets/gallery/portadas/portadas/Reset Portada.thumb.webp"
   },
   {
     "category": "portadas",
     "title": "Rosee Spotify",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/Rosee Spotify.jpg"
+    "src": "./assets/gallery/portadas/portadas/Rosee Spotify.webp"
   },
   {
     "category": "portadas",
     "title": "Ruby7Ty Spotify",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/Ruby7Ty Spotify.png"
+    "src": "./assets/gallery/portadas/portadas/Ruby7Ty Spotify.webp"
   },
   {
     "category": "portadas",
     "title": "Vulgares Spotify",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/Vulgares Spotify.png"
+    "src": "./assets/gallery/portadas/portadas/Vulgares Spotify.webp"
   },
   {
     "category": "portadas",
     "title": "4Real Collage inicial",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/4Real portada/4Real Collage inicial.png"
+    "src": "./assets/gallery/portadas/portadas/4Real portada/4Real Collage inicial.webp"
   },
   {
     "category": "portadas",
     "title": "4Real Final",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/4Real portada/4Real Final.png"
+    "src": "./assets/gallery/portadas/portadas/4Real portada/4Real Final.webp",
+    "thumbSrc": "./assets/gallery/portadas/portadas/4Real portada/4Real Final.thumb.webp"
   },
   {
     "category": "portadas",
     "title": "con una y con dos",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/MALAYA$/con una y con dos.png"
+    "src": "./assets/gallery/portadas/portadas/MALAYA$/con una y con dos.webp"
   },
   {
     "category": "portadas",
     "title": "edateros",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/MALAYA$/edateros.png"
+    "src": "./assets/gallery/portadas/portadas/MALAYA$/edateros.webp"
   },
   {
     "category": "portadas",
     "title": "esa plug!",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/MALAYA$/esa plug!.png"
+    "src": "./assets/gallery/portadas/portadas/MALAYA$/esa plug!.webp"
   },
   {
     "category": "portadas",
     "title": "malaya",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/MALAYA$/malaya.png"
+    "src": "./assets/gallery/portadas/portadas/MALAYA$/malaya.webp"
   },
   {
     "category": "portadas",
     "title": "miembro",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/MALAYA$/miembro.png"
+    "src": "./assets/gallery/portadas/portadas/MALAYA$/miembro.webp"
   },
   {
     "category": "portadas",
     "title": "Proyecto nuevo (22)",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/MALAYA$/Proyecto nuevo (22).png"
+    "src": "./assets/gallery/portadas/portadas/MALAYA$/Proyecto nuevo (22).webp"
   },
   {
     "category": "portadas",
     "title": "ratis",
     "type": "image",
-    "src": "./assets/gallery/portadas/portadas/MALAYA$/ratis.png"
+    "src": "./assets/gallery/portadas/portadas/MALAYA$/ratis.webp"
   },
   {
     "category": "renders",
     "title": "UnderNews Anuncios",
     "type": "image",
-    "src": "./assets/gallery/renders/renders/UnderNews Anuncios.jpg"
+    "src": "./assets/gallery/renders/renders/UnderNews Anuncios.webp",
+    "thumbSrc": "./assets/gallery/renders/renders/UnderNews Anuncios.thumb.webp"
   },
   {
     "category": "renders",
     "title": "UnderNews Eliminados",
     "type": "image",
-    "src": "./assets/gallery/renders/renders/UnderNews Eliminados.jpg"
+    "src": "./assets/gallery/renders/renders/UnderNews Eliminados.webp"
   },
   {
     "category": "renders",
     "title": "UnderNews FTS",
     "type": "image",
-    "src": "./assets/gallery/renders/renders/UnderNews FTS.jpg"
+    "src": "./assets/gallery/renders/renders/UnderNews FTS.webp"
   },
   {
     "category": "renders",
     "title": "zona 0 render",
     "type": "image",
-    "src": "./assets/gallery/renders/renders/zona 0 render.png"
+    "src": "./assets/gallery/renders/renders/zona 0 render.webp",
+    "thumbSrc": "./assets/gallery/renders/renders/zona 0 render.thumb.webp"
   },
   {
     "category": "skins",
     "title": "Shiden, Wasabi, NNytro Skins",
     "type": "image",
-    "src": "./assets/gallery/skins/skins/Shiden, Wasabi, NNytro Skins.png"
+    "src": "./assets/gallery/skins/skins/Shiden, Wasabi, NNytro Skins.webp",
+    "thumbSrc": "./assets/gallery/skins/skins/Shiden, Wasabi, NNytro Skins.thumb.webp"
   },
   {
     "category": "under news",
     "title": "Revista Shiden Buscado",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Revista Shiden Buscado.png"
+    "src": "./assets/gallery/under news/under news/Revista Shiden Buscado.webp"
   },
   {
     "category": "under news",
     "title": "4Real periodico",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Periodicos/4Real periodico.png"
+    "src": "./assets/gallery/under news/under news/Periodicos/4Real periodico.webp"
   },
   {
     "category": "under news",
     "title": "GARCHANDO UNOS PARES periodico",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Periodicos/GARCHANDO UNOS PARES periodico.png"
+    "src": "./assets/gallery/under news/under news/Periodicos/GARCHANDO UNOS PARES periodico.webp"
   },
   {
     "category": "under news",
     "title": "No Quiero Esas Jordans periodico",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Periodicos/No Quiero Esas Jordans periodico.png"
+    "src": "./assets/gallery/under news/under news/Periodicos/No Quiero Esas Jordans periodico.webp"
   },
   {
     "category": "under news",
     "title": "No Soy Paco periodico",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Periodicos/No Soy Paco periodico.png"
+    "src": "./assets/gallery/under news/under news/Periodicos/No Soy Paco periodico.webp"
   },
   {
     "category": "under news",
     "title": "Rosee periodico",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Periodicos/Rosee periodico.png"
+    "src": "./assets/gallery/under news/under news/Periodicos/Rosee periodico.webp"
   },
   {
     "category": "under news",
     "title": "Trap Story periodico",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Periodicos/Trap Story periodico.png"
+    "src": "./assets/gallery/under news/under news/Periodicos/Trap Story periodico.webp"
   },
   {
     "category": "under news",
     "title": "Una Mas y Ya periodico",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Periodicos/Una Mas y Ya periodico.png"
+    "src": "./assets/gallery/under news/under news/Periodicos/Una Mas y Ya periodico.webp"
   },
   {
     "category": "under news",
     "title": "alfajor tachado",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Polaroids/alfajor tachado.png"
+    "src": "./assets/gallery/under news/under news/Polaroids/alfajor tachado.webp"
   },
   {
     "category": "under news",
     "title": "chess tachado",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Polaroids/chess tachado.png"
+    "src": "./assets/gallery/under news/under news/Polaroids/chess tachado.webp"
   },
   {
     "category": "under news",
     "title": "code ft",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Polaroids/code ft.png"
+    "src": "./assets/gallery/under news/under news/Polaroids/code ft.webp"
   },
   {
     "category": "under news",
     "title": "iska tachado",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Polaroids/iska tachado.png"
+    "src": "./assets/gallery/under news/under news/Polaroids/iska tachado.webp"
   },
   {
     "category": "under news",
     "title": "kansu ft",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Polaroids/kansu ft.png"
+    "src": "./assets/gallery/under news/under news/Polaroids/kansu ft.webp"
   },
   {
     "category": "under news",
     "title": "nnytro ft",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Polaroids/nnytro ft.png"
+    "src": "./assets/gallery/under news/under news/Polaroids/nnytro ft.webp"
   },
   {
     "category": "under news",
     "title": "paquito tachado",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Polaroids/paquito tachado.png"
+    "src": "./assets/gallery/under news/under news/Polaroids/paquito tachado.webp"
   },
   {
     "category": "under news",
     "title": "shiden buscado",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Polaroids/shiden buscado.png"
+    "src": "./assets/gallery/under news/under news/Polaroids/shiden buscado.webp"
   },
   {
     "category": "under news",
     "title": "temu tachado",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Polaroids/temu tachado.png"
+    "src": "./assets/gallery/under news/under news/Polaroids/temu tachado.webp"
   },
   {
     "category": "under news",
     "title": "tipazo",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Polaroids/tipazo.png"
+    "src": "./assets/gallery/under news/under news/Polaroids/tipazo.webp"
   },
   {
     "category": "under news",
     "title": "wasabi ft",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Polaroids/wasabi ft.png"
+    "src": "./assets/gallery/under news/under news/Polaroids/wasabi ft.webp"
   },
   {
     "category": "under news",
     "title": "wolf ft",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/Polaroids/wolf ft.png"
+    "src": "./assets/gallery/under news/under news/Polaroids/wolf ft.webp"
   }
 ];
 
@@ -566,13 +589,13 @@ function customProjectFor(item) {
   };
 
   if (item.category === 'under news' || /^UnderNews\b/i.test(title)) {
-    return { key: 'under-news', title: 'Under News', category: 'under news', coverSrc: './assets/gallery/renders/renders/UnderNews Anuncios.jpg', description: description['under-news'] };
+    return { key: 'under-news', title: 'Under News', category: 'under news', coverSrc: './assets/gallery/renders/renders/UnderNews Anuncios.webp', description: description['under-news'] };
   }
   if (/Render Anuncio 7Refugio/i.test(source) || /^render menu(?: video)?$/i.test(title)) {
-    return { key: 'septimo-refugio', title: 'Séptimo Refugio', category: 'renders', coverSrc: './assets/gallery/matt/matt/render menu.png', description: description['septimo-refugio'] };
+    return { key: 'septimo-refugio', title: 'Séptimo Refugio', category: 'renders', coverSrc: './assets/gallery/matt/matt/render menu.webp', description: description['septimo-refugio'] };
   }
   if (/gravity\s*core/i.test(title + ' ' + source) || /^menu libro/i.test(title) || /menu libro/i.test(source)) {
-    return { key: 'gravity-core', title: 'Gravity Core', category: 'menus', coverSrc: './assets/gallery/menus/menus/GravityCore menu.png', description: description['gravity-core'] };
+    return { key: 'gravity-core', title: 'Gravity Core', category: 'menus', coverSrc: './assets/gallery/menus/menus/GravityCore menu.webp', description: description['gravity-core'] };
   }
   if (/dibujos animacion calavera|ruleta calavera/i.test(title + ' ' + source)) {
     return { key: 'calavera', title: 'Dibujos animación calavera', category: 'dibujos', description: description.calavera };
@@ -581,7 +604,7 @@ function customProjectFor(item) {
     return { key: '4real', title: '4Real portada', category: 'portadas', description: description['4real'] };
   }
   if (/malaya/i.test(title + ' ' + source)) {
-    return { key: 'malaya', title: 'Malaya$', category: 'portadas', coverSrc: './assets/gallery/portadas/portadas/MALAYA$ Spotify.jpg', description: description.malaya };
+    return { key: 'malaya', title: 'Malaya$', category: 'portadas', coverSrc: './assets/gallery/portadas/portadas/MALAYA$ Spotify.webp', description: description.malaya };
   }
   if (/^Boceto integrantes woody$/i.test(title) || /^boceto rongo$/i.test(title)) {
     return { key: 'woody-rongo', title: 'Boceto integrantes Woody', category: 'dibujos', description: description['woody-rongo'] };
@@ -593,10 +616,10 @@ function customProjectFor(item) {
     return { key: 'ruby7ty-dibujo-portada', title: 'Ruby7TY dibujo portada', category: 'dibujos', description: description.ruby7ty };
   }
   if (/de ruta/i.test(title)) {
-    return { key: 'de-ruta', title: 'De Ruta', category: 'portadas', coverSrc: './assets/gallery/portadas/portadas/De Ruta portada.png', description: description['de-ruta'] };
+    return { key: 'de-ruta', title: 'De Ruta', category: 'portadas', coverSrc: './assets/gallery/portadas/portadas/De Ruta portada.webp', description: description['de-ruta'] };
   }
   if (/codeina/i.test(title)) {
-    return { key: 'codeina', title: 'Codeina', category: 'portadas', coverSrc: './assets/gallery/portadas/portadas/Codeina portada Spotify.png', description: description.codeina };
+    return { key: 'codeina', title: 'Codeina', category: 'portadas', coverSrc: './assets/gallery/portadas/portadas/Codeina portada Spotify.webp', description: description.codeina };
   }
   if (/^444$/i.test(title)) {
     return { key: '444', title: '444', category: 'portadas', description: description['444'] };
@@ -632,7 +655,7 @@ function customProjectFor(item) {
     return { key: 'reset', title: 'Reset Portada', category: 'portadas', description: description.reset };
   }
   if (/spotify/i.test(title)) {
-    return { key: 'portadas-spotify', title: 'Portadas Spotify', category: 'portadas', coverSrc: './assets/gallery/portadas/portadas/quien krajo te entiende Spotify.png', description: description['portadas-spotify'] };
+    return { key: 'portadas-spotify', title: 'Portadas Spotify', category: 'portadas', coverSrc: './assets/gallery/portadas/portadas/quien krajo te entiende Spotify.webp', description: description['portadas-spotify'] };
   }
   return null;
 }
@@ -695,19 +718,20 @@ imageViewer.hidden = true;
 imageViewer.setAttribute('role', 'dialog');
 imageViewer.setAttribute('aria-modal', 'true');
 imageViewer.setAttribute('aria-label', 'Vista ampliada de imagen');
-imageViewer.innerHTML = '<button class="gallery-image-viewer-backdrop" type="button" aria-label="Cerrar imagen ampliada"></button><div class="gallery-image-viewer-panel"><button class="gallery-image-viewer-close" type="button" aria-label="Cerrar imagen ampliada">×</button><div class="gallery-image-viewer-viewport"><img alt="" /></div></div>';
+imageViewer.innerHTML = '<button class="gallery-image-viewer-backdrop" type="button" aria-label="Cerrar imagen ampliada"></button><div class="gallery-image-viewer-panel"><button class="gallery-image-viewer-close" type="button" aria-label="Cerrar imagen ampliada">×</button><div class="gallery-image-viewer-viewport"><div class="gallery-image-viewer-stage"><img alt="" /></div></div></div>';
 document.body.append(imageViewer);
 const viewerImage = imageViewer.querySelector('img');
 const viewerViewport = imageViewer.querySelector('.gallery-image-viewer-viewport');
+const viewerStage = imageViewer.querySelector('.gallery-image-viewer-stage');
 let viewerZoom = 1;
-let viewerPanX = 0;
-let viewerPanY = 0;
+let viewerBaseWidth = 0;
+let viewerBaseHeight = 0;
 let viewerDrag = null;
 let viewerReturnFocus = null;
 
 function createMedia(item, isModal = false) {
   const element = document.createElement(item.type === 'video' ? 'video' : 'img');
-  element.src = item.src;
+  element.src = item.type === 'image' && !isModal && item.thumbSrc ? item.thumbSrc : item.src;
 
   if (item.type === 'video') {
     element.muted = true;
@@ -720,7 +744,8 @@ function createMedia(item, isModal = false) {
     }
   } else {
     element.alt = item.title;
-    element.loading = isModal ? 'eager' : 'lazy';
+    element.loading = 'lazy';
+    if (isModal) element.fetchPriority = 'high';
   }
 
   return element;
@@ -846,22 +871,46 @@ function openModal(project) {
   modal.querySelector('.gallery-modal-close').focus();
 }
 
-function clampViewerPan() {
-  const maxX = Math.max(0, (viewerImage.offsetWidth * viewerZoom - viewerViewport.clientWidth) / 2);
-  const maxY = Math.max(0, (viewerImage.offsetHeight * viewerZoom - viewerViewport.clientHeight) / 2);
-  viewerPanX = Math.max(-maxX, Math.min(maxX, viewerPanX));
-  viewerPanY = Math.max(-maxY, Math.min(maxY, viewerPanY));
-  viewerImage.style.transform = 'translate3d(' + viewerPanX + 'px,' + viewerPanY + 'px,0) scale(' + viewerZoom + ')';
-  viewerViewport.classList.toggle('is-zoomed', viewerZoom > 1);
+function fitViewerImage() {
+  if (!viewerImage.naturalWidth || !viewerViewport.clientWidth || !viewerViewport.clientHeight) return;
+  const fit = Math.min(viewerViewport.clientWidth / viewerImage.naturalWidth, viewerViewport.clientHeight / viewerImage.naturalHeight);
+  viewerBaseWidth = viewerImage.naturalWidth * fit;
+  viewerBaseHeight = viewerImage.naturalHeight * fit;
+  viewerZoom = 1;
+  viewerImage.style.width = viewerBaseWidth + 'px';
+  viewerImage.style.height = viewerBaseHeight + 'px';
+  viewerStage.style.width = viewerViewport.clientWidth + 'px';
+  viewerStage.style.height = viewerViewport.clientHeight + 'px';
+  viewerViewport.scrollTo({ left: 0, top: 0 });
+  viewerViewport.classList.remove('is-zoomed');
 }
 
-function updateViewerZoom(nextZoom, focusX = 0, focusY = 0) {
+function updateViewerZoom(nextZoom, focusX = viewerViewport.clientWidth / 2, focusY = viewerViewport.clientHeight / 2) {
+  if (!viewerBaseWidth || !viewerBaseHeight) return;
   const next = Math.max(1, Math.min(8, nextZoom));
-  const ratio = next / viewerZoom;
-  viewerPanX = focusX + (viewerPanX - focusX) * ratio;
-  viewerPanY = focusY + (viewerPanY - focusY) * ratio;
+  const previous = viewerZoom;
+  const previousWidth = viewerBaseWidth * previous;
+  const previousHeight = viewerBaseHeight * previous;
+  const previousOffsetX = Math.max(0, (viewerStage.clientWidth - previousWidth) / 2);
+  const previousOffsetY = Math.max(0, (viewerStage.clientHeight - previousHeight) / 2);
+  const imageX = (viewerViewport.scrollLeft + focusX - previousOffsetX) / previous;
+  const imageY = (viewerViewport.scrollTop + focusY - previousOffsetY) / previous;
+  const nextWidth = viewerBaseWidth * next;
+  const nextHeight = viewerBaseHeight * next;
   viewerZoom = next;
-  clampViewerPan();
+  viewerImage.style.width = nextWidth + 'px';
+  viewerImage.style.height = nextHeight + 'px';
+  viewerStage.style.width = Math.max(viewerViewport.clientWidth, nextWidth) + 'px';
+  viewerStage.style.height = Math.max(viewerViewport.clientHeight, nextHeight) + 'px';
+  if (next === 1) {
+    viewerViewport.scrollTo({ left: 0, top: 0 });
+  } else {
+    const nextOffsetX = Math.max(0, (viewerStage.clientWidth - nextWidth) / 2);
+    const nextOffsetY = Math.max(0, (viewerStage.clientHeight - nextHeight) / 2);
+    viewerViewport.scrollLeft = Math.max(0, nextOffsetX + imageX * next - focusX);
+    viewerViewport.scrollTop = Math.max(0, nextOffsetY + imageY * next - focusY);
+  }
+  viewerViewport.classList.toggle('is-zoomed', next > 1);
 }
 
 function openImageViewer(item, trigger) {
@@ -869,17 +918,25 @@ function openImageViewer(item, trigger) {
   viewerImage.src = item.src;
   viewerImage.alt = item.title;
   viewerZoom = 1;
-  viewerPanX = 0;
-  viewerPanY = 0;
+  viewerBaseWidth = 0;
+  viewerBaseHeight = 0;
+  viewerImage.style.width = '';
+  viewerImage.style.height = '';
+  viewerStage.style.width = '100%';
+  viewerStage.style.height = '100%';
   viewerViewport.scrollTo(0, 0);
-  updateViewerZoom(1);
   imageViewer.hidden = false;
+  requestAnimationFrame(fitViewerImage);
   imageViewer.querySelector('.gallery-image-viewer-close').focus();
 }
 
 function closeImageViewer() {
   imageViewer.hidden = true;
   viewerImage.removeAttribute('src');
+  viewerBaseWidth = 0;
+  viewerBaseHeight = 0;
+  viewerZoom = 1;
+  viewerViewport.scrollTo(0, 0);
   if (viewerReturnFocus?.isConnected) viewerReturnFocus.focus();
   viewerReturnFocus = null;
 }
@@ -919,24 +976,23 @@ viewerViewport.addEventListener('wheel', (event) => {
   if (imageViewer.hidden) return;
   event.preventDefault();
   const bounds = viewerViewport.getBoundingClientRect();
-  const focusX = event.clientX - bounds.left - viewerViewport.clientWidth / 2;
-  const focusY = event.clientY - bounds.top - viewerViewport.clientHeight / 2;
+  const focusX = event.clientX - bounds.left;
+  const focusY = event.clientY - bounds.top;
   updateViewerZoom(viewerZoom * Math.exp(-event.deltaY * .0015), focusX, focusY);
 }, { passive: false });
-viewerImage.addEventListener('load', clampViewerPan);
-window.addEventListener('resize', clampViewerPan);
+viewerImage.addEventListener('load', fitViewerImage);
+window.addEventListener('resize', fitViewerImage);
 viewerViewport.addEventListener('pointerdown', (event) => {
-  if (viewerZoom <= 1 || event.button !== 0) return;
-  viewerDrag = { id: event.pointerId, x: event.clientX, y: event.clientY, panX: viewerPanX, panY: viewerPanY };
+  if (event.button !== 0 || viewerZoom <= 1) return;
+  viewerDrag = { id: event.pointerId, x: event.clientX, y: event.clientY, left: viewerViewport.scrollLeft, top: viewerViewport.scrollTop };
   viewerViewport.setPointerCapture(event.pointerId);
   viewerViewport.classList.add('is-dragging');
   event.preventDefault();
 });
 viewerViewport.addEventListener('pointermove', (event) => {
   if (!viewerDrag || viewerDrag.id !== event.pointerId) return;
-  viewerPanX = viewerDrag.panX + event.clientX - viewerDrag.x;
-  viewerPanY = viewerDrag.panY + event.clientY - viewerDrag.y;
-  clampViewerPan();
+  viewerViewport.scrollLeft = viewerDrag.left - (event.clientX - viewerDrag.x);
+  viewerViewport.scrollTop = viewerDrag.top - (event.clientY - viewerDrag.y);
 });
 const endViewerDrag = (event) => {
   if (!viewerDrag || viewerDrag.id !== event.pointerId) return;

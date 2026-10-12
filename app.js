@@ -27,7 +27,7 @@ if (homeMenu && tvScreen) {
     './inicio.html': {
       title: 'Sobre mí',
       description: 'Dibujo, edito, modelo en 3D y hago música: siempre hay algo nuevo en proceso.',
-      image: './assets/menu-preview-sobre-mi.png',
+      image: './assets/menu-preview-sobre-mi.webp',
       alt: 'Retrato de NNytro',
       tint: '#a855f7',
       imageLeft: '-2.5%',
@@ -37,7 +37,7 @@ if (homeMenu && tvScreen) {
     './galeria.html': {
       title: 'Portfolio',
       description: 'Un archivo de portadas, dibujos, renders y proyectos hechos a mi manera.',
-      image: './assets/menu-preview-portfolio.png',
+      image: './assets/menu-preview-portfolio.webp',
       alt: 'Arte de Gravity Core del portfolio',
       tint: '#2563eb',
       imageLeft: '3.5%',
@@ -47,7 +47,7 @@ if (homeMenu && tvScreen) {
     './musica.html': {
       title: 'Música',
       description: 'Portadas, ideas y sonidos para escuchar en otra frecuencia.',
-      image: './assets/menu-preview-musica.png',
+      image: './assets/menu-preview-musica.webp',
       alt: 'Portada de quien krajo te entiende',
       tint: '#ec4899',
       imageLeft: '3.5%',
@@ -57,7 +57,7 @@ if (homeMenu && tvScreen) {
     './contacto.html': {
       title: 'Contacto',
       description: '¿Tenés una idea o querés hacer algo juntos? Escribime.',
-      image: './assets/menu-preview-contacto.png',
+      image: './assets/menu-preview-contacto.webp',
       alt: 'Televisor de la página de NNytro',
       tint: '#06b6d4',
       imageLeft: '3.5%',

@@ -16,25 +16,25 @@
 .home-link:nth-child(1):hover,
 .home-link:nth-child(1):focus-visible,
 .home-link:nth-child(1)[aria-current="page"] {
-  background-image: url('./assets/botones menu/seleccionados/boton sobre mi1.png');
+  background-image: url('./assets/botones menu/seleccionados/boton sobre mi1.webp');
   background-size: 100% 100%;
 }
 .home-link:nth-child(2):hover,
 .home-link:nth-child(2):focus-visible,
 .home-link:nth-child(2)[aria-current="page"] {
-  background-image: url('./assets/botones menu/seleccionados/boton portfolio 2.png');
+  background-image: url('./assets/botones menu/seleccionados/boton portfolio 2.webp');
   background-size: 100% 100%;
 }
 .home-link:nth-child(3):hover,
 .home-link:nth-child(3):focus-visible,
 .home-link:nth-child(3)[aria-current="page"] {
-  background-image: url('./assets/botones menu/seleccionados/boton musica 3.png');
+  background-image: url('./assets/botones menu/seleccionados/boton musica 3.webp');
   background-size: 100% 100%;
 }
 .home-link:nth-child(4):hover,
 .home-link:nth-child(4):focus-visible,
 .home-link:nth-child(4)[aria-current="page"] {
-  background-image: url('./assets/botones menu/seleccionados/boton contacto 4.png');
+  background-image: url('./assets/botones menu/seleccionados/boton contacto 4.webp');
   background-size: 100% 100%;
 }
 .home-link:hover b,
