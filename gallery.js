@@ -695,12 +695,14 @@ imageViewer.hidden = true;
 imageViewer.setAttribute('role', 'dialog');
 imageViewer.setAttribute('aria-modal', 'true');
 imageViewer.setAttribute('aria-label', 'Vista ampliada de imagen');
-imageViewer.innerHTML = '<button class="gallery-image-viewer-backdrop" type="button" aria-label="Cerrar imagen ampliada"></button><div class="gallery-image-viewer-panel"><button class="gallery-image-viewer-close" type="button" aria-label="Cerrar imagen ampliada">×</button><div class="gallery-image-viewer-controls"><button type="button" data-zoom-out aria-label="Alejar">−</button><button type="button" data-zoom-reset aria-label="Restablecer zoom">100%</button><button type="button" data-zoom-in aria-label="Acercar">+</button></div><div class="gallery-image-viewer-viewport"><img alt="" /></div></div>';
+imageViewer.innerHTML = '<button class="gallery-image-viewer-backdrop" type="button" aria-label="Cerrar imagen ampliada"></button><div class="gallery-image-viewer-panel"><button class="gallery-image-viewer-close" type="button" aria-label="Cerrar imagen ampliada">×</button><div class="gallery-image-viewer-viewport"><img alt="" /></div></div>';
 document.body.append(imageViewer);
 const viewerImage = imageViewer.querySelector('img');
 const viewerViewport = imageViewer.querySelector('.gallery-image-viewer-viewport');
-const viewerZoomLabel = imageViewer.querySelector('[data-zoom-reset]');
 let viewerZoom = 1;
+let viewerPanX = 0;
+let viewerPanY = 0;
+let viewerDrag = null;
 let viewerReturnFocus = null;
 
 function createMedia(item, isModal = false) {
@@ -844,16 +846,31 @@ function openModal(project) {
   modal.querySelector('.gallery-modal-close').focus();
 }
 
-function updateViewerZoom(nextZoom) {
-  viewerZoom = Math.max(.5, Math.min(4, nextZoom));
-  viewerImage.style.transform = 'scale(' + viewerZoom + ')';
-  viewerZoomLabel.textContent = Math.round(viewerZoom * 100) + '%';
+function clampViewerPan() {
+  const maxX = Math.max(0, (viewerImage.offsetWidth * viewerZoom - viewerViewport.clientWidth) / 2);
+  const maxY = Math.max(0, (viewerImage.offsetHeight * viewerZoom - viewerViewport.clientHeight) / 2);
+  viewerPanX = Math.max(-maxX, Math.min(maxX, viewerPanX));
+  viewerPanY = Math.max(-maxY, Math.min(maxY, viewerPanY));
+  viewerImage.style.transform = 'translate3d(' + viewerPanX + 'px,' + viewerPanY + 'px,0) scale(' + viewerZoom + ')';
+  viewerViewport.classList.toggle('is-zoomed', viewerZoom > 1);
+}
+
+function updateViewerZoom(nextZoom, focusX = 0, focusY = 0) {
+  const next = Math.max(1, Math.min(8, nextZoom));
+  const ratio = next / viewerZoom;
+  viewerPanX = focusX + (viewerPanX - focusX) * ratio;
+  viewerPanY = focusY + (viewerPanY - focusY) * ratio;
+  viewerZoom = next;
+  clampViewerPan();
 }
 
 function openImageViewer(item, trigger) {
   viewerReturnFocus = trigger;
   viewerImage.src = item.src;
   viewerImage.alt = item.title;
+  viewerZoom = 1;
+  viewerPanX = 0;
+  viewerPanY = 0;
   viewerViewport.scrollTo(0, 0);
   updateViewerZoom(1);
   imageViewer.hidden = false;
@@ -898,14 +915,36 @@ function renderFilters() {
 
 closeButtons.forEach((button) => button.addEventListener('click', closeModal));
 imageViewer.querySelectorAll('.gallery-image-viewer-close, .gallery-image-viewer-backdrop').forEach((button) => button.addEventListener('click', closeImageViewer));
-imageViewer.querySelector('[data-zoom-in]').addEventListener('click', () => updateViewerZoom(viewerZoom + .25));
-imageViewer.querySelector('[data-zoom-out]').addEventListener('click', () => updateViewerZoom(viewerZoom - .25));
-viewerZoomLabel.addEventListener('click', () => updateViewerZoom(1));
 viewerViewport.addEventListener('wheel', (event) => {
   if (imageViewer.hidden) return;
   event.preventDefault();
-  updateViewerZoom(viewerZoom + (event.deltaY < 0 ? .15 : -.15));
+  const bounds = viewerViewport.getBoundingClientRect();
+  const focusX = event.clientX - bounds.left - viewerViewport.clientWidth / 2;
+  const focusY = event.clientY - bounds.top - viewerViewport.clientHeight / 2;
+  updateViewerZoom(viewerZoom * Math.exp(-event.deltaY * .0015), focusX, focusY);
 }, { passive: false });
+viewerImage.addEventListener('load', clampViewerPan);
+window.addEventListener('resize', clampViewerPan);
+viewerViewport.addEventListener('pointerdown', (event) => {
+  if (viewerZoom <= 1 || event.button !== 0) return;
+  viewerDrag = { id: event.pointerId, x: event.clientX, y: event.clientY, panX: viewerPanX, panY: viewerPanY };
+  viewerViewport.setPointerCapture(event.pointerId);
+  viewerViewport.classList.add('is-dragging');
+  event.preventDefault();
+});
+viewerViewport.addEventListener('pointermove', (event) => {
+  if (!viewerDrag || viewerDrag.id !== event.pointerId) return;
+  viewerPanX = viewerDrag.panX + event.clientX - viewerDrag.x;
+  viewerPanY = viewerDrag.panY + event.clientY - viewerDrag.y;
+  clampViewerPan();
+});
+const endViewerDrag = (event) => {
+  if (!viewerDrag || viewerDrag.id !== event.pointerId) return;
+  viewerDrag = null;
+  viewerViewport.classList.remove('is-dragging');
+};
+viewerViewport.addEventListener('pointerup', endViewerDrag);
+viewerViewport.addEventListener('pointercancel', endViewerDrag);
 document.addEventListener('keydown', (event) => {
   if (!imageViewer.hidden && (event.key === '+' || event.key === '=')) updateViewerZoom(viewerZoom + .25);
   else if (!imageViewer.hidden && event.key === '-') updateViewerZoom(viewerZoom - .25);

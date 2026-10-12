@@ -213,8 +213,8 @@
           activeImage.addEventListener('error', resolve, { once: true });
         })
       ]);
-      Promise.race([criticalReady, new Promise((resolve) => setTimeout(resolve, 450))])
-        .then(() => new Promise((resolve) => setTimeout(resolve, Math.max(0, 550 - (performance.now() - startedAt)))))
+      Promise.race([criticalReady, new Promise((resolve) => setTimeout(resolve, 2200))])
+        .then(() => new Promise((resolve) => setTimeout(resolve, Math.max(0, 1350 - (performance.now() - startedAt)))))
         .then(() => {
           requestAnimationFrame(() => requestAnimationFrame(() => {
             pageLoader.classList.add('site-loader--leaving');
