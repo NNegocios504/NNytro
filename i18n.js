@@ -247,6 +247,8 @@
   Object.assign(translations.pt, {'Para crear tu pedido, inicia sesión.':'Entre para criar seu pedido.','Elegí una cuenta para continuar. Tu pedido te espera al volver.':'Escolha uma conta para continuar. Seu pedido estará aqui quando você voltar.','No se pudo contactar al servidor de acceso. Probá de nuevo en unos segundos.':'Não foi possível acessar o servidor de login. Tente novamente em alguns segundos.','No se pudo guardar el pedido antes de iniciar sesión. Activá el almacenamiento del navegador y probá de nuevo.':'Não foi possível salvar seu pedido antes do login. Ative o armazenamento do navegador e tente novamente.'});
   Object.assign(translations.en, {'Iniciar con Google':'Sign in with Google','Iniciar con Discord':'Sign in with Discord','Iniciar con Twitter':'Sign in with X'});
   Object.assign(translations.pt, {'Iniciar con Google':'Entrar com Google','Iniciar con Discord':'Entrar com Discord','Iniciar con Twitter':'Entrar com X'});
+  Object.assign(translations.en, {'Iniciás sesión':'Sign in','Entrá con Google, Discord o Twitter para guardar tu pedido.':'Sign in with Google, Discord, or Twitter to save your request.'});
+  Object.assign(translations.pt, {'Iniciás sesión':'Entre na sua conta','Entrá con Google, Discord o Twitter para guardar tu pedido.':'Entre com Google, Discord ou Twitter para salvar seu pedido.'});
   observer.observe(document.body, { childList: true, subtree: true });
   const saved = (() => { try { return localStorage.getItem(storageKey); } catch { return null; } })();
   apply(saved || 'es');
