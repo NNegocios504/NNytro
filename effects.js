@@ -258,9 +258,9 @@
     if (!reduceMotion) screen.classList.add('analog-tv-jitter');
   });
 
-  // Sound remains opt-in, and the visitor's choice follows them between pages.
-  let enabled = false;
-  try { enabled = localStorage.getItem('portfolio-sound-enabled') === 'true'; } catch { /* Storage can be disabled. */ }
+  // Sound starts enabled on first visit; the visitor can mute it and keep that choice.
+  let enabled = true;
+  try { const savedSoundChoice=localStorage.getItem('portfolio-sound-enabled');if(savedSoundChoice!==null)enabled=savedSoundChoice==='true'; } catch { /* Storage can be disabled. */ }
 
   const toggle = document.createElement('button');
   toggle.type = 'button';
@@ -560,11 +560,11 @@
     const target = event.target;
     const control = target.closest('a, button, [role="button"], input[type="button"], input[type="submit"]');
     if (!control || control.hasAttribute('disabled') || control.getAttribute('aria-disabled') === 'true') return;
-    if (control.matches('[data-close-gallery], [data-close-modal], .gallery-image-viewer-close, .gallery-image-viewer-backdrop, .gallery-modal-close')) sound('modal-close');
+    if (control.matches('[data-close-gallery], [data-close-modal], .gallery-image-viewer-close, .gallery-image-viewer-backdrop, .gallery-modal-close, .commission-image-dialog-close')) sound('modal-close');
     else if (control.matches('[data-zoom-in], [data-zoom-out], [data-zoom-reset]')) sound('zoom');
     else if (control.matches('.gallery-filter')) sound('filter');
     else if (control.matches('.gallery-card')) sound('project');
-    else if (control.matches('.gallery-modal-image-button')) sound('modal-open');
+    else if (control.matches('.gallery-modal-image-button, .commission-hero-image-open, .commission-service-example button')) sound('modal-open');
     else if (control.matches('.tipazo-link, #open-photo')) sound('modal-open');
     else if (control.matches('.unified-site-nav a, .unified-site-menu, .back-link')) sound('nav');
     else if (control.matches('.home-link')) sound('link');
@@ -573,8 +573,12 @@
 
   document.addEventListener('wheel', (event) => {
     if (!enabled || !(event.target instanceof Element)) return;
-    if (event.target.closest('.gallery-image-viewer-viewport')) sound('zoom');
+    if (event.target.closest('.gallery-image-viewer-viewport, .commission-image-dialog-card > img')) sound('zoom');
   }, { passive: true });
+  document.addEventListener('pointerdown',event=>{if(enabled&&event.target instanceof Element&&event.target.matches('.commission-image-dialog-card > img'))sound('zoom')},{passive:true});
+  document.addEventListener('change',event=>{if(enabled&&event.target instanceof Element&&event.target.matches('input[type="checkbox"],input[type="radio"],input[type="file"],input[type="range"],select,[role="switch"]'))sound('click')});
+  document.addEventListener('dblclick',event=>{if(enabled&&event.target instanceof Element&&event.target.matches('.commission-image-dialog-card > img'))sound('zoom')});
+  document.addEventListener('keydown',event=>{if(!enabled||!(event.target instanceof Element))return;if(['+','=','-','_'].includes(event.key)&&event.target.closest('.commission-image-dialog-card > img')){sound('zoom');return}if(['ArrowLeft','ArrowRight'].includes(event.key)&&event.target.closest('.commission-image-dialog,.commission-service-visual--multiple'))sound('filter')});
 
   // Smooth navigation works in production and in the file:// preview used while editing.
   if (!reduceMotion) {
