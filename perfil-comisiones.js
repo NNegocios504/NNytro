@@ -14,6 +14,7 @@
   let cachedOrders = [];
   let authVersion = 0;
   let authRedirectMessage = '';
+  const orderLoginReturnKey='nnytro-order-login-return';
   let paymentProviders = { loading:true, paypal:false,transferUsd:false,transferArs:false,aliasUsd:'',aliasArs:'' };
   function captureDynamicFormState() {
     const state = new Map();
@@ -69,6 +70,10 @@
     return body;
   }
   const t = value => window.NNytroI18n?.t(value) || value;
+  const loginQuery=new URLSearchParams(location.search);
+  const requestedNext=loginQuery.get('next');
+  if(requestedNext){try{const target=new URL(requestedNext,location.origin);if(target.origin===location.origin&&target.pathname.endsWith('/comisiones.html'))sessionStorage.setItem(orderLoginReturnKey,`${target.pathname}${target.search}${target.hash}`)}catch{}loginQuery.delete('next');history.replaceState(null,'',`${location.pathname}${loginQuery.size?'?'+loginQuery.toString():''}${location.hash}`)}
+  function continueAfterOrderLogin(){try{const target=sessionStorage.getItem(orderLoginReturnKey);if(target){sessionStorage.removeItem(orderLoginReturnKey);location.replace(target);return true}}catch{}return false}
   function safeSetProfile() {
     try { localStorage.setItem(PROFILE_KEY, JSON.stringify({ name: nameInput.value.trim().slice(0, 48), photo: profilePhoto })); return true; }
     catch { return false; }
@@ -232,6 +237,7 @@
     authVersion += 1;
     authenticatedUser = user;
     const signed = Boolean(user);
+    if(signed&&continueAfterOrderLogin())return;
     if(signed)authRedirectMessage='';
     document.querySelectorAll('[data-provider],#profile-auth-hint').forEach(control=>control.hidden=signed);
     byId('profile-signout').hidden = !signed;
@@ -265,11 +271,10 @@
     event.preventDefault(); const status = byId('profile-order-status'); const submit = byId('profile-order-submit');
     const selected = Object.entries(cart()).map(([id, quantity]) => ({ id:id === 'saludo' ? 'un-saludo' : id, quantity:Math.floor(Number(quantity) || 0) })).filter(item => item.quantity > 0);
     if (!selected.length) { status.textContent = t('Primero agregá opciones desde el catálogo de comisiones.'); return; }
-    if (!byId('profile-already-spoken').checked) { status.textContent = t('Primero confirmá que ya hablaste con NNytro.'); return; }
     submit.disabled=true; status.textContent=t('Enviando pedido…');
     try {
       const saved=localProfile();
-      const { order, email } = await api('orders', { method:'POST', body:JSON.stringify({ items:selected, contact:byId('profile-contact').value, details:byId('profile-details').value, displayName:nameInput.value.trim() || saved.name || authenticatedUser?.name || '', alreadySpoken:true }) });
+      const { order, email } = await api('orders', { method:'POST', body:JSON.stringify({ items:selected, contact:byId('profile-contact').value, details:byId('profile-details').value, displayName:nameInput.value.trim() || saved.name || authenticatedUser?.name || '' }) });
       try { localStorage.removeItem(CART_KEY); } catch { }
       renderCartSummary(); const notices=[email?.admin==='sent'?'correo':null,email?.discord==='sent'?'Discord':null].filter(Boolean);const notifyCopy=notices.length?`${t('Aviso enviado a NNytro por')} ${notices.join(' y ')}.`:t('No pudimos avisarle a NNytro, pero el pedido quedó guardado en tu perfil.');const customerCopy=email?.customer==='sent'?t('Te enviamos la confirmación por correo.'):t('No salió el correo de confirmación; tu pedido quedó guardado.');status.textContent=`${t('Pedido enviado para revisión. Código')} ${String(order.id).slice(0,8).toUpperCase()}. ${notifyCopy} ${customerCopy}`; byId('profile-order-form').reset(); await loadOrders();
     } catch(error) { status.textContent=t(error.message); }

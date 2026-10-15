@@ -84,20 +84,16 @@ const commissionHeroImageButton = document.querySelector('.commission-hero-image
 const orderPreview = document.querySelector('#commission-order-preview');
 const copyOrderButton = document.querySelector('#commission-copy-order');
 const copyStatus = document.querySelector('#commission-copy-status');
-const spokeCheck = document.querySelector('#commission-spoke-check');
 const submitRequest = document.querySelector('#commission-submit-request');
 const emailLink = document.querySelector('#commission-email-link');
 const clientContact = document.querySelector('#commission-client-contact');
 const clientDetails = document.querySelector('#commission-client-details');
 const dialogFootnote = document.querySelector('#commission-dialog-footnote');
 const t = value => window.NNytroI18n?.t(value) || value;
+let orderFallbackBody='';
 
 function renderMailModeCopy() {
-  if (liveApiMode) {
-    dialogFootnote.textContent=t('Marcarlo solo confirma que ya hablaron. El pedido queda guardado y la pantalla indica si salió el aviso por correo; no inicia un pago.');
-  } else {
-    dialogFootnote.textContent=t('Marcarlo no confirma la charla: yo la reviso y acepto o rechazo el pedido. Esta demo no envía ni recibe el mail de forma automática.');
-  }
+  dialogFootnote.textContent=t(liveApiMode?'El pedido se guarda para que NNytro lo revise. No inicia ningún pago.':'Esta demo guarda el pedido solo en este navegador; no envía correos automáticamente.');
 }
 
 function loadCart() {
@@ -333,24 +329,27 @@ function orderText() {
   const profile = (() => { try { return JSON.parse(localStorage.getItem(profileKey) || '{}'); } catch { return {}; } })();
   return [t('Hola NNytro, quería consultar por este pedido:'), ...chosen.map(item => `• ${t(item.name)} × ${Number(cart[item.id])} (${t('Precio publicado USD')} ${formatUsd(item.price * Number(cart[item.id]))})`), '', `${t('Nombre elegido:')} ${String(profile.name || '').trim() || t('(sin guardar)')}`, `${t('Mi contacto:')} ${clientContact.value.trim() || t('(agregar Discord o email)')}`, `${t('Detalles:')} ${clientDetails.value.trim() || t('(contar la idea)')}`, '', t('Te cuento la idea y confirmamos si el precio publicado aplica a mi pedido. Todavía no confirmé ninguna compra.')].join('\n');
 }
-function openOrderDialog() {
+async function openOrderDialog() {
   if(!commissionStatusReady||!commissionsOpen){copyStatus.textContent=commissionStatusReady?'Las comisiones están cerradas por el momento.':'No se pudo consultar si las comisiones están abiertas. Probá de nuevo más tarde.';return}
-  clientContact.value = ''; clientDetails.value = '';
+  if(liveApiMode){try{const response=await fetch('/api/auth/me',{credentials:'same-origin',cache:'no-store'});const auth=response.ok?await response.json():{user:null};if(!auth.user){const destination='./comisiones.html?resumeOrder=1';sessionStorage.setItem('nnytro-order-login-return',destination);location.assign(`./perfil-comisiones.html?next=${encodeURIComponent(destination)}#signin-title`);return}}catch{copyStatus.textContent='No pude revisar tu sesión. Probá de nuevo en unos segundos.';return}}
+  clientContact.value = ''; clientDetails.value = ''; orderFallbackBody='';
   const summary = document.createElement('pre'); summary.textContent = orderText(); orderPreview.replaceChildren(summary); copyStatus.textContent = '';
-  spokeCheck.checked = false; submitRequest.disabled = true; emailLink.setAttribute('aria-disabled', 'true'); emailLink.tabIndex = -1;
+  submitRequest.disabled = false; emailLink.removeAttribute('aria-disabled'); emailLink.tabIndex = 0;
   const subject = encodeURIComponent('Consulta de comisión NNytro');
   emailLink.href = `mailto:nnytro.online@gmail.com?subject=${subject}&body=${encodeURIComponent(orderText())}`;
-  clientContact.addEventListener('input', refreshOrderText, { once: true }); clientDetails.addEventListener('input', refreshOrderText, { once: true });
+  clientContact.addEventListener('input', scheduleRefreshOrderText); clientDetails.addEventListener('input', scheduleRefreshOrderText);
   if (typeof orderDialog.showModal === 'function') orderDialog.showModal(); else orderDialog.setAttribute('open', '');
 }
+let orderTextRefreshTimer;
+function scheduleRefreshOrderText(){clearTimeout(orderTextRefreshTimer);orderTextRefreshTimer=setTimeout(refreshOrderText,180)}
 function refreshOrderText() {
-  const summary = document.createElement('pre'); summary.textContent = orderText(); orderPreview.replaceChildren(summary);
-  emailLink.href = `mailto:nnytro.online@gmail.com?subject=${encodeURIComponent('Consulta de comisión NNytro')}&body=${encodeURIComponent(orderText())}`;
-  clientContact.removeEventListener('input', refreshOrderText); clientDetails.removeEventListener('input', refreshOrderText);
-  clientContact.addEventListener('input', refreshOrderText, { once: true }); clientDetails.addEventListener('input', refreshOrderText, { once: true });
+  const body=orderFallbackBody||orderText();
+  const summary = document.createElement('pre'); summary.textContent = body; orderPreview.replaceChildren(summary);
+  emailLink.href = `mailto:nnytro.online@gmail.com?subject=${encodeURIComponent('Consulta de comisión NNytro')}&body=${encodeURIComponent(body)}`;
 }
 
-renderCatalog(); renderCart(); updateDisplayedPrices(); setCartOpen(false); loadCurrencyRates(); loadCommissionStatus();
+renderCatalog(); renderCart(); updateDisplayedPrices(); setCartOpen(false); loadCurrencyRates(); const commissionStatusPromise=loadCommissionStatus();
+if(new URLSearchParams(location.search).get('resumeOrder')==='1'){const params=new URLSearchParams(location.search);params.delete('resumeOrder');history.replaceState(null,'',`${location.pathname}${params.size?'?'+params.toString():''}${location.hash}`);setCartOpen(true);commissionStatusPromise.then(()=>openOrderDialog())}
 commissionHeroImageButton?.addEventListener('click', () => {
   const image = commissionHeroImageButton.querySelector('img');
   if (!image) return;
@@ -392,39 +391,41 @@ cartItems.addEventListener('click', event => { const button = event.target.close
 cartToggle.addEventListener('click', () => setCartOpen(false, true));
 cartReopen.addEventListener('click', () => setCartOpen(true, true));
 document.addEventListener('keydown', event => { if (event.key === 'Escape' && cartRoot.dataset.open === 'true') setCartOpen(false, true); });
-sendOrder.addEventListener('click', openOrderDialog);
-spokeCheck.addEventListener('change', () => { submitRequest.disabled = !spokeCheck.checked; emailLink.setAttribute('aria-disabled', String(!spokeCheck.checked)); emailLink.tabIndex = spokeCheck.checked ? 0 : -1; });
-emailLink.addEventListener('click', event => { if (!spokeCheck.checked) { event.preventDefault(); copyStatus.textContent = 'Primero marcá que ya hablaste conmigo.'; return; } if (!clientContact.value.trim()) { event.preventDefault(); clientContact.reportValidity(); return; } refreshOrderText(); });
+sendOrder.addEventListener('click', () => { void openOrderDialog(); });
+emailLink.addEventListener('click', event => { if (!clientContact.validity.valid) { event.preventDefault(); clientContact.reportValidity(); return; } if(!orderFallbackBody)refreshOrderText(); });
 submitRequest.addEventListener('click', async () => {
   const selected = allServices.filter(item => Number(cart[item.id]) > 0).map(item => ({ id: item.id, name: item.name, quantity: Number(cart[item.id]) }));
-  if (!selected.length || !spokeCheck.checked || !clientContact.value.trim()) { clientContact.reportValidity(); return; }
+  if (!selected.length || !clientContact.validity.valid) { clientContact.reportValidity(); return; }
+  const mailFallback=orderText();
   if (liveApiMode) {
     submitRequest.disabled=true;copyStatus.textContent='Enviando pedido al servidor seguro…';
     try {
       const authResponse=await fetch('/api/auth/me',{credentials:'same-origin',cache:'no-store'});const auth=authResponse.ok?await authResponse.json():{user:null};
-      if(!auth.user){copyStatus.textContent='Para guardar el pedido en tu cuenta, iniciá sesión con Google, Discord o X desde tu perfil. La charla con NNytro sigue siendo necesaria.';submitRequest.disabled=false;return}
+      if(!auth.user){const destination='./comisiones.html?resumeOrder=1';sessionStorage.setItem('nnytro-order-login-return',destination);location.assign(`./perfil-comisiones.html?next=${encodeURIComponent(destination)}#signin-title`);return}
       const profile=(()=>{try{return JSON.parse(localStorage.getItem(profileKey)||'{}')}catch{return{}}})();
       const items=selected.map(item=>({id:item.id==='saludo'?'un-saludo':item.id,quantity:item.quantity}));
-      const response=await fetch('/api/orders',{method:'POST',credentials:'same-origin',headers:{'content-type':'application/json'},body:JSON.stringify({items,contact:clientContact.value.trim(),details:clientDetails.value.trim(),displayName:String(profile.name||auth.user.name||'').trim(),alreadySpoken:true})});
+      const response=await fetch('/api/orders',{method:'POST',credentials:'same-origin',headers:{'content-type':'application/json'},body:JSON.stringify({items,contact:clientContact.value.trim(),details:clientDetails.value.trim(),displayName:String(profile.name||auth.user.name||'').trim()})});
       const body=await response.json().catch(()=>({}));if(!response.ok)throw new Error(body.error||`No se pudo enviar (${response.status})`);
-      Object.keys(cart).forEach(key=>delete cart[key]);saveCart();renderCart();
+      orderFallbackBody=mailFallback;Object.keys(cart).forEach(key=>delete cart[key]);saveCart();renderCart();
       orderPreview.replaceChildren();const created=document.createElement('p');created.className='commission-request-created';created.textContent=`Pedido ${String(body.order?.id||'').slice(0,8).toUpperCase()} enviado para revisión. No se inició ningún pago.`;orderPreview.append(created);
       const adminEmail=body.email?.admin,customerEmail=body.email?.customer;
       if(adminEmail==='sent')copyStatus.textContent=t(customerEmail==='sent'?'Pedido guardado y aviso enviado a NNytro; también te mandamos una confirmación a tu correo.':'Pedido guardado y aviso enviado a NNytro. Podés seguirlo desde tu perfil.');
-      else copyStatus.textContent=t('El pedido quedó guardado en tu perfil, pero no se pudo enviar el aviso por correo a NNytro. Escribile por Discord para avisarle; el pedido ya está guardado.');
+      else if(adminEmail==='not_configured')copyStatus.textContent=t('El pedido quedó guardado, pero falta configurar el servicio de correo. Abrí el correo de tu dispositivo para avisarle a NNytro.');
+      else copyStatus.textContent=t('El pedido quedó guardado, pero falló el envío del correo a NNytro. Abrí el correo de tu dispositivo para avisarle.');
+      emailLink.href=`mailto:nnytro.online@gmail.com?subject=${encodeURIComponent('Consulta de comisión NNytro')}&body=${encodeURIComponent(mailFallback)}`;
       submitRequest.disabled=true;
-      setTimeout(()=>{if(orderDialog.open)orderDialog.close()},2800);return;
+      if(adminEmail==='sent')setTimeout(()=>{if(orderDialog.open)orderDialog.close()},2800);return;
     } catch(error) {copyStatus.textContent=`No se pudo enviar el pedido: ${error.message}`;submitRequest.disabled=false;return}
   }
   const orders = loadOrders();
   const id = `NN-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
   const profile = (() => { try { return JSON.parse(localStorage.getItem(profileKey) || '{}'); } catch { return {}; } })();
   orders.push({ id, createdAt: new Date().toISOString(), items: selected, customerName: String(profile.name || '').trim().slice(0, 48), clientContact: clientContact.value.trim(), details: clientDetails.value.trim(), status: 'requested', contactCheckedByClient: true, spokeConfirmed: false, total: null, paymentPlan: null, paymentUrl: '' });
-  saveOrders(orders); Object.keys(cart).forEach(key => delete cart[key]); saveCart(); renderCart();
-  orderPreview.innerHTML = `<p class="commission-request-created"><strong>Pedido ${id} creado en esta demo local.</strong><br />Ahora aparece en el panel de prueba. En la web real iniciás sesión con Google, Discord o X y yo tengo que confirmar nuestra charla.</p>`;
-  copyStatus.textContent = 'Recordá mandarme el resumen por Discord o por mail; esta demo no lo envía por sí sola.';
+  orderFallbackBody=mailFallback;saveOrders(orders); Object.keys(cart).forEach(key => delete cart[key]); saveCart(); renderCart();
+  orderPreview.innerHTML = `<p class="commission-request-created"><strong>Pedido ${id} creado en esta demo local.</strong><br />Ahora aparece en el panel de prueba.</p>`;
+  copyStatus.textContent = 'El pedido quedó en esta demo local; abrí el enlace de correo para avisarme.';
   submitRequest.disabled = true;
-  setTimeout(() => { if (orderDialog.open) orderDialog.close(); }, 2800);
+  emailLink.href=`mailto:nnytro.online@gmail.com?subject=${encodeURIComponent('Consulta de comisión NNytro')}&body=${encodeURIComponent(mailFallback)}`;
 });
 renderMailModeCopy();
 document.addEventListener('nnytro:language-applied', () => { renderCatalog(); renderCart(); renderMailModeCopy(); if (orderDialog.open) refreshOrderText(); });

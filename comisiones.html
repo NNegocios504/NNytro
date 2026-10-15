@@ -8,7 +8,7 @@
     <title>Comisiones — NNytro</title>
     <link rel="stylesheet" href="./styles.css?v=otter-brand-1" />
     <link rel="stylesheet" href="./effects.css?v=20261015-8" />
-    <link rel="stylesheet" href="./comisiones.css?v=hero-language-layout-1" />
+    <link rel="stylesheet" href="./comisiones.css?v=commission-cart-login-copy-2" />
   </head>
   <body class="commissions-body" data-cart-open="false">
     <video class="page-background-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true"><source src="./assets/fondos/comisiones.webm" type="video/webm" /></video>
@@ -33,6 +33,7 @@
         </div>
 
       </section>
+      <section class="commission-steps" aria-labelledby="steps-title"><div class="commission-steps-intro"><h2 id="steps-title">Primero hablamos.<br /><em>Después cotizamos.</em></h2><p>El pedido es una lista para iniciar la charla. No es una compra ni confirma disponibilidad.</p></div><ol><li><div><strong>Elegís</strong><small>Sumá al carrito lo que te interesa.</small></div></li><li><div><strong>Me escribís</strong><small>Copiás tu lista y me hablás para explicar tu idea.</small></div></li><li><div><strong>Lo confirmamos</strong><small>Reviso el pedido, acordamos el precio y te lo envío.</small></div></li><li><div><strong>Pagás si aceptás</strong><small>El pago aparece después de confirmar juntos el presupuesto.</small></div></li></ol></section>
       <section class="commission-catalog" id="opciones" aria-labelledby="options-title">
         <div class="commission-catalog-heading"><div><h2 id="options-title">Opciones disponibles</h2></div></div>
         <p class="commission-quote-callout"><span aria-hidden="true">✳</span><span><strong>Precios base en USD.</strong> Si tu pedido necesita algo distinto, hablamos primero y te confirmo el total antes de avanzar.<small id="commission-currency-rate-note"></small></span></p>
@@ -42,7 +43,6 @@
       <section class="commission-greeting" aria-label="Un saludo de NNytro">
         <span class="greeting-star" aria-hidden="true">✳</span><div><h2>Un saludo mío</h2><p>Invaluable. Ese viene con buena onda, no se agrega al carrito.</p><p>Na mentira, pagame.</p></div><span class="greeting-price">0,01</span><button class="commission-add-button greeting-add-button" type="button" data-add-service="saludo" aria-label="Agregar un saludo mío al pedido"><span>Agregar al pedido</span><b aria-hidden="true">＋</b></button>
       </section>
-      <section class="commission-steps" aria-labelledby="steps-title"><div class="commission-steps-intro"><h2 id="steps-title">Primero hablamos.<br /><em>Después cotizamos.</em></h2><p>El pedido es una lista para iniciar la charla. No es una compra ni confirma disponibilidad.</p></div><ol><li><div><strong>Elegís</strong><small>Sumá al carrito lo que te interesa.</small></div></li><li><div><strong>Me escribís</strong><small>Copiás tu lista y me hablás para explicar tu idea.</small></div></li><li><div><strong>Lo confirmamos</strong><small>Reviso el pedido, acordamos el precio y te lo envío.</small></div></li><li><div><strong>Pagás si aceptás</strong><small>El pago aparece después de confirmar juntos el presupuesto.</small></div></li></ol></section>
       <footer class="commission-footer"><span>NNYTRO / COMISIONES</span><a href="./comisiones-hechas.html">COMISIONES HECHAS ↗</a><a href="./index.html">VOLVER AL MENÚ ↑</a></footer>
     </main>
     <aside class="commission-cart" id="commission-cart" aria-label="Tu carrito de comisiones" aria-hidden="true" inert data-empty="true" data-open="false">
@@ -53,14 +53,13 @@
     <dialog class="commission-order-dialog" id="commission-order-dialog" aria-labelledby="commission-dialog-title">
       <form method="dialog"><button class="commission-dialog-close" aria-label="Cerrar">×</button></form>
       <h2 id="commission-dialog-title">Hablemos del pedido</h2>
-      <p>Copiá el resumen para mandármelo por Discord. Contame qué imaginás, para cuándo lo necesitás y cualquier referencia que tengas.</p>
+      <p>Dejame tu email y contame qué imaginás, para cuándo lo necesitás y cualquier referencia que tengas.</p>
       <div class="order-summary-preview" id="commission-order-preview"></div>
-      <label class="commission-form-field">Tu Discord o email<input id="commission-client-contact" type="text" autocomplete="off" maxlength="120" placeholder="usuario de Discord o email" required /></label>
+      <label class="commission-form-field">Tu email de contacto<input id="commission-client-contact" type="email" autocomplete="email" inputmode="email" spellcheck="false" maxlength="254" placeholder="tu@email.com" required /></label>
       <label class="commission-form-field">Detalles del pedido<textarea id="commission-client-details" rows="3" maxlength="1200" placeholder="Qué querés hacer, para cuándo y cualquier detalle útil"></textarea></label>
-      <label class="commission-spoke-check"><input type="checkbox" id="commission-spoke-check" /><span>Ya hablé con NNytro por Discord o por mail.</span></label>
-      <div class="commission-dialog-actions"><button class="commission-copy-order" id="commission-copy-order" type="button">Copiar pedido</button><a class="commission-contact-link" id="commission-email-link" href="mailto:nnytro.online@gmail.com">Preparar mail <span>↗</span></a></div>
-      <button class="commission-submit-request" id="commission-submit-request" type="button" disabled>Enviar para revisión <span>→</span></button>
-      <p class="commission-dialog-footnote" id="commission-dialog-footnote">Marcarlo no confirma la charla: yo la reviso y acepto o rechazo el pedido. Esta demo no envía ni recibe el mail de forma automática.</p><p class="commission-copy-status" id="commission-copy-status" role="status" aria-live="polite"></p>
+      <div class="commission-dialog-actions"><button class="commission-copy-order" id="commission-copy-order" type="button">Copiar pedido</button><a class="commission-contact-link" id="commission-email-link" href="mailto:nnytro.online@gmail.com">Abrir correo para enviarme el pedido <span>↗</span></a></div>
+      <button class="commission-submit-request" id="commission-submit-request" type="button">Enviar para revisión <span>→</span></button>
+      <p class="commission-dialog-footnote" id="commission-dialog-footnote">El pedido se guarda para que NNytro lo revise. No inicia ningún pago.</p><p class="commission-copy-status" id="commission-copy-status" role="status" aria-live="polite"></p>
     </dialog>
     <dialog class="commission-image-dialog" id="commission-image-dialog" aria-label="Imagen original">
       <div class="commission-image-dialog-card">
@@ -68,6 +67,6 @@
         <img id="commission-image-original" alt="Imagen original de ejemplos de comisión" />
       </div>
     </dialog>
-    <script src="./i18n.js?v=commission-image-arrows-1" defer></script><script src="./effects.js?v=global-sound-1" defer></script><script src="./comisiones.js?v=image-zoom-drag-1" defer></script>
+    <script src="./i18n.js?v=commission-cart-login-copy-2" defer></script><script src="./effects.js?v=global-sound-1" defer></script><script src="./comisiones.js?v=commission-cart-login-copy-2" defer></script>
   </body>
 </html>
