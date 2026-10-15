@@ -6,8 +6,8 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "nnytro-local",
-      "database_id": "00000000-0000-0000-0000-000000000001"
+      "database_name": "nnytro-production",
+      "database_id": "876cf201-b5cc-49b4-a377-60b5e08aded2"
     }
   ],
   "r2_buckets": [
