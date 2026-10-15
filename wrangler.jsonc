@@ -10,12 +10,6 @@
       "database_id": "876cf201-b5cc-49b4-a377-60b5e08aded2"
     }
   ],
-  "r2_buckets": [
-    {
-      "binding": "MEDIA_BUCKET",
-      "bucket_name": "nnytro-commission-media-local"
-    }
-  ],
   "vars": {
     "ADMIN_EMAIL": "nnytro.online@gmail.com",
     "MAIL_REPLY_TO": "nnytro.online@gmail.com",
