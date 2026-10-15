@@ -39,3 +39,4 @@
 
 /* El video de contacto cubre el fondo; deja solo una capa oscura ligera para legibilidad. */
 .detail-shell.contact-page { background:linear-gradient(110deg,rgba(2,4,22,.24),rgba(7,5,30,.18)) !important; }
+.detail-shell.contact-page{padding-top:0}.detail-shell.contact-page>.unified-site-header{margin-top:0}

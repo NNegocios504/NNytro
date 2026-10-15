@@ -2,9 +2,30 @@
   const root = document.documentElement;
   root.classList.add('xp-cursor');
 
-  // Only the menu uses the loader. From there, warm every page shell and its direct assets.
+  // Keep this in sync with index.html so the tuning screen returns once per site revision.
+  const siteBuildVersion = '2026-10-15-13';
+  let siteRevisionNeedsTuning = false;
+  try {
+    siteRevisionNeedsTuning = localStorage.getItem('nnytro-site-loader-version') !== siteBuildVersion;
+    localStorage.setItem('nnytro-site-loader-version', siteBuildVersion);
+  } catch { siteRevisionNeedsTuning = true; }
+
+  // The menu warms every page shell; a direct page visit also gets the brief revision screen when needed.
   const isHome = document.querySelector('.home-page') !== null;
-  const pageLoader = document.querySelector('.site-loader');
+  let pageLoader = document.querySelector('.site-loader');
+  if (!pageLoader && siteRevisionNeedsTuning) {
+    pageLoader = document.createElement('div');
+    pageLoader.className = 'site-loader site-loader--revision';
+    pageLoader.setAttribute('role', 'status');
+    pageLoader.setAttribute('aria-live', 'polite');
+    pageLoader.setAttribute('aria-label', 'Cargando página');
+    pageLoader.innerHTML = '<div class="site-loader-screen" aria-hidden="true"><span class="site-loader-orbit"></span><img class="site-loader-nutria" src="./assets/nutria-loading.png" alt=""></div><span class="site-loader-label">Sintonizando</span><span class="site-loader-progress" role="progressbar" aria-label="Actualizando sitio" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><i style="width:100%"></i></span>';
+    document.body.append(pageLoader);
+    setTimeout(() => {
+      pageLoader.classList.add('site-loader--leaving');
+      setTimeout(() => pageLoader?.remove(), 1250);
+    }, 500);
+  }
   const firstMenuVisit = isHome && !root.classList.contains('nnytro-menu-return');
   const progressBar = pageLoader?.querySelector('.site-loader-progress');
   const progressFill = progressBar?.querySelector('i');
@@ -199,7 +220,7 @@
     else window.addEventListener('load', startWarmup, { once: true });
   }) : Promise.resolve();
 
-  if (pageLoader) {
+  if (pageLoader && !pageLoader.classList.contains('site-loader--revision')) {
     if (!firstMenuVisit) {
       pageLoader.remove();
     } else {
@@ -249,7 +270,159 @@
   toggle.setAttribute('aria-label', `${enabled ? 'Desactivar' : 'Activar'} sonidos de la página`);
   toggle.title = enabled ? 'Desactivar sonidos' : 'Activar sonidos';
   toggle.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="sound-speaker" d="M3 9v6h4l5 4V5L7 9H3Z"/><path class="sound-wave" d="M15 9a5 5 0 0 1 0 6"/><path class="sound-wave" d="M17.8 6.5a8.5 8.5 0 0 1 0 11"/><path class="sound-muted-mark" d="m16 9 5 6m0-6-5 6"/></svg>';
+  const profileToggle = document.createElement('a');
+  profileToggle.className = 'site-profile-toggle';
+  profileToggle.href = './perfil-comisiones.html';
+  profileToggle.setAttribute('aria-label', 'Tu perfil');
+  profileToggle.title = 'Tu perfil';
+  profileToggle.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20a7.2 7.2 0 0 1 14.4 0"/></svg>';
+  const isMenuPage = /(?:^|\/)index(?:\.html)?\/?$/i.test(location.pathname);
+  (isMenuPage ? document.body : document.querySelector(".unified-site-actions") || document.querySelector(".commission-header-actions") || document.querySelector(".unified-site-header") || document.body).append(profileToggle);
   document.body.append(toggle);
+
+  // Currency preference is shared between pages; commission prices convert from USD.
+  const currencyOptions = [
+    ['USD','Dólar estadounidense','US dollar','Dólar americano'],['ARS','Peso argentino','Argentine peso','Peso argentino'],['BRL','Real brasileño','Brazilian real','Real brasileiro'],['EUR','Euro','Euro','Euro'],['MXN','Peso mexicano','Mexican peso','Peso mexicano'],['CLP','Peso chileno','Chilean peso','Peso chileno'],['COP','Peso colombiano','Colombian peso','Peso colombiano'],['PEN','Sol peruano','Peruvian sol','Sol peruano'],['UYU','Peso uruguayo','Uruguayan peso','Peso uruguaio'],['GBP','Libra esterlina','British pound','Libra esterlina'],['CAD','Dólar canadiense','Canadian dollar','Dólar canadense'],['AUD','Dólar australiano','Australian dollar','Dólar australiano'],['JPY','Yen japonés','Japanese yen','Iene japonês'],['CHF','Franco suizo','Swiss franc','Franco suíço'],['CNY','Yuan chino','Chinese yuan','Yuan chinês'],['INR','Rupia india','Indian rupee','Rupia indiana'],['NZD','Dólar neozelandés','New Zealand dollar','Dólar neozelandês'],['ZAR','Rand sudafricano','South African rand','Rand sul-africano'],['SEK','Corona sueca','Swedish krona','Coroa sueca'],['NOK','Corona noruega','Norwegian krone','Coroa norueguesa'],['DKK','Corona danesa','Danish krone','Coroa dinamarquesa'],['PLN','Zloty polaco','Polish złoty','Złoty polonês'],['TRY','Lira turca','Turkish lira','Lira turca']
+  ];
+  const currencyStorageKey = 'nnytro-currency';
+  const regionToCurrency = { AR:'ARS', BR:'BRL', US:'USD', GB:'GBP', MX:'MXN', CL:'CLP', CO:'COP', PE:'PEN', UY:'UYU', CA:'CAD', AU:'AUD', JP:'JPY', CH:'CHF', CN:'CNY', IN:'INR', NZ:'NZD', ZA:'ZAR', SE:'SEK', NO:'NOK', DK:'DKK', PL:'PLN', TR:'TRY', AT:'EUR', BE:'EUR', CY:'EUR', DE:'EUR', EE:'EUR', ES:'EUR', FI:'EUR', FR:'EUR', GR:'EUR', HR:'EUR', IE:'EUR', IT:'EUR', LT:'EUR', LU:'EUR', LV:'EUR', MT:'EUR', NL:'EUR', PT:'EUR', SI:'EUR', SK:'EUR' };
+  const detectCurrency = () => {
+    for (const locale of (navigator.languages || [navigator.language]).filter(Boolean)) {
+      try { const region = new Intl.Locale(locale).region; if (regionToCurrency[region]) return regionToCurrency[region]; } catch { /* Ignore malformed browser locales. */ }
+    }
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    if (timezone.startsWith('America/Argentina/')) return 'ARS';
+    if (/^America\/(Sao_Paulo|Fortaleza|Recife|Bahia|Belem|Manaus|Porto_Velho)/.test(timezone)) return 'BRL';
+    if (/^America\/(Mexico_City|Monterrey|Tijuana|Cancun)/.test(timezone)) return 'MXN';
+    if (timezone === 'America/Santiago') return 'CLP';
+    if (timezone === 'America/Bogota') return 'COP';
+    if (timezone === 'America/Lima') return 'PEN';
+    if (timezone === 'America/Montevideo') return 'UYU';
+    if (/^America\/(Toronto|Vancouver|Montreal|Winnipeg|Edmonton|Halifax)/.test(timezone)) return 'CAD';
+    if (timezone === 'Europe/London') return 'GBP';
+    if (timezone.startsWith('Europe/')) return 'EUR';
+    if (timezone === 'Asia/Tokyo') return 'JPY';
+    if (timezone.startsWith('Australia/')) return 'AUD';
+    return 'USD';
+  };
+  let selectedCurrency = (() => {
+    try { const saved = localStorage.getItem(currencyStorageKey); if (currencyOptions.some(([code]) => code === saved)) return saved; } catch { /* Storage is optional. */ }
+    return detectCurrency();
+  })();
+  const currencyToggle = document.createElement('button');
+  currencyToggle.type = 'button';
+  currencyToggle.className = 'site-currency-toggle';
+  currencyToggle.setAttribute('aria-expanded', 'false');
+  currencyToggle.setAttribute('aria-controls', 'site-currency-menu');
+  currencyToggle.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M15.2 8.3c-.5-.6-1.4-.9-2.6-.9-1.5 0-2.5.7-2.5 1.7 0 2.5 5.8 1 5.8 4 0 1.3-1.2 2.2-3 2.2-1.3 0-2.4-.4-3.1-1.2M12.9 5.8v12.4"/></svg>';
+  const currencyMenu = document.createElement('div');
+  currencyMenu.className = 'site-currency-menu';
+  currencyMenu.id = 'site-currency-menu';
+  currencyMenu.hidden = true;
+  currencyMenu.setAttribute('role', 'menu');
+  const currencyLabels = { es:{heading:'MONEDA',toggle:'Cambiar moneda'}, en:{heading:'CURRENCY',toggle:'Change currency'}, pt:{heading:'MOEDA',toggle:'Mudar moeda'} };
+  const currencyLanguage = () => (window.NNytroI18n?.getLanguage?.() || document.documentElement.lang || 'es').toLowerCase().startsWith('en') ? 'en' : (window.NNytroI18n?.getLanguage?.() || document.documentElement.lang || 'es').toLowerCase().startsWith('pt') ? 'pt' : 'es';
+  const renderCurrencyMenu = () => {
+    const lang = currencyLanguage();
+    currencyToggle.title = `${currencyLabels[lang].toggle} · ${selectedCurrency}`;
+    currencyToggle.setAttribute('aria-label', currencyToggle.title);
+    currencyMenu.setAttribute('aria-label', currencyLabels[lang].toggle);
+    currencyMenu.replaceChildren();
+    const heading = document.createElement('strong'); heading.textContent = currencyLabels[lang].heading; currencyMenu.append(heading);
+    currencyOptions.forEach(([code,es,en,pt]) => {
+      const option = document.createElement('button'); option.type = 'button'; option.setAttribute('role','menuitemradio'); option.setAttribute('aria-checked',String(selectedCurrency === code)); option.dataset.currencyChoice = code; option.textContent = `${code} · ${({es,en,pt})[lang]}`; currencyMenu.append(option);
+    });
+  };
+  const setCurrency = (code) => {
+    if (!currencyOptions.some(([currency]) => currency === code)) return;
+    selectedCurrency = code;
+    try { localStorage.setItem(currencyStorageKey, code); } catch { /* This tab still remembers the current selection. */ }
+    renderCurrencyMenu();
+    document.dispatchEvent(new CustomEvent('nnytro:currency-change', { detail:{ currency:code } }));
+  };
+  window.NNytroCurrency = { getCurrency:() => selectedCurrency, setCurrency };
+  renderCurrencyMenu();
+  currencyToggle.addEventListener('click', () => {
+    languageToggle.setAttribute('aria-expanded','false'); languageMenu.hidden = true;
+    const open = currencyToggle.getAttribute('aria-expanded') !== 'true';
+    currencyToggle.setAttribute('aria-expanded',String(open)); currencyMenu.hidden = !open;
+  });
+  currencyMenu.addEventListener('click', (event) => {
+    const option = event.target.closest('[data-currency-choice]'); if (!option) return;
+    setCurrency(option.dataset.currencyChoice); currencyToggle.setAttribute('aria-expanded','false'); currencyMenu.hidden = true;
+  });
+  document.body.append(currencyToggle, currencyMenu);
+
+  // Language control is shared site-wide and delegates translations to the i18n module.
+  const languageToggle = document.createElement('button');
+  languageToggle.type = 'button';
+  languageToggle.className = 'site-language-toggle';
+  languageToggle.setAttribute('aria-label', 'Cambiar idioma');
+  languageToggle.setAttribute('aria-expanded', 'false');
+  languageToggle.setAttribute('aria-controls', 'site-language-menu');
+  languageToggle.title = 'Cambiar idioma';
+  languageToggle.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18M5.6 6.2h12.8M5.6 17.8h12.8"/></svg>';
+  const languageMenu = document.createElement('div');
+  languageMenu.className = 'site-language-menu';
+  languageMenu.id = 'site-language-menu';
+  languageMenu.hidden = true;
+  languageMenu.setAttribute('role', 'menu');
+  languageMenu.setAttribute('aria-label', 'Idioma del sitio');
+  const languageNames = {
+    es: { heading: 'IDIOMA', es: 'Español', pt: 'Português (Brasil)', en: 'English', toggle: 'Cambiar idioma', menu: 'Idioma del sitio' },
+    pt: { heading: 'IDIOMA', es: 'Espanhol', pt: 'Português (Brasil)', en: 'Inglês', toggle: 'Mudar idioma', menu: 'Idioma do site' },
+    en: { heading: 'LANGUAGE', es: 'Spanish', pt: 'Português (Brasil)', en: 'English', toggle: 'Change language', menu: 'Site language' }
+  };
+  const selectedLanguage = () => {
+    const value = window.NNytroI18n?.getLanguage?.() || document.documentElement.lang || 'es';
+    return value.toLowerCase().startsWith('pt') ? 'pt' : value.toLowerCase().startsWith('en') ? 'en' : 'es';
+  };
+  const renderLanguageMenu = () => {
+    const current = selectedLanguage();
+    languageToggle.setAttribute('aria-label', languageNames[current].toggle);
+    languageToggle.title = languageNames[current].toggle;
+    languageMenu.setAttribute('aria-label', languageNames[current].menu);
+    languageMenu.replaceChildren();
+    const heading = document.createElement('strong'); heading.textContent = languageNames[current].heading; languageMenu.append(heading);
+    [['es','es'],['pt','pt'],['en','en']].forEach(([locale,key]) => {
+      const option = document.createElement('button'); option.type = 'button'; option.setAttribute('role','menuitemradio'); option.setAttribute('aria-checked',String(current === locale)); option.dataset.languageChoice = locale === 'pt' ? 'pt-BR' : locale; option.textContent = languageNames[current][key]; languageMenu.append(option);
+    });
+  };
+  renderLanguageMenu();
+  document.addEventListener('nnytro:language-applied', renderLanguageMenu);
+  document.addEventListener('nnytro:language-applied', renderCurrencyMenu);
+  document.body.append(languageToggle, languageMenu);
+  languageMenu.addEventListener('click', (event) => {
+    const option = event.target.closest('[data-language-choice]');
+    if (!option) return;
+    const language = option.dataset.languageChoice;
+    if (window.NNytroI18n?.setLanguage) window.NNytroI18n.setLanguage(language);
+    else document.dispatchEvent(new CustomEvent('nnytro:language-change', { detail: { language } }));
+    renderLanguageMenu();
+    languageToggle.setAttribute('aria-expanded', 'false');
+    languageMenu.hidden = true;
+  });
+  languageToggle.addEventListener('click', () => {
+    currencyToggle.setAttribute('aria-expanded','false'); currencyMenu.hidden = true;
+    const open = languageToggle.getAttribute('aria-expanded') !== 'true';
+    languageToggle.setAttribute('aria-expanded', String(open));
+    languageMenu.hidden = !open;
+  });
+  document.addEventListener('click', (event) => {
+    if (event.target instanceof Node && !languageToggle.contains(event.target) && !languageMenu.contains(event.target)) {
+      languageToggle.setAttribute('aria-expanded', 'false');
+      languageMenu.hidden = true;
+    }
+    if (event.target instanceof Node && !currencyToggle.contains(event.target) && !currencyMenu.contains(event.target)) {
+      currencyToggle.setAttribute('aria-expanded','false'); currencyMenu.hidden = true;
+    }
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    languageToggle.setAttribute('aria-expanded', 'false');
+    languageMenu.hidden = true;
+    currencyToggle.setAttribute('aria-expanded','false'); currencyMenu.hidden = true;
+  });
 
   let audioContext = null;
   let noiseBuffer = null;
@@ -402,6 +575,48 @@
     if (!enabled || !(event.target instanceof Element)) return;
     if (event.target.closest('.gallery-image-viewer-viewport')) sound('zoom');
   }, { passive: true });
+
+  // Smooth navigation works in production and in the file:// preview used while editing.
+  if (!reduceMotion) {
+    const makeCurtain = () => {
+      const curtain = document.createElement('div');
+      curtain.className = 'fx-transition-curtain';
+      curtain.setAttribute('aria-hidden', 'true');
+      curtain.innerHTML = '<span class="fx-transition-ring"></span><img src="./assets/nutria-loading.png" alt="">';
+      document.body.append(curtain);
+      return curtain;
+    };
+    let arrivingFromPage = false;
+    try {
+      arrivingFromPage = sessionStorage.getItem('nnytro-page-transition') === '1';
+      sessionStorage.removeItem('nnytro-page-transition');
+    } catch { /* Transitions still work when browser storage is unavailable. */ }
+    if (arrivingFromPage) {
+      const curtain = makeCurtain();
+      curtain.classList.add('is-active');
+      requestAnimationFrame(() => requestAnimationFrame(() => curtain.classList.remove('is-active')));
+      window.setTimeout(() => curtain.remove(), 720);
+    }
+    document.addEventListener('click', (event) => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      if (!(event.target instanceof Element)) return;
+      const link = event.target.closest('a[href]');
+      if (!link || (link.target && link.target !== '_self') || link.hasAttribute('download') || link.hasAttribute('data-no-transition')) return;
+      let destination;
+      try { destination = new URL(link.href, location.href); } catch { return; }
+      const localFileNavigation = location.protocol === 'file:' && destination.protocol === 'file:' && destination.pathname.startsWith(new URL('./', location.href).pathname);
+      if (destination.origin !== location.origin && !localFileNavigation) return;
+      if (destination.pathname === location.pathname && destination.search === location.search && destination.hash) return;
+      if (!/^https?:$/.test(destination.protocol) && !localFileNavigation) return;
+      if (destination.pathname.startsWith('/api/')) return;
+      event.preventDefault();
+      if (document.querySelector('.fx-transition-curtain.is-active')) return;
+      const curtain = makeCurtain();
+      try { sessionStorage.setItem('nnytro-page-transition', '1'); } catch { /* The exit transition does not depend on storage. */ }
+      requestAnimationFrame(() => curtain.classList.add('is-active'));
+      window.setTimeout(() => location.assign(destination.href), 520);
+    });
+  }
 
   // A small entrance and scroll reveal make the different sections feel connected.
   if (!reduceMotion) {

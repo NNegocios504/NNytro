@@ -1,2 +1,7 @@
 .git/
+.wrangler/
+node_modules/
+.dev.vars*
+/PENDIENTES-COMISIONES.md
+/README.md
 .assetsignore

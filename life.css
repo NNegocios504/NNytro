@@ -126,3 +126,9 @@ html { scroll-behavior:smooth; }
   -webkit-text-stroke:.3px rgba(0,0,0,.82) !important;
   letter-spacing:.04em !important;
 }
+/* El arte de Comisiones ya dibuja su propia silueta: quitar el marco rectangular del foco. */
+.home-menu .home-link--commissions:focus-visible { outline:none; outline-offset:0; }
+
+/* Comisiones: conservar su arte tal cual, sin marco rectangular y con etiqueta blanca. */
+.home-menu .home-link--commissions { color:#fff; border:0; box-shadow:none; outline:none; text-shadow:0 1px 2px #080718,0 0 6px rgba(143,57,255,.75); }
+.home-menu .home-link--commissions:hover,.home-menu .home-link--commissions:focus-visible,.home-menu .home-link--commissions[aria-current="page"] { color:#fff; border:0; box-shadow:none; outline:none; }

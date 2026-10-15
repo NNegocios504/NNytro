@@ -196,7 +196,7 @@ const galleryItems = [
     "category": "modeloss blockbench",
     "title": "Gobblewonker Gravity Core",
     "type": "image",
-    "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/Gobblewonker Gravity Core.webp"
+    "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/Gravity Core Cobblewonker sin animacion.png"
   },
   {
     "category": "modeloss blockbench",
@@ -208,15 +208,13 @@ const galleryItems = [
     "category": "modeloss blockbench",
     "title": "Borramentes Gravity Core",
     "type": "image",
-    "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/Borramentes Gravity Core.webp",
-    "thumbSrc": "./assets/gallery/modeloss blockbench/modeloss blockbench/Borramentes Gravity Core.thumb.webp"
+    "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/Gravity Core Borramentes objeto.png"
   },
   {
     "category": "modeloss blockbench",
     "title": "Gnomo Gravity Core 1",
     "type": "image",
-    "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/Gnomo Gravity Core 1.webp",
-    "thumbSrc": "./assets/gallery/modeloss blockbench/modeloss blockbench/Gnomo Gravity Core 1.thumb.webp"
+    "src": "./assets/gallery/modeloss blockbench/modeloss blockbench/Gravity Core Gnomo animado.png"
   },
   {
     "category": "modeloss blockbench",
@@ -574,6 +572,42 @@ const galleryItems = [
     "title": "wolf ft",
     "type": "image",
     "src": "./assets/gallery/under news/under news/Polaroids/wolf ft.webp"
+  },
+  {
+    "category": "renders",
+    "title": "Render 7Refugio 1",
+    "type": "image",
+    "src": "./assets/gallery/renders/renders/Render Anuncio 7Refugio/Render 7Refugio 1.png"
+  },
+  {
+    "category": "renders",
+    "title": "Render 7Refugio 2",
+    "type": "image",
+    "src": "./assets/gallery/renders/renders/Render Anuncio 7Refugio/Render 7Refugio 2.png"
+  },
+  {
+    "category": "renders",
+    "title": "fancymenu final",
+    "type": "image",
+    "src": "./assets/gallery/renders/renders/Render Anuncio 7Refugio/fancymenu final.png"
+  },
+  {
+    "category": "skins",
+    "title": "Skin Diddy",
+    "type": "image",
+    "src": "./assets/gallery/skins/skins/Skin Diddy/Skin Diddy.png"
+  },
+  {
+    "category": "skins",
+    "title": "Referencia 1",
+    "type": "image",
+    "src": "./assets/gallery/skins/skins/Skin Diddy/Referencia 1.png"
+  },
+  {
+    "category": "skins",
+    "title": "Referencia 2",
+    "type": "image",
+    "src": "./assets/gallery/skins/skins/Skin Diddy/Referencia 2.png"
   }
 ];
 
@@ -591,7 +625,8 @@ const categoryLabels = {
 };
 
 function labelFor(category) {
-  return categoryLabels[category] || category;
+  const label = categoryLabels[category] || category;
+  return window.NNytroI18n?.t(label) || label;
 }
 
 function customProjectFor(item) {
@@ -616,10 +651,11 @@ function customProjectFor(item) {
     'calavera': 'Animación de una calavera para Momento Reviil. Me gustó mucho cómo quedó, aunque podría estar mejor.',
     'lordkai': 'OC que me gusta mucho. Lo creé como personaje para jugar RPG con unos amigos. Había terminado el dibujo e incluso hecho una animación, pero las perdí y solo me quedó el boceto.',
     'nyxza': 'Improvisé este dibujo sin terminar a partir de uno que encontré en Pinterest. Me gustaron el boceto y el diseño del personaje, y quise darle mi estilo.',
-    'septimo-refugio': 'Animación hecha en Blender para el Fancy Menu de Séptimo Refugio, junto con el modelo de la Entidad 007.',
+    'septimo-refugio': 'Animación hecha en Blender para FancyMenu de Séptimo Refugio, con imágenes finales y la animación.',
     'ruby7ty': 'Uno de mis dibujos favoritos. Me gustó mucho cómo quedó: está hecho en Krita, con un poco de edición en Photoshop, para la canción de Ruby7TY.',
     'tryer': 'Un OC rápido que hice mientras veía gameplays de Cuphead. Vi una imagen de una momia, se me ocurrió este fantasma momia raro y me gustó cómo quedó.',
     'skins': 'Skins rápidas que hice para mí, Shiden y Wasabi en Blockbench.',
+    'skin-diddy': 'Skin hecha para Diddy mediante referencias que él me mandó. Gracias por el pedido, Diddy. #bestwoody',
     'under-news': 'Varios trabajos y assets que hice para el álbum UnderNews de Shiden. Hice las portadas y después creé cosas en Blender, como assets de periódicos y fotos Polaroid. Los modelos son del tipazo del Pelado. Con esos assets hice animaciones y renders para los anuncios. Disfruté mucho hacer todo.'
   };
 
@@ -627,10 +663,13 @@ function customProjectFor(item) {
     return { key: 'under-news', title: 'Under News', category: 'under news', coverSrc: './assets/gallery/renders/renders/UnderNews Anuncios.webp', description: description['under-news'] };
   }
   if (/Render Anuncio 7Refugio/i.test(source) || /^render menu(?: video)?$/i.test(title)) {
-    return { key: 'septimo-refugio', title: 'Séptimo Refugio', category: 'renders', coverSrc: './assets/gallery/matt/matt/render menu.webp', description: description['septimo-refugio'] };
+    return { key: 'septimo-refugio', title: 'Séptimo Refugio', category: 'renders', coverSrc: './assets/gallery/renders/renders/Render Anuncio 7Refugio/Render 7Refugio 1.png', coverPosition: '82% center', description: description['septimo-refugio'] };
   }
   if (/gravity\s*core/i.test(title + ' ' + source) || /^menu libro/i.test(title) || /menu libro/i.test(source)) {
     return { key: 'gravity-core', title: 'Gravity Core', category: 'menus', coverSrc: './assets/gallery/menus/menus/GravityCore menu.webp', description: description['gravity-core'] };
+  }
+  if (/Skin Diddy/i.test(title + ' ' + source)) {
+    return { key: 'skin-diddy', title: 'Skin Diddy', category: 'skins', coverSrc: './assets/gallery/skins/skins/Skin Diddy/Skin Diddy.png', coverPosition: '50% 0%', description: description['skin-diddy'] };
   }
   if (/dibujos animacion calavera|ruleta calavera/i.test(title + ' ' + source)) {
     return { key: 'calavera', title: 'Dibujos animación calavera', category: 'dibujos', description: description.calavera };
@@ -712,6 +751,7 @@ function buildProjects(items) {
         category: custom?.category || item.category,
         title: custom?.title || nestedFolder || item.title,
         coverSrc: custom?.coverSrc || null,
+        coverPosition: custom?.coverPosition || null,
         description: custom?.description || "",
         isGroup: Boolean(custom || nestedFolder),
         items: []
@@ -746,6 +786,7 @@ const modalCategory = document.querySelector('#gallery-modal-category');
 const modalTitle = document.querySelector('#gallery-modal-title');
 const modalType = document.querySelector('#gallery-modal-type');
 const modalDescription = document.querySelector('#gallery-modal-description');
+const modalCard = modal.querySelector('.gallery-modal-card');
 const closeButtons = document.querySelectorAll('[data-close-gallery]');
 const imageViewer = document.createElement('div');
 imageViewer.className = 'gallery-image-viewer';
@@ -753,16 +794,33 @@ imageViewer.hidden = true;
 imageViewer.setAttribute('role', 'dialog');
 imageViewer.setAttribute('aria-modal', 'true');
 imageViewer.setAttribute('aria-label', 'Vista ampliada de imagen');
-imageViewer.innerHTML = '<button class="gallery-image-viewer-backdrop" type="button" aria-label="Cerrar imagen ampliada"></button><div class="gallery-image-viewer-panel"><button class="gallery-image-viewer-close" type="button" aria-label="Cerrar imagen ampliada">×</button><div class="gallery-image-viewer-viewport"><div class="gallery-image-viewer-stage"><img alt="" /></div></div></div>';
+imageViewer.innerHTML = '<button class="gallery-image-viewer-backdrop" type="button" aria-label="Cerrar imagen ampliada"></button><div class="gallery-image-viewer-panel"><button class="gallery-image-viewer-close" type="button" aria-label="Cerrar imagen ampliada">×</button><div class="gallery-image-viewer-viewport"><button class="gallery-image-viewer-nav gallery-image-viewer-nav--previous" type="button" aria-label="Imagen anterior" hidden>‹</button><output class="gallery-image-viewer-count" data-viewer-image-count aria-live="polite" hidden></output><button class="gallery-image-viewer-nav gallery-image-viewer-nav--next" type="button" aria-label="Imagen siguiente" hidden>›</button><div class="gallery-image-viewer-stage"><img alt="" /></div></div><div class="gallery-image-viewer-controls" role="group" aria-label="Controles de ampliación"><button type="button" data-viewer-zoom-out aria-label="Alejar imagen">−</button><output data-viewer-zoom-value aria-live="polite">0%</output><button type="button" data-viewer-zoom-in aria-label="Acercar imagen">+</button></div><p class="gallery-image-viewer-hint"><span aria-hidden="true">🖐</span> Mantené click y arrastrá para mover la imagen</p></div></div>';
 document.body.append(imageViewer);
 const viewerImage = imageViewer.querySelector('img');
 const viewerViewport = imageViewer.querySelector('.gallery-image-viewer-viewport');
 const viewerStage = imageViewer.querySelector('.gallery-image-viewer-stage');
-let viewerZoom = 1;
+let viewerZoom = 0;
+let viewerItems = [];
+let viewerIndex = 0;
 let viewerBaseWidth = 0;
 let viewerBaseHeight = 0;
 let viewerDrag = null;
 let viewerReturnFocus = null;
+let singleModalImage = null;
+const viewerPanel = imageViewer.querySelector('.gallery-image-viewer-panel');
+const viewerZoomOut = imageViewer.querySelector('[data-viewer-zoom-out]');
+const viewerZoomIn = imageViewer.querySelector('[data-viewer-zoom-in]');
+const viewerZoomValue = imageViewer.querySelector('[data-viewer-zoom-value]');
+const viewerPrevious = imageViewer.querySelector('.gallery-image-viewer-nav--previous');
+const viewerNext = imageViewer.querySelector('.gallery-image-viewer-nav--next');
+const viewerImageCount = imageViewer.querySelector('[data-viewer-image-count]');
+
+function updateViewerZoomControls() {
+  viewerZoomOut.disabled = viewerZoom <= 0;
+  viewerZoomIn.disabled = viewerZoom >= 4;
+  viewerZoomValue.value = Math.round(viewerZoom * 100) + '%';
+  viewerZoomValue.textContent = viewerZoomValue.value;
+}
 
 function createMedia(item, isModal = false) {
   const element = document.createElement(item.type === 'video' ? 'video' : 'img');
@@ -811,7 +869,9 @@ function renderCards(category = 'all') {
     const media = document.createElement('div');
     media.className = 'gallery-card-media';
     const cover = project.items.find((item) => item.src === project.coverSrc) || project.items.find((item) => /final|resultado/i.test(item.title) && item.type === 'image') || project.items.find((item) => item.type === 'image') || project.items[0];
-    media.append(createMedia(cover));
+    const coverMedia = createMedia(cover);
+    if (project.coverPosition && coverMedia instanceof HTMLImageElement) coverMedia.style.objectPosition = project.coverPosition;
+    media.append(coverMedia);
 
     if (project.isGroup) {
       const groupBadge = document.createElement('span');
@@ -858,12 +918,21 @@ function renderCards(category = 'all') {
 }
 
 function openModal(project) {
+  const isCollection = project.isGroup && project.items.length > 1;
   modal.hidden = false;
   document.body.classList.add('modal-open');
+  modalCard.classList.toggle('gallery-modal-card--collection', isCollection);
+  modalCard.classList.toggle('gallery-modal-card--single-image', project.items.length === 1 && project.items[0]?.type === 'image');
+  modalCard.style.removeProperty('--gallery-modal-width');
+  if (isCollection) modalCard.style.setProperty('--gallery-modal-width', `${Math.min(1240, 320 + Math.min(3, project.items.length) * 380)}px`);
+  modalCard.style.removeProperty('--gallery-single-image-width');
+  modalCard.style.removeProperty('--gallery-single-image-height');
+  singleModalImage = null;
   modalMedia.replaceChildren();
-  modalMedia.classList.toggle('gallery-modal-media--collection', project.isGroup);
+  modalMedia.classList.toggle('gallery-modal-media--collection', isCollection);
 
-  if (project.isGroup) {
+  if (isCollection) {
+    const imageItems = project.items.filter((item) => item.type === 'image');
     project.items.forEach((item) => {
       const piece = document.createElement('figure');
       piece.className = 'gallery-modal-piece';
@@ -874,7 +943,7 @@ function openModal(project) {
         zoomButton.className = 'gallery-modal-image-button';
         zoomButton.setAttribute('aria-label', 'Abrir imagen ampliada: ' + item.title);
         zoomButton.append(media);
-        zoomButton.addEventListener('click', () => openImageViewer(item, zoomButton));
+        zoomButton.addEventListener('click', () => openImageViewer(item, zoomButton, imageItems));
         piece.append(zoomButton);
       } else {
         piece.append(media);
@@ -882,16 +951,25 @@ function openModal(project) {
       const caption = document.createElement('figcaption');
       caption.textContent = item.title;
       piece.append(caption);
-      if (item.description) {
-        const itemDescription = document.createElement('p');
-        itemDescription.className = 'gallery-item-description';
-        itemDescription.textContent = item.description;
-        piece.append(itemDescription);
-      }
       modalMedia.append(piece);
     });
   } else {
-    modalMedia.append(createMedia(project.items[0], true));
+    const item = project.items[0];
+    const media = createMedia(item, true);
+    if (item.type === 'image') {
+      singleModalImage = media;
+      media.addEventListener('load', fitSingleModalImage, { once:true });
+      if (media.complete) requestAnimationFrame(fitSingleModalImage);
+      const zoomButton = document.createElement('button');
+      zoomButton.type = 'button';
+      zoomButton.className = 'gallery-modal-single-image-button';
+      zoomButton.setAttribute('aria-label', 'Abrir imagen ampliada: ' + item.title);
+      zoomButton.append(media);
+      zoomButton.addEventListener('click', () => openImageViewer(item, zoomButton, [item]));
+      modalMedia.append(zoomButton);
+    } else {
+      modalMedia.append(media);
+    }
   }
 
   modalCategory.textContent = labelFor(project.category);
@@ -906,62 +984,81 @@ function openModal(project) {
   modal.querySelector('.gallery-modal-close').focus();
 }
 
+function fitSingleModalImage() {
+  if (!singleModalImage?.naturalWidth || modal.hidden) return;
+  const mobile = window.matchMedia('(max-width:760px)').matches;
+  const maxHeight = window.innerHeight * (mobile ? .48 : .78);
+  const maxWidth = mobile
+    ? Math.min(window.innerWidth * .9, 740)
+    : Math.max(240, Math.min(900, window.innerWidth * .62, window.innerWidth * .94 - 320));
+  const scale = Math.min(1, maxWidth / singleModalImage.naturalWidth, maxHeight / singleModalImage.naturalHeight);
+  modalCard.style.setProperty('--gallery-single-image-width', `${Math.round(singleModalImage.naturalWidth * scale)}px`);
+  modalCard.style.setProperty('--gallery-single-image-height', `${Math.round(singleModalImage.naturalHeight * scale)}px`);
+}
+
 function fitViewerImage() {
-  if (!viewerImage.naturalWidth || !viewerViewport.clientWidth || !viewerViewport.clientHeight) return;
-  const fit = Math.min(viewerViewport.clientWidth / viewerImage.naturalWidth, viewerViewport.clientHeight / viewerImage.naturalHeight);
+  if (!viewerImage.naturalWidth || !viewerImage.naturalHeight) return;
+  const fit = Math.min(1, (window.innerWidth * .9) / viewerImage.naturalWidth, (window.innerHeight * .72) / viewerImage.naturalHeight);
   viewerBaseWidth = viewerImage.naturalWidth * fit;
   viewerBaseHeight = viewerImage.naturalHeight * fit;
-  viewerZoom = 1;
+  viewerZoom = 0;
+  viewerPanel.style.width = Math.round(viewerBaseWidth) + 'px';
+  viewerPanel.style.height = '';
+  viewerViewport.style.width = Math.round(viewerBaseWidth) + 'px';
+  viewerViewport.style.height = Math.round(viewerBaseHeight) + 'px';
   viewerStage.style.width = viewerBaseWidth + 'px';
   viewerStage.style.height = viewerBaseHeight + 'px';
   viewerImage.style.width = viewerBaseWidth + 'px';
   viewerImage.style.height = viewerBaseHeight + 'px';
-  viewerImage.style.left = Math.max(0, (viewerStage.clientWidth - viewerBaseWidth) / 2) + 'px';
-  viewerImage.style.top = Math.max(0, (viewerStage.clientHeight - viewerBaseHeight) / 2) + 'px';
+  viewerImage.style.left = '0px';
+  viewerImage.style.top = '0px';
   viewerViewport.scrollTo({ left: 0, top: 0 });
   viewerViewport.classList.remove('is-zoomed');
+  updateViewerZoomControls();
 }
 
 function updateViewerZoom(nextZoom, focusX = viewerViewport.clientWidth / 2, focusY = viewerViewport.clientHeight / 2) {
   if (!viewerBaseWidth || !viewerBaseHeight) return;
-  const next = Math.max(1, Math.min(8, nextZoom));
+  const next = Math.max(0, Math.min(4, nextZoom));
   const previous = viewerZoom;
-  const previousWidth = viewerBaseWidth * previous;
-  const previousHeight = viewerBaseHeight * previous;
   const previousOffsetX = Number.parseFloat(viewerImage.style.left) || 0;
   const previousOffsetY = Number.parseFloat(viewerImage.style.top) || 0;
-  const imageX = (viewerViewport.scrollLeft + focusX - previousOffsetX) / previous;
-  const imageY = (viewerViewport.scrollTop + focusY - previousOffsetY) / previous;
-  const nextWidth = viewerBaseWidth * next;
-  const nextHeight = viewerBaseHeight * next;
+  const imageX = (viewerViewport.scrollLeft + focusX - previousOffsetX) / (1 + previous);
+  const imageY = (viewerViewport.scrollTop + focusY - previousOffsetY) / (1 + previous);
+  const nextWidth = viewerBaseWidth * (1 + next);
+  const nextHeight = viewerBaseHeight * (1 + next);
   viewerZoom = next;
   viewerImage.style.width = nextWidth + 'px';
   viewerImage.style.height = nextHeight + 'px';
   viewerStage.style.width = nextWidth + 'px';
   viewerStage.style.height = nextHeight + 'px';
-  viewerImage.style.left = Math.max(0, (viewerStage.clientWidth - nextWidth) / 2) + 'px';
-  viewerImage.style.top = Math.max(0, (viewerStage.clientHeight - nextHeight) / 2) + 'px';
-  if (next === 1) {
+  viewerImage.style.left = '0px';
+  viewerImage.style.top = '0px';
+  if (next === 0) {
     viewerViewport.scrollTo({ left: 0, top: 0 });
     viewerViewport.classList.remove('is-zoomed');
+    updateViewerZoomControls();
     requestAnimationFrame(() => {
-      if (!imageViewer.hidden && viewerZoom === 1) fitViewerImage();
+      if (!imageViewer.hidden && viewerZoom === 0) fitViewerImage();
     });
     return;
   } else {
     const nextOffsetX = Number.parseFloat(viewerImage.style.left) || 0;
     const nextOffsetY = Number.parseFloat(viewerImage.style.top) || 0;
-    viewerViewport.scrollLeft = Math.max(0, nextOffsetX + imageX * next - focusX);
-    viewerViewport.scrollTop = Math.max(0, nextOffsetY + imageY * next - focusY);
+    viewerViewport.scrollLeft = Math.max(0, nextOffsetX + imageX * (1 + next) - focusX);
+    viewerViewport.scrollTop = Math.max(0, nextOffsetY + imageY * (1 + next) - focusY);
   }
-  viewerViewport.classList.toggle('is-zoomed', next > 1);
+  viewerViewport.classList.toggle('is-zoomed', next > 0);
+  updateViewerZoomControls();
 }
 
-function openImageViewer(item, trigger) {
-  viewerReturnFocus = trigger;
+function showViewerImage(index) {
+  if (!viewerItems.length) return;
+  viewerIndex = (index + viewerItems.length) % viewerItems.length;
+  const item = viewerItems[viewerIndex];
   viewerImage.src = item.src;
   viewerImage.alt = item.title;
-  viewerZoom = 1;
+  viewerZoom = 0;
   viewerBaseWidth = 0;
   viewerBaseHeight = 0;
   viewerImage.style.width = '';
@@ -970,8 +1067,29 @@ function openImageViewer(item, trigger) {
   viewerImage.style.top = '';
   viewerStage.style.width = '';
   viewerStage.style.height = '';
+  viewerViewport.style.width = '';
+  viewerViewport.style.height = '';
+  viewerPanel.style.width = '';
+  viewerPanel.style.height = '';
   viewerViewport.scrollTo(0, 0);
+  viewerPrevious.hidden = viewerItems.length < 2;
+  viewerNext.hidden = viewerItems.length < 2;
+  viewerImageCount.hidden = viewerItems.length < 2;
+  viewerImageCount.textContent = `${viewerIndex + 1} / ${viewerItems.length}`;
+  if (viewerImage.complete && viewerImage.naturalWidth) requestAnimationFrame(fitViewerImage);
+}
+
+function moveViewerImage(direction) {
+  if (viewerItems.length < 2) return;
+  showViewerImage(viewerIndex + direction);
+}
+
+function openImageViewer(item, trigger, images = [item]) {
+  viewerReturnFocus = trigger;
+  viewerItems = images;
+  viewerIndex = Math.max(0, viewerItems.indexOf(item));
   imageViewer.hidden = false;
+  showViewerImage(viewerIndex);
   requestAnimationFrame(fitViewerImage);
   imageViewer.querySelector('.gallery-image-viewer-close').focus();
 }
@@ -981,7 +1099,12 @@ function closeImageViewer() {
   viewerImage.removeAttribute('src');
   viewerBaseWidth = 0;
   viewerBaseHeight = 0;
-  viewerZoom = 1;
+  viewerZoom = 0;
+  viewerItems = [];
+  viewerIndex = 0;
+  viewerPrevious.hidden = true;
+  viewerNext.hidden = true;
+  viewerImageCount.hidden = true;
   viewerViewport.scrollTo(0, 0);
   if (viewerReturnFocus?.isConnected) viewerReturnFocus.focus();
   viewerReturnFocus = null;
@@ -991,12 +1114,19 @@ function closeModal() {
   if (!imageViewer.hidden) closeImageViewer();
   modal.hidden = true;
   modalMedia.replaceChildren();
+  singleModalImage = null;
+  modalCard.style.removeProperty('--gallery-single-image-width');
+  modalCard.style.removeProperty('--gallery-single-image-height');
+  modalCard.style.removeProperty('--gallery-modal-width');
   modalMedia.classList.remove('gallery-modal-media--collection');
+  modalCard.classList.remove('gallery-modal-card--collection', 'gallery-modal-card--single-image');
   document.body.classList.remove('modal-open');
 }
+window.addEventListener('resize', fitSingleModalImage);
 
 function renderFilters() {
   const categories = ['all', ...new Set(projects.map((project) => project.category))];
+  filters.replaceChildren();
 
   categories.forEach((category) => {
     const categoryCount = category === 'all'
@@ -1005,6 +1135,7 @@ function renderFilters() {
     const button = document.createElement('button');
     button.className = 'gallery-filter';
     button.type = 'button';
+    button.dataset.category = category;
     button.textContent = labelFor(category) + ' · ' + categoryCount;
     button.addEventListener('click', () => {
       document.querySelectorAll('.gallery-filter').forEach((filter) => filter.classList.remove('is-active'));
@@ -1018,18 +1149,34 @@ function renderFilters() {
 
 closeButtons.forEach((button) => button.addEventListener('click', closeModal));
 imageViewer.querySelectorAll('.gallery-image-viewer-close, .gallery-image-viewer-backdrop').forEach((button) => button.addEventListener('click', closeImageViewer));
+viewerPrevious.addEventListener('click', () => moveViewerImage(-1));
+viewerNext.addEventListener('click', () => moveViewerImage(1));
+viewerZoomOut.addEventListener('click', () => updateViewerZoom(viewerZoom - .25));
+viewerZoomIn.addEventListener('click', () => updateViewerZoom(viewerZoom + .25));
+const translateViewerControls = () => {
+  const translate = (value) => window.NNytroI18n?.t(value) || value;
+  imageViewer.setAttribute('aria-label', translate('Vista ampliada de imagen'));
+  imageViewer.querySelector('.gallery-image-viewer-backdrop').setAttribute('aria-label', translate('Cerrar imagen ampliada'));
+  imageViewer.querySelector('.gallery-image-viewer-close').setAttribute('aria-label', translate('Cerrar imagen ampliada'));
+  imageViewer.querySelector('.gallery-image-viewer-controls').setAttribute('aria-label', translate('Controles de ampliación'));
+  viewerZoomOut.setAttribute('aria-label', translate('Alejar imagen'));
+  viewerZoomIn.setAttribute('aria-label', translate('Acercar imagen'));
+  viewerPrevious.setAttribute('aria-label', translate('Imagen anterior'));
+  viewerNext.setAttribute('aria-label', translate('Imagen siguiente'));
+};
+translateViewerControls();
 viewerViewport.addEventListener('wheel', (event) => {
   if (imageViewer.hidden) return;
   event.preventDefault();
   const bounds = viewerViewport.getBoundingClientRect();
   const focusX = event.clientX - bounds.left;
   const focusY = event.clientY - bounds.top;
-  updateViewerZoom(viewerZoom * Math.exp(-event.deltaY * .0015), focusX, focusY);
+  updateViewerZoom(viewerZoom - event.deltaY * .0015, focusX, focusY);
 }, { passive: false });
 viewerImage.addEventListener('load', fitViewerImage);
 window.addEventListener('resize', fitViewerImage);
 viewerViewport.addEventListener('pointerdown', (event) => {
-  if (event.button !== 0 || viewerZoom <= 1 || (viewerViewport.scrollWidth <= viewerViewport.clientWidth && viewerViewport.scrollHeight <= viewerViewport.clientHeight)) return;
+  if (event.target.closest('.gallery-image-viewer-nav') || event.button !== 0 || viewerZoom <= 0 || (viewerViewport.scrollWidth <= viewerViewport.clientWidth && viewerViewport.scrollHeight <= viewerViewport.clientHeight)) return;
   viewerDrag = { id: event.pointerId, x: event.clientX, y: event.clientY, left: viewerViewport.scrollLeft, top: viewerViewport.scrollTop };
   viewerViewport.setPointerCapture(event.pointerId);
   viewerViewport.classList.add('is-dragging');
@@ -1048,7 +1195,9 @@ const endViewerDrag = (event) => {
 viewerViewport.addEventListener('pointerup', endViewerDrag);
 viewerViewport.addEventListener('pointercancel', endViewerDrag);
 document.addEventListener('keydown', (event) => {
-  if (!imageViewer.hidden && (event.key === '+' || event.key === '=')) updateViewerZoom(viewerZoom + .25);
+  if (!imageViewer.hidden && viewerItems.length > 1 && event.key === 'ArrowLeft') { event.preventDefault(); moveViewerImage(-1); }
+  else if (!imageViewer.hidden && viewerItems.length > 1 && event.key === 'ArrowRight') { event.preventDefault(); moveViewerImage(1); }
+  else if (!imageViewer.hidden && (event.key === '+' || event.key === '=')) updateViewerZoom(viewerZoom + .25);
   else if (!imageViewer.hidden && event.key === '-') updateViewerZoom(viewerZoom - .25);
   else if (event.key === 'Escape' && !imageViewer.hidden) closeImageViewer();
   else if (event.key === 'Escape' && !modal.hidden) closeModal();
@@ -1056,3 +1205,12 @@ document.addEventListener('keydown', (event) => {
 
 renderFilters();
 renderCards();
+document.addEventListener('nnytro:language-applied', () => {
+  translateViewerControls();
+  const active = document.querySelector('.gallery-filter.is-active');
+  const category = active?.dataset.category || 'all';
+  renderFilters();
+  const nextActive = [...document.querySelectorAll('.gallery-filter')].find((button) => button.dataset.category === category);
+  nextActive?.classList.add('is-active');
+  renderCards(category);
+});

@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nnytro-commissions-local",
+  "compatibility_date": "2026-10-13",
+  "pages_build_output_dir": ".",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "nnytro-local",
+      "database_id": "00000000-0000-0000-0000-000000000001"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MEDIA_BUCKET",
+      "bucket_name": "nnytro-commission-media-local"
+    }
+  ],
+  "vars": {
+    "ADMIN_EMAIL": "nnytro.online@gmail.com",
+    "MAIL_REPLY_TO": "nnytro.online@gmail.com",
+    "PAYPAL_ENV": "sandbox"
+  }
+}

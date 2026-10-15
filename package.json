@@ -1,0 +1,11 @@
+{
+  "name": "nnytro-portfolio",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev --local --port 8788 --env-file .dev.vars",
+    "db:local:init": "wrangler d1 execute nnytro-local --local --file=functions/api/schema.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}

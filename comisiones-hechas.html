@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Pedidos ya hechos y finalizados. Las reseñas aparecen cuando el cliente las deja." />
+  <meta name="theme-color" content="#080718" />
+  <title>COMI$IONES YA - HECHAS! · NNytro</title>
+  <link rel="stylesheet" href="./comisiones-hechas.css?v=atmosphere-fallback-2" />
+  <link rel="stylesheet" href="./effects.css?v=20261015-8" />
+</head>
+<body class="archive-body">
+  <video class="page-background-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true"><source src="./assets/fondos/comisiones.webm" type="video/webm" /></video>
+  <main class="archive-page">
+    <header class="topbar archive-header"><a class="brand unified-site-brand" href="./index.html">NNYTRO <span>/ COMISIONES</span></a><nav class="unified-site-nav" aria-label="Otras páginas"><a href="./inicio.html">Sobre mí</a><a href="./galeria.html">Portfolio</a><a href="./comisiones.html">Comisiones</a><a href="./musica.html">Música</a><a href="./contacto.html">Contacto</a></nav><div class="unified-site-actions"><a class="unified-site-menu" href="./index.html">← Volver al menú</a></div></header>
+    <section class="hero" aria-labelledby="archive-title"><h1 id="archive-title">COMI$IONES<br><em>YA - HECHAS!</em></h1><p>Pedidos ya hechos y finalizados. Las reseñas aparecen cuando el cliente las deja.</p><a class="button" href="#publicacion-ejemplo">Explorar comisiones <span aria-hidden="true">↓</span></a></section>
+    <section id="publicacion-ejemplo" class="publication-example" aria-labelledby="example-title">
+      <div class="example-heading"><span class="eyebrow">ASÍ SE VERÍA</span><h2 id="example-title">Una publicación terminada</h2><p>Al terminar el trabajo y confirmar el pago, puedo publicar imágenes, video y una descripción. El cliente recibe una notificación y puede dejar una calificación de 0 a 5 estrellas y una reseña opcional, con el nombre que haya elegido o sin mostrar su nombre.</p></div>
+      <article class="entry entry--example">
+        <div class="entry-visual">
+          <span class="example-badge">VISTA DE PRUEBA · TRABAJO PUBLICADO</span>
+          <video class="process" controls playsinline preload="metadata" poster="./assets/gallery/renders/renders/Render Anuncio 7Refugio/fancymenu final.png" aria-label="Animación de muestra del FancyMenu de Séptimo Refugio"><source src="./assets/gallery/matt/matt/render menu video.webm" type="video/webm"></video>
+          <div class="final-gallery">
+            <figure class="media-tile"><button class="example-image-open" type="button" aria-label="Abrir imagen: FancyMenu final"><img src="./assets/gallery/renders/renders/Render Anuncio 7Refugio/fancymenu final.png" alt="FancyMenu final de Séptimo Refugio" loading="lazy"></button><figcaption>FancyMenu final</figcaption></figure>
+            <figure class="media-tile"><button class="example-image-open" type="button" aria-label="Abrir imagen: render del menú"><img src="./assets/gallery/renders/renders/Render Anuncio 7Refugio/fancymenu render.png" alt="Render del personaje en el menú de Séptimo Refugio" loading="lazy"></button><figcaption>Render del menú</figcaption></figure>
+          </div>
+        </div>
+        <div class="entry-copy">
+          <p class="eyebrow entry-kicker">EJEMPLO DE PUBLICACIÓN</p>
+          <h3 id="example-title-card">Render de menú para Minecraft</h3>
+          <p class="client-thanks">Animación hecha en Blender para FancyMenu de Séptimo Refugio, con imágenes finales y la animación.</p>
+          <div class="example-review"><span class="example-review-label">Reseña del cliente · opcional</span><p>Si el cliente deja una reseña, acá aparecen su calificación de 0 a 5 estrellas y el nombre que haya elegido, o puede mostrarse sin nombre.</p><div class="example-review-meta"><span>Nombre opcional</span><span class="example-stars" aria-label="La calificación puede ser de cero a cinco estrellas">☆☆☆☆☆ <small>0–5</small></span></div></div>
+          <p class="example-publication-note">La publicación se realiza cuando el trabajo está terminado y el pago está confirmado. El nombre y la reseña son opcionales.</p>
+        </div>
+      </article>
+    </section>
+    <dialog class="example-lightbox" aria-label="Imagen ampliada"><button class="example-lightbox-close" type="button" aria-label="Cerrar imagen ampliada">×</button><img alt=""></dialog>
+    <section id="archivo" class="archive" aria-label="Comisiones terminadas"><div class="archive-count-row"><span id="count" class="count">0 trabajos</span></div><div id="entries" class="entries" aria-live="polite"></div></section>
+  </main>
+  <template id="entry-template"><article class="entry"><div class="entry-visual"><div class="reference-grid"></div><video class="process" controls playsinline preload="metadata" hidden></video><div class="final-gallery"></div></div><div class="entry-copy"><p class="eyebrow entry-kicker"></p><h3></h3><p class="client-thanks"></p><div class="brief-grid"></div><blockquote class="reason" hidden></blockquote><div class="review-summary"></div><form class="review-form"><h4>¿Cómo fue tu comisión?</h4><p>Tu opinión puede ayudar a otros a elegir. La reseña es opcional.</p><label>Tu puntuación <span class="stars" role="radiogroup" aria-label="Puntuación de cero a cinco estrellas"></span></label><label>Reseña (opcional)<textarea name="review" maxlength="1000" rows="3" placeholder="Contá cómo fue tu experiencia"></textarea></label><label>Tu nombre<input name="reviewer" maxlength="60" placeholder="Como querés que aparezca" required></label><button class="button" type="submit">Publicar reseña</button><small class="review-status" role="status"></small></form></div></article></template>
+  <script src="./i18n.js?v=commission-locales-3" defer></script>
+  <script src="./comisiones-hechas.js?v=commission-locales-3" defer></script>
+<script src="./effects.js?v=20261015-14" defer></script></body>
+</html>

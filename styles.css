@@ -1,5 +1,10 @@
 @font-face { font-family: 'Comico'; src: url('./assets/Comico-Regular.otf') format('opentype'); font-style: normal; font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Crosner'; src: url('./assets/Crosner-Regular.ttf') format('truetype'); font-style: normal; font-weight: 400; font-display: swap; }
+:is(.home-brand,.home-intro h1,.home-link,.home-tv-title,.detail-title,.about-title,.tipazo-modal-content h2,.modal-action,.gallery-title,.gallery-card-title,.gallery-modal-info h2,.gallery-image-viewer-controls button,.unified-site-brand,.commissions-hero h1,.commission-steps h2,.commission-hero-art-title,.commission-catalog-heading h2,.commission-greeting h2,.commission-category-heading h3,.commission-service-copy h4,.greeting-price,.commission-steps strong,.cart-summary-text strong,.commission-order-dialog h2,.contact-index,.discord-copy-button,.channel-copy strong,.contact-footer,.music-brand,.music-hero h1,.music-cta,.console-frequency,.music-section-heading h2,.music-note h2,.cover-card strong,.music-feature h1,.music-platform-heading h2,.music-youtube-card strong,.profile-intro h1,.profile-signin-copy h2,.profile-section-heading h2,.profile-panel h2,.profile-avatar,.profile-admin-publish h3,.xp-guns-logo,.channel-icon--guns,.contact-sticker span) {
+  -webkit-text-stroke:.32px rgba(2,2,12,.84) !important;
+  paint-order:stroke fill;
+  letter-spacing:.045em !important;
+}
 :root { color-scheme: dark; --ink:#070617; --violet:#a984ff; --cyan:#72eaff; --white:#f7f4ff; }
 * { box-sizing: border-box; }
 html { min-width:320px; min-height:100%; background:var(--ink); scroll-behavior:smooth; }
@@ -15,7 +20,7 @@ img,svg { max-width:100%; }
 .home-page { position:relative; isolation:isolate; display:flex; min-height:100vh; min-height:100svh; flex-direction:column; overflow:hidden; padding:clamp(1rem,3vw,2.4rem) clamp(1rem,4vw,4rem); background-color:#061344; }
 .home-background-video { position:fixed; inset:0; z-index:0; display:block; width:100vw; height:100vh; height:100svh; object-fit:cover; object-position:center; pointer-events:none; }
 .home-page::before,.home-page::after { position:absolute; inset:0; z-index:0; content:''; pointer-events:none; }
-.home-page::before { z-index:1; background:linear-gradient(90deg,rgba(2,5,30,.72),transparent 44%,rgba(3,4,30,.3)),radial-gradient(ellipse at 50% 50%,transparent 28%,rgba(2,4,25,.4)); }
+.home-page::before { z-index:1; background-image:linear-gradient(90deg,rgba(2,5,30,.72),transparent 44%,rgba(3,4,30,.3)),radial-gradient(ellipse at 50% 50%,transparent 28%,rgba(2,4,25,.4)); background-size:auto,auto; background-position:0 0,50% 50%; animation:nnytro-home-drift 38s ease-in-out infinite alternate; }
 .home-page::after { opacity:.18; background:repeating-linear-gradient(0deg,rgba(255,255,255,.12) 0 1px,transparent 1px 4px); mix-blend-mode:screen; }
 .home-header,.home-layout { position:relative; z-index:2; }
 .home-header { display:flex; align-items:center; min-height:2.5rem; }
@@ -23,6 +28,7 @@ img,svg { max-width:100%; }
 .home-layout { position:relative; display:block; flex:1; width:100%; margin:0 auto; pointer-events:none; }
 .home-intro { position:absolute; top:50%; left:0; width:min(31%,28rem); max-width:28rem; padding:clamp(1rem,2vw,1.5rem); border-left:2px solid rgba(166,146,255,.72); background:linear-gradient(90deg,rgba(4,5,32,.58),transparent); transform:translateY(-50%); }
 .home-intro h1 { margin:0; color:#fff; font:clamp(3rem,5.2vw,6rem)/.98 'Crosner','Comico',sans-serif; letter-spacing:.005em; text-shadow:2px 3px 0 rgba(29,17,87,.95),0 0 26px rgba(145,105,255,.42); text-wrap:balance; }
+html[lang="en"] .home-intro h1 { font-size:clamp(2.3rem,4.15vw,3.25rem); letter-spacing:0; }
 .home-intro p { max-width:23rem; margin:1rem 0 0; color:#e9f4ff; font:clamp(1rem,1.25vw,1.12rem)/1.65 'Comico',sans-serif; text-shadow:0 2px 8px #000; }
 .home-menu { position:absolute; top:50%; right:0; z-index:3; display:grid; grid-auto-rows:4.55rem; gap:.7rem; width:min(25%,31rem); transform:translateY(-50%) rotate(-2deg); pointer-events:auto; }
 .home-link { position:relative; display:flex; box-sizing:border-box; align-items:center; justify-content:space-between; gap:.6rem; width:100%; height:4.55rem; min-width:0; min-height:0; padding:.45rem 1.25rem .45rem 1.65rem; border:1px solid rgba(255,255,255,.94); color:#1c3154; background:linear-gradient(180deg,#f7fbff 0%,#dfeaf8 43%,#b7cae4 50%,#e7f0fc 100%); box-shadow:inset 1px 1px 0 #fff,inset -1px -1px 0 rgba(32,56,93,.45),0 5px 13px rgba(0,0,25,.48); clip-path:polygon(2% 12%,96% 0,100% 80%,8% 100%,0 72%); font:clamp(1.15rem,1.8vw,1.7rem)/1.2 'Crosner','Comico',sans-serif; letter-spacing:.015em; text-decoration:none; transition:transform 180ms ease,filter 180ms ease,color 180ms ease,background 180ms ease; }
@@ -41,7 +47,7 @@ img,svg { max-width:100%; }
 .home-tv-frame { position:absolute; inset:0; z-index:1; display:block; width:100%; height:100%; object-fit:fill; opacity:1; filter:blur(.55px); clip-path:polygon(0 0,100% 0,100% 68%,84% 68%,84% 100%,0 100%); }
 .home-tv-content { position:absolute; inset:3.5%; z-index:1; display:block; overflow:hidden; color:#fff; opacity:0; background:transparent; text-shadow:0 1px 4px #000,0 0 8px rgba(0,0,0,.8); transition:opacity 220ms ease,background 220ms ease; }
 .home-tv-content.is-tuned { opacity:1; background:linear-gradient(115deg,color-mix(in srgb,var(--screen-tint,#193cff) 16%,transparent),rgba(24,8,56,.1) 62%,rgba(5,8,25,.06)); }
-.home-tv-image { position:absolute; top:14.5%; left:3.5%; z-index:1; display:block; width:51.5%; height:60%; min-width:0; min-height:0; max-width:none; max-height:none; object-fit:cover; object-position:center; opacity:.9; mix-blend-mode:screen; filter:drop-shadow(1px 0 rgba(255,0,90,.14)) drop-shadow(-1px 0 rgba(0,220,255,.12)); }
+.home-tv-image { position:absolute; top:var(--tv-image-top,14.5%); left:3.5%; z-index:1; display:block; width:var(--tv-image-width,51.5%); height:var(--tv-image-height,60%); min-width:0; min-height:0; max-width:none; max-height:none; object-fit:cover; object-position:center; opacity:.9; mix-blend-mode:screen; filter:drop-shadow(1px 0 rgba(255,0,90,.14)) drop-shadow(-1px 0 rgba(0,220,255,.12)); }
 .home-tv-copy { position:absolute; top:75%; left:12%; z-index:2; width:74%; height:25%; overflow:hidden; padding:.12em .25em; background:linear-gradient(90deg,rgba(4,13,47,.26),rgba(4,13,47,.14) 78%,transparent); }
 .home-tv-title { margin:0; font:clamp(.82rem,1.35vw,1.25rem)/1.1 'Crosner','Comico',sans-serif; overflow-wrap:anywhere; }
 .home-tv-description { margin:.32em 0 0; font:clamp(.68rem,.95vw,.95rem)/1.25 'Comico',sans-serif; overflow-wrap:anywhere; }
@@ -51,6 +57,7 @@ img,svg { max-width:100%; }
 
 /* Páginas de detalle y Sobre mí */
 .detail-shell { position:relative; isolation:isolate; min-height:100vh; min-height:100svh; padding:1.4rem clamp(1rem,4vw,4rem) 2rem; color:#f7f4ff; background-color:#070515; background-image:radial-gradient(ellipse at 72% 40%,rgba(75,43,160,.3),transparent 34rem),linear-gradient(120deg,rgba(3,4,22,.83),rgba(5,8,30,.72)); background-size:auto,auto; }
+.detail-shell::before { position:fixed; inset:0; z-index:0; content:''; pointer-events:none; opacity:.17; background:radial-gradient(ellipse at 68% 38%,rgba(112,83,213,.24),transparent 68%); mix-blend-mode:screen; animation:nnytro-single-texture-drift 44s ease-in-out infinite alternate; }
 .detail-shell::after { position:fixed; inset:0; z-index:0; content:''; pointer-events:none; background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 4px); }
 .detail-header,.detail-layout,.about-layout { position:relative; z-index:1; }
 .detail-header { display:flex; align-items:center; justify-content:space-between; gap:1rem; min-height:2.5rem; }
@@ -149,6 +156,7 @@ img,svg { max-width:100%; }
   .home-layout { display:flex; flex:0 0 auto; flex-direction:column; align-items:stretch; justify-content:flex-start; gap:.8rem; min-height:0; padding:.5rem 0 1rem; }
   .home-intro { position:relative; top:auto; left:auto; width:min(88%,26rem); max-width:26rem; padding:.7rem .85rem; transform:none; }
   .home-intro h1 { font-size:clamp(2.25rem,11vw,3.5rem); }
+  html[lang="en"] .home-intro h1 { font-size:clamp(2rem,9vw,3.25rem); }
   .home-intro p { margin-top:.45rem; font-size:.95rem; }
   .home-menu { position:relative; top:auto; right:auto; order:2; width:min(100%,30rem); grid-template-columns:repeat(2,minmax(0,1fr)); gap:.55rem; margin:.4rem 0 0; transform:rotate(-1deg); }
   .home-menu { grid-auto-rows:3.9rem; }
@@ -176,6 +184,13 @@ img,svg { max-width:100%; }
   .gallery-modal-info { padding:1rem; }
 }
 @media (max-width:440px) { .home-menu { grid-template-columns:1fr; width:calc(100% - 84px); } .home-link { min-height:2.8rem; } }
+@keyframes nnytro-home-drift { from { background-position:0 0,50% 50%,46% 54%; } to { background-position:0 0,50% 50%,54% 46%; } }
+@keyframes nnytro-texture-drift { from { background-position:0 0,46% 54%,78% 18%,0 0; } to { background-position:0 0,54% 46%,78% 18%,0 0; } }
+@keyframes nnytro-glow-breathe { from { opacity:.55; transform:scale(.96); } to { opacity:1; transform:scale(1.04); } }
+@keyframes nnytro-single-texture-drift { from { background-position:46% 50%; } to { background-position:54% 50%; } }
+@keyframes nnytro-gallery-drift { from { background-position:46% 54%,0 0,center; } to { background-position:54% 46%,0 0,center; } }
+@keyframes nnytro-orbit-drift { from { translate:-4px 0; } to { translate:4px 0; } }
+@keyframes nnytro-sticker-float { 0%,100% { transform:translateY(0) rotate(-11deg); } 50% { transform:translateY(-7px) rotate(-8deg); } }
 @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition-duration:.01ms!important; animation-duration:.01ms!important; } }
 
 /* La escena y el PNG de la tele respetan el formato 16:10 del material original. */
@@ -199,6 +214,13 @@ img,svg { max-width:100%; }
 .home-link:nth-child(2) { background-image: url('./assets/botones menu/boton portfolio.webp'); }
 .home-link:nth-child(3) { background-image: url('./assets/botones menu/boton musica.webp'); }
 .home-link:nth-child(4) { background-image: url('./assets/botones menu/boton contacto.webp'); }
+/* Fifth menu entry: commissions gets its own cart-inspired visual instead of inheriting a neighbor's artwork. */
+.home-link:nth-child(3) { background-image: linear-gradient(110deg,rgba(50,18,107,.96),rgba(81,38,170,.94) 48%,rgba(28,27,89,.96)); color:#fff; border:1px solid rgba(211,170,255,.78); box-shadow:inset 0 0 18px rgba(205,132,255,.23),0 0 18px rgba(128,74,255,.35); }
+.home-link:nth-child(4) { background-image: url('./assets/botones menu/boton musica.webp'); }
+.home-link:nth-child(5) { background-image: url('./assets/botones menu/boton contacto.webp'); }
+.home-menu .home-link--commissions { color:#1c3154; text-shadow:none; background-image:url('./assets/commission-button.png?v=default-2'); }
+.home-menu .home-link--commissions .home-cart-icon { visibility:hidden; }
+.home-menu .home-link--commissions:hover,.home-menu .home-link--commissions:focus-visible { color:#fff; background-image:url('./assets/commission-button-selected.png?v=selected-3'); filter:drop-shadow(0 0 12px rgba(93,151,255,.65)); }
 
 
 /* Transición nativa al navegar entre las páginas del portafolio. */
@@ -261,7 +283,7 @@ img,svg { max-width:100%; }
 
 
 /* Barra de navegación compartida para las páginas internas. */
-.unified-site-header { position:relative; z-index:5; display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:center; gap:1rem; width:calc(100% + clamp(2rem,8vw,8rem)); min-height:3.35rem; margin:-1.4rem 0 0 calc(-1 * clamp(1rem,4vw,4rem)); padding:.55rem clamp(1rem,4vw,4rem); border-bottom:1px solid rgba(154,135,219,.25); background:linear-gradient(90deg,rgba(4,4,21,.55),rgba(12,8,38,.38),rgba(4,4,21,.55)); box-shadow:0 4px 20px rgba(0,0,0,.12); backdrop-filter:blur(5px); }
+.unified-site-header { position:sticky; top:0; z-index:100; display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:center; gap:1rem; width:calc(100% + clamp(2rem,8vw,8rem)); min-height:3.35rem; margin:-1.4rem 0 0 calc(-1 * clamp(1rem,4vw,4rem)); padding:.55rem clamp(1rem,4vw,4rem); border-bottom:1px solid rgba(154,135,219,.25); background:linear-gradient(90deg,rgba(4,4,21,.82),rgba(12,8,38,.78),rgba(4,4,21,.82)); box-shadow:0 4px 20px rgba(0,0,0,.12); backdrop-filter:blur(5px); }
 .unified-site-brand { justify-self:start; color:#f5f2ff; font:1.05rem/1 'Crosner','Comico',sans-serif; letter-spacing:.04em; text-decoration:none; text-shadow:0 0 12px rgba(111,220,255,.45); white-space:nowrap; }
 .unified-site-brand span { color:rgba(190,173,255,.72); font:8px/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.18em; text-transform:uppercase; }
 .unified-site-nav { display:flex; align-items:center; justify-content:center; gap:clamp(.8rem,2vw,1.8rem); }
@@ -293,7 +315,6 @@ img,svg { max-width:100%; }
 
 
 /* En la TV, compensar los márgenes transparentes de los PNG y darles luz según su arte. */
-.home-tv-content .home-tv-image { left:var(--tv-image-left,7%); }
 .home-tv-content.is-tuned .home-tv-image {
   filter:brightness(1.2) saturate(1.12)
     drop-shadow(0 0 5px var(--tv-image-glow,rgba(74,202,255,.78)))

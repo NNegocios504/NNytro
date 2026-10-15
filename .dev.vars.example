@@ -1,0 +1,32 @@
+# Copy this file to .dev.vars for local Pages Functions development.
+# Never put real credentials in source control or browser JavaScript.
+GOOGLE_CLIENT_ID=your-google-web-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=
+DISCORD_CLIENT_ID=
+DISCORD_CLIENT_SECRET=
+# Separate bot credentials; never reuse the OAuth client secret above.
+DISCORD_BOT_TOKEN=
+DISCORD_NOTIFY_USER_ID=
+X_CLIENT_ID=
+X_CLIENT_SECRET=
+SESSION_SECRET=replace-with-a-random-secret-of-at-least-32-characters
+RESEND_API_KEY=re_your_private_resend_api_key
+# Local test sender only. Use a verified domain sender in Cloudflare production.
+MAIL_FROM=onboarding@resend.dev
+MAIL_REPLY_TO=nnytro.online@gmail.com
+# Local email links only; never used for payment callbacks.
+LOCAL_SITE_URL=http://127.0.0.1:8788
+# Leave unset locally; payment checkout requires a publicly reachable HTTPS site.
+# PUBLIC_SITE_URL=https://nnytro.online
+
+# Optional. Never put Live credentials in this local example.
+# Mercado Pago Pix uses a Brazil seller account and charges BRL; keep blocked until USD conversion rules are implemented.
+MERCADOPAGO_ACCESS_TOKEN=
+MERCADOPAGO_WEBHOOK_SECRET=
+# PayPal sandbox credentials must belong to the same sandbox REST app.
+PAYPAL_ENV=sandbox
+PAYPAL_CLIENT_ID=
+PAYPAL_CLIENT_SECRET=
+PAYPAL_WEBHOOK_ID=
+PAYMENT_ALIAS_USD=
+PAYMENT_ALIAS_ARS=
