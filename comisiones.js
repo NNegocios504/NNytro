@@ -71,6 +71,12 @@ let commissionsOpen = true;
 let commissionStatusReady = false;
 const clearCart = document.querySelector('#commission-clear-cart');
 const orderDialog = document.querySelector('#commission-order-dialog');
+const orderContent = document.querySelector('#commission-order-content');
+const orderLoginGate = document.querySelector('#commission-login-gate');
+const orderLoginStatus = document.querySelector('#commission-login-status');
+const orderLoginBack = document.querySelector('#commission-login-back');
+const orderAuthLinks = [...document.querySelectorAll('[data-order-auth-provider]')];
+const orderLoginReturnKey = 'nnytro-order-login-return';
 const commissionImageDialog = document.querySelector('#commission-image-dialog');
 const commissionImageOriginal = document.querySelector('#commission-image-original');
 const commissionImagePrevious = commissionImageDialog?.querySelector('.commission-image-nav--previous');
@@ -331,7 +337,6 @@ function orderText() {
 }
 async function openOrderDialog() {
   if(!commissionStatusReady||!commissionsOpen){copyStatus.textContent=commissionStatusReady?'Las comisiones están cerradas por el momento.':'No se pudo consultar si las comisiones están abiertas. Probá de nuevo más tarde.';return}
-  if(liveApiMode){try{const response=await fetch('/api/auth/me',{credentials:'same-origin',cache:'no-store'});const auth=response.ok?await response.json():{user:null};if(!auth.user){const destination='./comisiones.html?resumeOrder=1';sessionStorage.setItem('nnytro-order-login-return',destination);location.assign(`./perfil-comisiones.html?next=${encodeURIComponent(destination)}#signin-title`);return}}catch{copyStatus.textContent='No pude revisar tu sesión. Probá de nuevo en unos segundos.';return}}
   clientContact.value = ''; clientDetails.value = ''; orderFallbackBody='';
   const summary = document.createElement('pre'); summary.textContent = orderText(); orderPreview.replaceChildren(summary); copyStatus.textContent = '';
   submitRequest.disabled = false; emailLink.removeAttribute('aria-disabled'); emailLink.tabIndex = 0;
@@ -339,7 +344,12 @@ async function openOrderDialog() {
   emailLink.href = `mailto:nnytro.online@gmail.com?subject=${subject}&body=${encodeURIComponent(orderText())}`;
   clientContact.addEventListener('input', scheduleRefreshOrderText); clientDetails.addEventListener('input', scheduleRefreshOrderText);
   if (typeof orderDialog.showModal === 'function') orderDialog.showModal(); else orderDialog.setAttribute('open', '');
+  setOrderLoginGate(liveApiMode);
+  if(liveApiMode){try{const response=await fetch('/api/auth/me',{credentials:'same-origin',cache:'no-store'});const auth=response.ok?await response.json():{user:null};if(!auth.user)return;setOrderLoginGate(false)}catch{copyStatus.textContent='No pude revisar tu sesión. Probá de nuevo en unos segundos.';return}}
 }
+function setOrderLoginGate(open){if(!orderLoginGate)return;orderLoginGate.hidden=!open;orderContent?.classList.toggle('is-blurred',open);orderContent?.toggleAttribute('inert',open);if(open){orderLoginBack?.focus();void loadOrderAuthProviders()}else clientContact?.focus()}
+let orderAuthProvidersRequest;
+function loadOrderAuthProviders(){if(orderAuthProvidersRequest)return orderAuthProvidersRequest;const names={google:'Google',discord:'Discord',x:'Twitter'};orderAuthProvidersRequest=fetch('/api/auth/providers',{credentials:'same-origin',cache:'no-store'}).then(response=>{if(!response.ok)throw Error('provider status unavailable');return response.json()}).then(available=>{for(const link of orderAuthLinks){const provider=link.dataset.orderAuthProvider,enabled=Boolean(available[provider]);link.setAttribute('aria-disabled',String(!enabled));link.tabIndex=enabled?0:-1;link.querySelector('[data-order-auth-label]').textContent=enabled?`${t('Iniciar con')} ${names[provider]}`:`${names[provider]} · ${t('no configurado')}`}orderLoginStatus.textContent=t('Elegí una cuenta para continuar. Tu pedido te espera al volver.')}).catch(()=>{orderAuthProvidersRequest=null;for(const link of orderAuthLinks){link.setAttribute('aria-disabled','true');link.tabIndex=-1;link.querySelector('[data-order-auth-label]').textContent=`${names[link.dataset.orderAuthProvider]} · ${t('no disponible')}`}orderLoginStatus.textContent=t('No se pudo contactar al servidor de acceso. Probá de nuevo en unos segundos.')});return orderAuthProvidersRequest}
 let orderTextRefreshTimer;
 function scheduleRefreshOrderText(){clearTimeout(orderTextRefreshTimer);orderTextRefreshTimer=setTimeout(refreshOrderText,180)}
 function refreshOrderText() {
@@ -392,6 +402,9 @@ cartToggle.addEventListener('click', () => setCartOpen(false, true));
 cartReopen.addEventListener('click', () => setCartOpen(true, true));
 document.addEventListener('keydown', event => { if (event.key === 'Escape' && cartRoot.dataset.open === 'true') setCartOpen(false, true); });
 sendOrder.addEventListener('click', () => { void openOrderDialog(); });
+orderLoginBack?.addEventListener('click',()=>{setOrderLoginGate(false);orderAuthProvidersRequest=null;try{sessionStorage.removeItem(orderLoginReturnKey)}catch{}});
+orderAuthLinks.forEach(link=>link.addEventListener('click',event=>{if(link.getAttribute('aria-disabled')==='true'){event.preventDefault();return}try{sessionStorage.setItem(orderLoginReturnKey,'./comisiones.html?resumeOrder=1')}catch{event.preventDefault();orderLoginStatus.textContent=t('No se pudo guardar el pedido antes de iniciar sesión. Activá el almacenamiento del navegador y probá de nuevo.')}}));
+orderDialog.addEventListener('close',()=>{try{sessionStorage.removeItem(orderLoginReturnKey)}catch{}});
 emailLink.addEventListener('click', event => { if (!clientContact.validity.valid) { event.preventDefault(); clientContact.reportValidity(); return; } if(!orderFallbackBody)refreshOrderText(); });
 submitRequest.addEventListener('click', async () => {
   const selected = allServices.filter(item => Number(cart[item.id]) > 0).map(item => ({ id: item.id, name: item.name, quantity: Number(cart[item.id]) }));
@@ -401,7 +414,7 @@ submitRequest.addEventListener('click', async () => {
     submitRequest.disabled=true;copyStatus.textContent='Enviando pedido al servidor seguro…';
     try {
       const authResponse=await fetch('/api/auth/me',{credentials:'same-origin',cache:'no-store'});const auth=authResponse.ok?await authResponse.json():{user:null};
-      if(!auth.user){const destination='./comisiones.html?resumeOrder=1';sessionStorage.setItem('nnytro-order-login-return',destination);location.assign(`./perfil-comisiones.html?next=${encodeURIComponent(destination)}#signin-title`);return}
+      if(!auth.user){setOrderLoginGate(true);submitRequest.disabled=false;return}
       const profile=(()=>{try{return JSON.parse(localStorage.getItem(profileKey)||'{}')}catch{return{}}})();
       const items=selected.map(item=>({id:item.id==='saludo'?'un-saludo':item.id,quantity:item.quantity}));
       const response=await fetch('/api/orders',{method:'POST',credentials:'same-origin',headers:{'content-type':'application/json'},body:JSON.stringify({items,contact:clientContact.value.trim(),details:clientDetails.value.trim(),displayName:String(profile.name||auth.user.name||'').trim()})});

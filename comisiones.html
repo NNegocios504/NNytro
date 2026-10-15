@@ -8,7 +8,7 @@
     <title>Comisiones — NNytro</title>
     <link rel="stylesheet" href="./styles.css?v=otter-brand-1" />
     <link rel="stylesheet" href="./effects.css?v=20261015-8" />
-    <link rel="stylesheet" href="./comisiones.css?v=commission-hero-art-size-1" />
+    <link rel="stylesheet" href="./comisiones.css?v=commission-order-login-gate-1" />
   </head>
   <body class="commissions-body" data-cart-open="false">
     <video class="page-background-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true"><source src="./assets/fondos/comisiones.webm" type="video/webm" /></video>
@@ -51,6 +51,7 @@
     </aside>
     <button class="commission-cart-reopen" id="commission-cart-reopen" type="button" aria-label="Abrir carrito, 0 opciones" aria-controls="commission-cart" aria-expanded="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 4h2l2.1 11.1a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 1.9-1.4L22 8H6M10 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2Zm8 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/></svg><span id="commission-cart-reopen-count">0</span></button>
     <dialog class="commission-order-dialog" id="commission-order-dialog" aria-labelledby="commission-dialog-title">
+      <div class="commission-order-content" id="commission-order-content">
       <form method="dialog"><button class="commission-dialog-close" aria-label="Cerrar">×</button></form>
       <h2 id="commission-dialog-title">Hablemos del pedido</h2>
       <p>Dejame tu email y contame qué imaginás, para cuándo lo necesitás y cualquier referencia que tengas.</p>
@@ -60,6 +61,10 @@
       <div class="commission-dialog-actions"><button class="commission-copy-order" id="commission-copy-order" type="button">Copiar pedido</button><a class="commission-contact-link" id="commission-email-link" href="mailto:nnytro.online@gmail.com">Abrir correo para enviarme el pedido <span>↗</span></a></div>
       <button class="commission-submit-request" id="commission-submit-request" type="button">Enviar para revisión <span>→</span></button>
       <p class="commission-dialog-footnote" id="commission-dialog-footnote">El pedido se guarda para que NNytro lo revise. No inicia ningún pago.</p><p class="commission-copy-status" id="commission-copy-status" role="status" aria-live="polite"></p>
+      </div>
+      <section class="commission-login-gate" id="commission-login-gate" aria-labelledby="commission-login-title" hidden>
+        <div class="commission-login-card"><span class="commission-login-kicker">NNYTRO / PEDIDO</span><h2 id="commission-login-title">Para crear tu pedido, inicia sesión.</h2><p id="commission-login-status">Elegí una cuenta para continuar. Tu pedido te espera al volver.</p><div class="commission-login-providers"><a class="commission-login-provider" data-order-auth-provider="google" aria-disabled="true" tabindex="-1" href="/api/auth/google/start"><span class="commission-login-icon commission-login-icon--google" aria-hidden="true">G</span><span data-order-auth-label>Iniciar con Google</span></a><a class="commission-login-provider" data-order-auth-provider="discord" aria-disabled="true" tabindex="-1" href="/api/auth/discord/start"><span class="commission-login-icon commission-login-icon--discord" aria-hidden="true">◉</span><span data-order-auth-label>Iniciar con Discord</span></a><a class="commission-login-provider" data-order-auth-provider="x" aria-disabled="true" tabindex="-1" href="/api/auth/x/start"><span class="commission-login-icon commission-login-icon--x" aria-hidden="true">𝕏</span><span data-order-auth-label>Iniciar con Twitter</span></a></div><button class="commission-login-back" id="commission-login-back" type="button">Atrás</button></div>
+      </section>
     </dialog>
     <dialog class="commission-image-dialog" id="commission-image-dialog" aria-label="Imagen original">
       <div class="commission-image-dialog-card">
@@ -67,6 +72,6 @@
         <img id="commission-image-original" alt="Imagen original de ejemplos de comisión" />
       </div>
     </dialog>
-    <script src="./i18n.js?v=commission-cart-login-copy-2" defer></script><script src="./effects.js?v=global-sound-1" defer></script><script src="./comisiones.js?v=commission-cart-login-copy-2" defer></script>
+    <script src="./i18n.js?v=commission-order-login-gate-1" defer></script><script src="./effects.js?v=global-sound-1" defer></script><script src="./comisiones.js?v=commission-order-login-gate-1" defer></script>
   </body>
 </html>
