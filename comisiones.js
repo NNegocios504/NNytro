@@ -66,6 +66,9 @@ const cartTotal = document.querySelector('.cart-total');
 const cartToggle = document.querySelector('.commission-cart-summary');
 const cartDetails = document.querySelector('#commission-cart-details');
 const sendOrder = document.querySelector('#commission-send-order');
+const commissionLiveStatus = document.querySelector('#commission-live-status');
+let commissionsOpen = true;
+let commissionStatusReady = false;
 const clearCart = document.querySelector('#commission-clear-cart');
 const orderDialog = document.querySelector('#commission-order-dialog');
 const commissionImageDialog = document.querySelector('#commission-image-dialog');
@@ -314,14 +317,16 @@ function renderCart() {
   cartEstimate.textContent = formatCartEstimate(estimateTotal, greetingQuantity);
   cartTotal.hidden = count === 0;
   cartEmpty.hidden = count !== 0;
-  sendOrder.disabled = count === 0; clearCart.hidden = count === 0; cartToggle.setAttribute('aria-label', `${t('Tu pedido')}: ${count} ${t(count === 1 ? 'opción' : 'opciones')}`); cartReopen.setAttribute('aria-label', `${t('Abrir carrito,')} ${count} ${t(count === 1 ? 'opción' : 'opciones')}`);
+  sendOrder.disabled = count === 0 || !commissionStatusReady || !commissionsOpen; clearCart.hidden = count === 0; cartToggle.setAttribute('aria-label', `${t('Tu pedido')}: ${count} ${t(count === 1 ? 'opción' : 'opciones')}`); cartReopen.setAttribute('aria-label', `${t('Abrir carrito,')} ${count} ${t(count === 1 ? 'opción' : 'opciones')}`);
 }
+async function loadCommissionStatus(){try{const response=await fetch('/api/commissions/status',{credentials:'same-origin',cache:'no-store'});const body=await response.json();if(!response.ok)throw new Error(body.error||'No se pudo consultar el estado.');commissionsOpen=body.open===true;commissionStatusReady=true;commissionLiveStatus.dataset.open=String(commissionsOpen);commissionLiveStatus.lastChild.textContent=commissionsOpen?' Estado: comisiones abiertas':' Estado: comisiones cerradas'}catch{commissionStatusReady=false;commissionLiveStatus.dataset.open='unknown';commissionLiveStatus.lastChild.textContent=' Estado: no disponible'}renderCart()}
 function orderText() {
   const chosen = allServices.filter(item => Number(cart[item.id]) > 0);
   const profile = (() => { try { return JSON.parse(localStorage.getItem(profileKey) || '{}'); } catch { return {}; } })();
   return [t('Hola NNytro, quería consultar por este pedido:'), ...chosen.map(item => `• ${t(item.name)} × ${Number(cart[item.id])} (${t('Precio publicado USD')} ${formatUsd(item.price * Number(cart[item.id]))})`), '', `${t('Nombre elegido:')} ${String(profile.name || '').trim() || t('(sin guardar)')}`, `${t('Mi contacto:')} ${clientContact.value.trim() || t('(agregar Discord o email)')}`, `${t('Detalles:')} ${clientDetails.value.trim() || t('(contar la idea)')}`, '', t('Te cuento la idea y confirmamos si el precio publicado aplica a mi pedido. Todavía no confirmé ninguna compra.')].join('\n');
 }
 function openOrderDialog() {
+  if(!commissionStatusReady||!commissionsOpen){copyStatus.textContent=commissionStatusReady?'Las comisiones están cerradas por el momento.':'No se pudo consultar si las comisiones están abiertas. Probá de nuevo más tarde.';return}
   clientContact.value = ''; clientDetails.value = '';
   const summary = document.createElement('pre'); summary.textContent = orderText(); orderPreview.replaceChildren(summary); copyStatus.textContent = '';
   spokeCheck.checked = false; submitRequest.disabled = true; emailLink.setAttribute('aria-disabled', 'true'); emailLink.tabIndex = -1;
@@ -337,7 +342,7 @@ function refreshOrderText() {
   clientContact.addEventListener('input', refreshOrderText, { once: true }); clientDetails.addEventListener('input', refreshOrderText, { once: true });
 }
 
-renderCatalog(); renderCart(); updateDisplayedPrices(); setCartOpen(false); loadCurrencyRates();
+renderCatalog(); renderCart(); updateDisplayedPrices(); setCartOpen(false); loadCurrencyRates(); loadCommissionStatus();
 commissionHeroImageButton?.addEventListener('click', () => {
   const image = commissionHeroImageButton.querySelector('img');
   if (!image) return;

@@ -1,4 +1,6 @@
 PRAGMA foreign_keys = ON;
+CREATE TABLE IF NOT EXISTS site_settings (setting_key TEXT PRIMARY KEY,setting_value TEXT NOT NULL,updated_at TEXT NOT NULL);
+INSERT OR IGNORE INTO site_settings(setting_key,setting_value,updated_at) VALUES('commissions_open','true',datetime('now'));
 CREATE TABLE IF NOT EXISTS users (google_sub TEXT PRIMARY KEY,email TEXT NOT NULL,display_name TEXT NOT NULL,avatar_url TEXT NOT NULL DEFAULT '',created_at TEXT NOT NULL,updated_at TEXT NOT NULL);
 CREATE INDEX IF NOT EXISTS users_email_idx ON users(email);
 CREATE TABLE IF NOT EXISTS orders (

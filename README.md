@@ -9,7 +9,7 @@ Sitio del portfolio personal con backend de Cloudflare Pages Functions para comi
 3. Inicializar la base D1 local una vez: `npm run db:local:init`.
 4. Ejecutar `npm run dev` para iniciar Wrangler en modo local, cargando `.dev.vars`, y abrir `http://localhost:8788`.
 
-Pages crea D1 y R2 simulados en esta computadora. Google OAuth ya está configurado localmente; Discord y X requieren sus secretos locales o de Cloudflare. Resend puede enviar correos reales desde el entorno local si se crea un pedido; PayPal sigue apagado hasta configurar el sandbox y una URL HTTPS pública. Las nuevas cotizaciones son USD; Mercado Pago/Pix permanecen deshabilitados para USD hasta definir una conversión. En una base D1 existente, hacer un backup y aplicar las migraciones que falten en orden hasta `0008_manual_transfer_methods.sql`; una base nueva se inicializa solo con `schema.sql`. No desplegar `wrangler.jsonc` tal cual: contiene identificadores locales de ejemplo.
+Pages crea D1 y R2 simulados en esta computadora. Google OAuth ya está configurado localmente; Discord y X requieren sus secretos locales o de Cloudflare. Resend puede enviar correos reales desde el entorno local si se crea un pedido; PayPal sigue apagado hasta configurar el sandbox y una URL HTTPS pública. Las nuevas cotizaciones son USD; Mercado Pago/Pix permanecen deshabilitados para USD hasta definir una conversión. En una base D1 existente, hacer un backup y aplicar las migraciones que falten en orden hasta `0009_commission_open_state.sql`; una base nueva se inicializa solo con `schema.sql`. No desplegar `wrangler.jsonc` tal cual: contiene identificadores locales de ejemplo.
 
 ## Publicar
 

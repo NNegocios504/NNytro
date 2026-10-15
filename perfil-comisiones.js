@@ -238,10 +238,13 @@
     byId('profile-email').textContent = signed ? user.email : '';
     byId('profile-admin').hidden=!(signed&&user.isAdmin);
     if (!signed || !user.isAdmin) byId('profile-admin-orders').replaceChildren();
+    if(signed&&user.isAdmin)loadCommissionSettings();
     if (signed) { if (!nameInput.value) nameInput.value = user.name || ''; setMode(`${t('Sesión iniciada como')} ${user.name || user.email}. ${t('Los pedidos se consultan en el servidor.')}`); loadProfile(); loadOrders(); loadPaymentProviders(); }
     else { setMode(authRedirectMessage||'Aún no iniciaste sesión. Iniciá con Google, Discord o Twitter para vincular pedidos, mensajes y reseñas.'); showOrders([]); }
     updateAvatar(user);
   }
+  async function loadCommissionSettings(){const button=byId('profile-commission-toggle'),state=byId('profile-commission-state'),status=byId('profile-commission-status');button.disabled=true;try{const result=await api('admin/commission-status');state.textContent=result.open?'Estado: comisiones abiertas':'Estado: comisiones cerradas';button.textContent=result.open?'Cerrar comisiones':'Abrir comisiones';button.dataset.open=String(result.open);button.disabled=false;status.textContent=''}catch(error){state.textContent='Estado: no disponible';button.textContent='No se pudo cargar';status.textContent=t(error.message)}}
+  byId('profile-commission-toggle').addEventListener('click',async()=>{const button=byId('profile-commission-toggle'),status=byId('profile-commission-status'),open=button.dataset.open!=='true';button.disabled=true;status.textContent=t('Guardando estado…');try{const result=await api('admin/commission-status',{method:'PUT',body:JSON.stringify({open})});button.dataset.open=String(result.open);byId('profile-commission-state').textContent=result.open?'Estado: comisiones abiertas':'Estado: comisiones cerradas';button.textContent=result.open?'Cerrar comisiones':'Abrir comisiones';status.textContent=t(result.open?'Las comisiones quedaron abiertas.':'Las comisiones quedaron cerradas.');button.disabled=false}catch(error){status.textContent=t(error.message);button.disabled=false}});
   async function loadProfile(){try{const result=await api('profile');if(result.profile){nameInput.value=result.profile.name||'';authenticatedUser={...authenticatedUser,name:result.profile.name,picture:result.profile.picture||authenticatedUser.picture};updateAvatar();}}catch(error){byId('profile-save-status').textContent=`${t('No se pudo cargar el perfil:')} ${t(error.message)}`}}
   async function setupOAuthProviders() {
     const links=[...document.querySelectorAll('[data-provider]')];

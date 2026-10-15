@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="./styles.css?v=atmosphere-fallback-2" />
     <link rel="stylesheet" href="./effects.css?v=20261015-8" />
     <link rel="stylesheet" href="./perfil-comisiones.css?v=atmosphere-fallback-2" />
-    <link rel="stylesheet" href="./perfil-comisiones-admin.css" />
+    <link rel="stylesheet" href="./perfil-comisiones-admin.css?v=commission-state-1" />
   </head>
   <body class="profile-body">
     <video class="page-background-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true"><source src="./assets/fondos/portfolio.webm" type="video/webm" /></video>
@@ -53,6 +53,7 @@
       <section class="profile-edit profile-admin-section" aria-labelledby="profile-admin-title" id="profile-admin" hidden>
         <div class="profile-section-heading"><div><p class="profile-kicker">ADMINISTRACIÓN PRIVADA</p><h2 id="profile-admin-title">Pedidos para revisar</h2></div><small>Solo visible en sesión administradora</small></div>
         <p class="profile-request-hint">El checkout todavía no está disponible en esta vista local. La API de pagos requiere Cloudflare Pages, credenciales privadas y webhooks configurados; no ingreses claves aquí ni marques pagos recibidos manualmente.</p>
+        <div class="profile-commission-toggle"><div><strong id="profile-commission-state">Estado: cargando…</strong><small id="profile-commission-status" role="status" aria-live="polite"></small></div><button id="profile-commission-toggle" type="button" disabled>Cargando estado…</button></div>
         <div id="profile-admin-orders" class="profile-order-list"></div>
       </section>
 
@@ -65,6 +66,6 @@
 
       <footer class="profile-footer"><span>NNYTRO / PERFIL DE CLIENTE</span><a href="./comisiones.html">VOLVER A COMISIONES ↑</a></footer>
     </main>
-    <script src="./i18n.js?v=profile-publication-optional-name-1" defer></script><script src="./profile-config.js" defer></script><script src="./perfil-comisiones.js?v=profile-publication-optional-name-1" defer></script><script src="./effects.js?v=20261015-14" defer></script>
+    <script src="./i18n.js?v=profile-publication-optional-name-1" defer></script><script src="./profile-config.js" defer></script><script src="./perfil-comisiones.js?v=commission-state-1" defer></script><script src="./effects.js?v=20261015-14" defer></script>
   </body>
 </html>
