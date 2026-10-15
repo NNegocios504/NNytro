@@ -40,7 +40,7 @@ async function oauthCallback(r,env,provider){
 }
 async function googleOauthStart(r,env){
  const id=env.GOOGLE_CLIENT_ID,secret=env.GOOGLE_CLIENT_SECRET;
- if(!id||!secret||!env.SESSION_SECRET)return new Response('OAuth de Google no configurado. Falta GOOGLE_CLIENT_SECRET en los secretos locales.',{status:503});
+ if(!id||!secret||!env.SESSION_SECRET)return new Response('OAuth de Google no configurado. Configurá GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET y SESSION_SECRET en el entorno de Pages.',{status:503});
  const u=new URL(r.url),state=await randomToken(),verifier=await randomToken(48),challenge=b64(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier)))),redirectUri=u.origin+'/api/auth/google/callback';
  const params=new URLSearchParams({client_id:id,response_type:'code',redirect_uri:redirectUri,scope:'openid email profile',state,code_challenge:challenge,code_challenge_method:'S256',access_type:'online'});
  return redirect('https://accounts.google.com/o/oauth2/v2/auth?'+params.toString(),[cookie(r,'nnytro_google_state',state,600),cookie(r,'nnytro_google_verifier',verifier,600)]);

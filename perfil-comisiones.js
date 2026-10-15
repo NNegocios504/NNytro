@@ -232,6 +232,7 @@
     authVersion += 1;
     authenticatedUser = user;
     const signed = Boolean(user);
+    if(signed)authRedirectMessage='';
     document.querySelectorAll('[data-provider],#profile-auth-hint').forEach(control=>control.hidden=signed);
     byId('profile-signout').hidden = !signed;
     byId('profile-new-order').hidden = !signed;
@@ -250,10 +251,17 @@
     const links=[...document.querySelectorAll('[data-provider]')];
     links.forEach(link=>link.addEventListener('click',event=>{if(link.getAttribute('aria-disabled')==='true')event.preventDefault()}));
     const names={google:'Google',discord:'Discord',x:'Twitter'};
-    const missing={google:'Configurá GOOGLE_CLIENT_ID y GOOGLE_CLIENT_SECRET en .dev.vars.',discord:'Configurá DISCORD_CLIENT_ID y DISCORD_CLIENT_SECRET en .dev.vars o Cloudflare.',x:'Configurá X_CLIENT_ID y X_CLIENT_SECRET en .dev.vars o Cloudflare.'};
-    try { const available=await api('auth/providers'); for(const link of links){const provider=link.dataset.provider,enabled=Boolean(available[provider]),label=names[provider],copy=`${t('Iniciar con')} ${label}`;link.setAttribute('aria-disabled',String(!enabled));link.title=enabled?'':t(missing[provider]);link.querySelector('.profile-provider-label').textContent=copy;} }
-    catch { for(const link of links){const provider=link.dataset.provider;link.setAttribute('aria-disabled','true');link.querySelector('.profile-provider-label').textContent=`${t('Iniciar con')} ${names[provider]}`} }
-  }  async function createOrder(event) {
+    const missing={google:'Configurá GOOGLE_CLIENT_ID y GOOGLE_CLIENT_SECRET en Cloudflare Pages y registrá /api/auth/google/callback en Google.',discord:'Configurá DISCORD_CLIENT_ID y DISCORD_CLIENT_SECRET en Cloudflare y registrá /api/auth/discord/callback en Discord.',x:'Configurá X_CLIENT_ID y X_CLIENT_SECRET en Cloudflare y registrá /api/auth/x/callback en X.'};
+    try {
+      const available=await api('auth/providers');
+      for(const link of links){const provider=link.dataset.provider,enabled=Boolean(available[provider]),label=names[provider];link.setAttribute('aria-disabled',String(!enabled));link.title=enabled?'':t(missing[provider]);link.querySelector('.profile-provider-label').textContent=enabled?`${t('Iniciar con')} ${label}`:`${label} · ${t('no configurado')}`;}
+      if(!Object.values(available).some(Boolean)&&!authenticatedUser){authRedirectMessage=t('Todavía no hay accesos configurados. En Cloudflare hacen falta D1, SESSION_SECRET y las credenciales OAuth del proveedor.');byId('profile-auth-message').textContent=authRedirectMessage;}
+    } catch {
+      for(const link of links){const provider=link.dataset.provider;link.setAttribute('aria-disabled','true');link.title=t('El sitio no pudo contactar al servidor de acceso.');link.querySelector('.profile-provider-label').textContent=`${names[provider]} · ${t('no disponible')}`;}
+      if(!authenticatedUser){authRedirectMessage=location.protocol==='file:'?t('Esta vista abierta como archivo no puede iniciar sesión. Abrí el sitio publicado en Cloudflare Pages.'):t('No se pudo contactar al servidor de acceso. Revisá que Cloudflare Pages Functions y D1 estén configurados.');byId('profile-auth-message').textContent=authRedirectMessage;}
+    }
+  }
+ async function createOrder(event) {
     event.preventDefault(); const status = byId('profile-order-status'); const submit = byId('profile-order-submit');
     const selected = Object.entries(cart()).map(([id, quantity]) => ({ id:id === 'saludo' ? 'un-saludo' : id, quantity:Math.floor(Number(quantity) || 0) })).filter(item => item.quantity > 0);
     if (!selected.length) { status.textContent = t('Primero agregá opciones desde el catálogo de comisiones.'); return; }
@@ -291,7 +299,7 @@
     const snapshot = captureDynamicFormState();
     renderCartSummary();
     if (authenticatedUser) byId('profile-auth-message').textContent = `${t('Sesión iniciada como')} ${authenticatedUser.name || authenticatedUser.email}. ${t('Los pedidos se consultan en el servidor.')}`;
-    else byId('profile-auth-message').textContent = t('Aún no iniciaste sesión. Iniciá con Google, Discord o Twitter para vincular pedidos, mensajes y reseñas.');
+    else byId('profile-auth-message').textContent = authRedirectMessage || t('Aún no iniciaste sesión. Iniciá con Google, Discord o Twitter para vincular pedidos, mensajes y reseñas.');
     if (cachedOrders.length) {
       showOrders(cachedOrders);
       if (authenticatedUser?.isAdmin) renderAdminOrders(cachedOrders);
