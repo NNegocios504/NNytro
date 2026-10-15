@@ -77,6 +77,9 @@ const commissionImagePrevious = commissionImageDialog?.querySelector('.commissio
 const commissionImageNext = commissionImageDialog?.querySelector('.commission-image-nav--next');
 let commissionImageSet = [];
 let commissionImageIndex = 0;
+let commissionImageZoom = 1;
+let commissionImageOffset = { x:0, y:0 };
+let commissionImageDrag = null;
 const commissionHeroImageButton = document.querySelector('.commission-hero-image-open');
 const orderPreview = document.querySelector('#commission-order-preview');
 const copyOrderButton = document.querySelector('#commission-copy-order');
@@ -221,6 +224,7 @@ function openCommissionImage(src, alt, images = []) {
   commissionImageSet = images;
   commissionImageIndex = Math.max(0, images.findIndex(image => (image.currentSrc || image.src) === src));
   const image = commissionImageSet[commissionImageIndex];
+  resetCommissionImageView();
   commissionImageOriginal.src = image ? image.currentSrc || image.src : src;
   commissionImageOriginal.alt = image?.alt || alt || t('Imagen original de ejemplos de comisión');
   const canNavigate = commissionImageSet.length > 1;
@@ -234,9 +238,13 @@ function moveCommissionImage(direction) {
   if (commissionImageSet.length < 2) return;
   commissionImageIndex = (commissionImageIndex + direction + commissionImageSet.length) % commissionImageSet.length;
   const image = commissionImageSet[commissionImageIndex];
+  resetCommissionImageView();
   commissionImageOriginal.src = image.currentSrc || image.src;
   commissionImageOriginal.alt = image.alt || t('Imagen original de ejemplos de comisión');
 }
+
+function resetCommissionImageView(){commissionImageZoom=1;commissionImageOffset={x:0,y:0};if(commissionImageOriginal){commissionImageOriginal.style.transform='';commissionImageOriginal.style.cursor='zoom-in'}}
+function setCommissionImageZoom(value){commissionImageZoom=Math.min(5,Math.max(1,value));if(commissionImageZoom===1)commissionImageOffset={x:0,y:0};const image=commissionImageOriginal;const maxX=image?image.clientWidth*(commissionImageZoom-1)/2:0;const maxY=image?image.clientHeight*(commissionImageZoom-1)/2:0;commissionImageOffset.x=Math.min(maxX,Math.max(-maxX,commissionImageOffset.x));commissionImageOffset.y=Math.min(maxY,Math.max(-maxY,commissionImageOffset.y));if(image){image.style.transform=`translate(${commissionImageOffset.x}px,${commissionImageOffset.y}px) scale(${commissionImageZoom})`;image.style.cursor=commissionImageZoom>1?'grab':'zoom-in'}}
 
 function makeServiceCard(item) {
   const card = document.createElement('article'); card.className = 'commission-service-card'; card.dataset.serviceId = item.id;
@@ -352,10 +360,19 @@ commissionImageDialog?.addEventListener('click', event => { if (event.target ===
 commissionImagePrevious?.addEventListener('click', () => moveCommissionImage(-1));
 commissionImageNext?.addEventListener('click', () => moveCommissionImage(1));
 commissionImageDialog?.addEventListener('keydown', event => {
+  if ((event.key==='+'||event.key==='=')&&!event.ctrlKey){event.preventDefault();setCommissionImageZoom(commissionImageZoom+.5);return}
+  if ((event.key==='-'||event.key==='_')&&!event.ctrlKey){event.preventDefault();setCommissionImageZoom(commissionImageZoom-.5);return}
   if ((event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') || commissionImageSet.length < 2) return;
   event.preventDefault();
   moveCommissionImage(event.key === 'ArrowRight' ? 1 : -1);
 });
+commissionImageOriginal?.addEventListener('wheel',event=>{event.preventDefault();setCommissionImageZoom(commissionImageZoom+(event.deltaY<0?.25:-.25))},{passive:false});
+commissionImageOriginal?.addEventListener('dblclick',event=>{event.preventDefault();setCommissionImageZoom(commissionImageZoom===1?2:1)});
+commissionImageOriginal?.addEventListener('pointerdown',event=>{if(commissionImageZoom<=1)return;event.preventDefault();commissionImageDrag={id:event.pointerId,x:event.clientX,y:event.clientY,offsetX:commissionImageOffset.x,offsetY:commissionImageOffset.y};commissionImageOriginal.setPointerCapture(event.pointerId);commissionImageOriginal.style.cursor='grabbing'});
+commissionImageOriginal?.addEventListener('pointermove',event=>{if(!commissionImageDrag||commissionImageDrag.id!==event.pointerId)return;commissionImageOffset.x=commissionImageDrag.offsetX+event.clientX-commissionImageDrag.x;commissionImageOffset.y=commissionImageDrag.offsetY+event.clientY-commissionImageDrag.y;setCommissionImageZoom(commissionImageZoom)});
+const finishCommissionImageDrag=event=>{if(commissionImageDrag?.id===event.pointerId)commissionImageDrag=null;if(commissionImageOriginal)commissionImageOriginal.style.cursor=commissionImageZoom>1?'grab':'zoom-in'};
+commissionImageOriginal?.addEventListener('pointerup',finishCommissionImageDrag);commissionImageOriginal?.addEventListener('pointercancel',finishCommissionImageDrag);
+commissionImageDialog?.addEventListener('close',resetCommissionImageView);
 const hoverTiltEnabled = window.matchMedia?.('(hover: hover) and (pointer: fine)').matches && !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 if (hoverTiltEnabled) document.querySelectorAll('.commission-title-row,.commission-hero-art').forEach(target => {
   target.addEventListener('pointermove', event => {
