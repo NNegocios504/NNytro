@@ -163,7 +163,7 @@ html.xp-cursor [contenteditable="true"] { cursor: text; }
 .unified-site-actions { grid-column:3; display:flex; align-items:center; justify-self:end; gap:clamp(.45rem,1vw,.9rem); }
 .unified-site-actions .site-profile-toggle { position:static; top:auto; right:auto; z-index:6; width:38px; height:38px; flex:0 0 38px; }
 .unified-site-actions .site-profile-toggle svg { width:20px; height:20px; }
-@media(max-width:700px) { .unified-site-actions { grid-column:2; grid-row:1; gap:.4rem; } .unified-site-actions .unified-site-menu { font-size:7px; padding:.4rem .55rem; } .unified-site-actions .site-profile-toggle { width:34px; height:34px; flex-basis:34px; } }
+@media(max-width:700px) { .unified-site-actions { grid-column:2; grid-row:1; gap:.4rem; } .unified-site-actions .unified-site-menu { font-size:8px; padding:.4rem .55rem; } .unified-site-actions .site-profile-toggle { width:34px; height:34px; flex-basis:34px; } }
 .site-profile-toggle:hover,.site-profile-toggle:focus-visible { transform:scale(1.08); filter:brightness(1.14); box-shadow:0 0 18px rgba(142,181,207,.42),0 3px 9px #0009; }
 .site-profile-toggle:focus-visible { outline:3px solid #d9efff; outline-offset:3px; }
 .site-profile-toggle svg { width:23px; height:23px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }

@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#080718" />
     <title>Mi perfil — NNytro</title>
-    <link rel="stylesheet" href="./styles.css?v=otter-brand-1" />
-    <link rel="stylesheet" href="./effects.css?v=20261015-8" />
+    <link rel="stylesheet" href="./styles.css?v=nav-size-match-1" />
+    <link rel="stylesheet" href="./effects.css?v=20261015-9" />
     <link rel="stylesheet" href="./perfil-comisiones.css?v=profile-header-full-width-1" />
-    <link rel="stylesheet" href="./perfil-comisiones-admin.css?v=commission-state-1" />
+    <link rel="stylesheet" href="./perfil-comisiones-admin.css?v=admin-published-tools-1" />
   </head>
   <body class="profile-body">
     <video class="page-background-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true"><source src="./assets/fondos/portfolio.webm" type="video/webm" /></video>
@@ -54,6 +54,8 @@
         <p class="profile-request-hint">El checkout todavía no está disponible en esta vista local. La API de pagos requiere Cloudflare Pages, credenciales privadas y webhooks configurados; no ingreses claves aquí ni marques pagos recibidos manualmente.</p>
         <div class="profile-commission-toggle"><div><strong id="profile-commission-state">Estado: cargando…</strong><small id="profile-commission-status" role="status" aria-live="polite"></small></div><button id="profile-commission-toggle" type="button" disabled>Cargando estado…</button></div>
         <div id="profile-admin-orders" class="profile-order-list"></div>
+        <div class="profile-section-heading profile-admin-publications-heading"><div><p class="profile-kicker">PUBLICACIONES</p><h2>Comisiones terminadas y publicadas</h2></div></div>
+        <div id="profile-admin-publications" class="profile-admin-publications"></div>
       </section>
 
       <section class="profile-overview" aria-label="Resumen de tu cuenta">
@@ -65,6 +67,6 @@
 
       <footer class="profile-footer"><span>NNYTRO / PERFIL DE CLIENTE</span><a href="./comisiones.html">VOLVER A COMISIONES ↑</a></footer>
     </main>
-    <script src="./i18n.js?v=commission-cart-login-copy-2" defer></script><script src="./profile-config.js" defer></script><script src="./perfil-comisiones.js?v=commission-cart-login-copy-2" defer></script><script src="./effects.js?v=currency-on-commissions-2" defer></script>
+    <script src="./i18n.js?v=commission-cart-login-copy-2" defer></script><script src="./profile-config.js" defer></script><script src="./perfil-comisiones.js?v=admin-published-tools-1" defer></script><script src="./effects.js?v=currency-on-commissions-2" defer></script>
   </body>
 </html>

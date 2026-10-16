@@ -290,12 +290,14 @@ html[lang="en"] .home-intro h1 { font-size:clamp(2.3rem,4.15vw,3.25rem); letter-
 .unified-site-brand .brand-copy { display:inline-flex; align-items:baseline; gap:.4em; }
 .unified-site-brand .brand-section { color:rgba(190,173,255,.72); font:8px/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.18em; text-transform:uppercase; }
 .unified-site-nav { display:flex; align-items:center; justify-content:center; gap:clamp(.8rem,2vw,1.8rem); }
-.unified-site-nav a { color:#ddd6f4; font:9px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.12em; text-decoration:none; text-transform:uppercase; white-space:nowrap; transition:color .16s ease,text-shadow .16s ease; }
+.unified-site-nav a { color:#ddd6f4; font:11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.12em; text-decoration:none; text-transform:uppercase; white-space:nowrap; transition:color .16s ease,text-shadow .16s ease; }
 .unified-site-nav a:hover,.unified-site-nav a:focus-visible { color:#fff; text-shadow:0 0 12px #72eaff; outline:none; }
-.unified-site-menu { justify-self:end; display:inline-flex; align-items:center; justify-content:center; min-height:2rem; padding:.45rem .7rem; border:1px solid rgba(170,156,224,.34); color:#e5dfff; background:rgba(7,8,28,.55); font:8px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.13em; text-decoration:none; text-transform:uppercase; white-space:nowrap; transition:color .16s ease,border-color .16s ease,background .16s ease; }
+.unified-site-menu { justify-self:end; display:inline-flex; align-items:center; justify-content:center; min-height:2rem; padding:.45rem .7rem; border:1px solid rgba(170,156,224,.34); color:#e5dfff; background:rgba(7,8,28,.55); font:11px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.13em; text-decoration:none; text-transform:uppercase; white-space:nowrap; transition:color .16s ease,border-color .16s ease,background .16s ease; }
 .unified-site-menu:hover,.unified-site-menu:focus-visible { color:white; border-color:#72eaff; background:rgba(91,58,178,.38); outline:none; }
 .gallery-page-title { width:min(100%,1320px); margin:.8rem auto 0; }
-@media(max-width:700px) { .unified-site-header { grid-template-columns:minmax(0,1fr) auto; row-gap:.6rem; min-height:auto; padding-top:.65rem; padding-bottom:.65rem; } .unified-site-brand { font-size:.95rem; } .unified-site-brand .brand-section { font-size:7px; } .unified-site-nav { grid-column:1 / -1; grid-row:2; justify-content:flex-start; gap:clamp(.8rem,5vw,1.4rem); } .unified-site-nav a { font-size:8px; } .unified-site-menu { grid-column:2; grid-row:1; font-size:7px; } }
+@media(max-width:700px) { .unified-site-header { grid-template-columns:minmax(0,1fr) auto; row-gap:.6rem; min-height:auto; padding-top:.65rem; padding-bottom:.65rem; } .unified-site-brand { font-size:.95rem; } .unified-site-brand .brand-section { font-size:7px; } .unified-site-nav { grid-column:1 / -1; grid-row:2; justify-content:flex-start; gap:clamp(.8rem,5vw,1.4rem); } .unified-site-nav a { font-size:11px; } .unified-site-menu { grid-column:2; grid-row:1; font-size:8px; } }
+@media(max-width:480px) { .unified-site-nav a { font-size:9px; } }
+@media(max-width:380px) { .unified-site-menu { font-size:7px; } }
 
 /* En móvil: presentación, TV y menú en ese orden; escritorio conserva la escena actual. */
 @media (max-width:700px) {
