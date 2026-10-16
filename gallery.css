@@ -1,6 +1,6 @@
 @font-face{font-family:Crosner;src:url('./assets/Crosner-Regular.ttf') format('truetype');font-display:swap}
 @font-face{font-family:Comico;src:url('./assets/Comico-Regular.otf') format('opentype');font-display:swap}
-:root{--gallery-ink:#08051b;--gallery-violet:#b894ff;--gallery-cyan:#75e8ff;--gallery-line:rgba(191,164,255,.35)}
+:root{--gallery-ink:#08051b;--gallery-violet:#b894ff;--gallery-cyan:#75e8ff;--gallery-line:rgba(191,164,255,.35);--gallery-card-min:245px}
 *{box-sizing:border-box}
 body{margin:0;background:#08051b;color:#f7f4ff;font-family:'Comico',sans-serif}
 .gallery-page{position:relative;isolation:isolate;min-height:100vh;min-height:100svh;padding:clamp(1rem,3vw,2.6rem) clamp(1rem,4vw,4rem) 5rem;background-color:#08051b;background-image:radial-gradient(ellipse at 50% 0,rgba(113,55,203,.35),transparent 50rem),linear-gradient(180deg,rgba(4,4,20,.79),rgba(4,5,20,.92));background-repeat:no-repeat;color:#fff}
@@ -68,12 +68,18 @@ body{margin:0;background:#08051b;color:#f7f4ff;font-family:'Comico',sans-serif}
 .gallery-image-viewer-viewport img{position:absolute;display:block;max-width:none;max-height:none;border-radius:14px;object-fit:fill;user-select:none;-webkit-user-drag:none;pointer-events:none}
 body.modal-open{overflow:hidden}
 @media(max-width:760px){.gallery-page{padding-inline:1rem;background-attachment:scroll}.gallery-toolbar{align-items:flex-start;flex-direction:column}.gallery-modal-card{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;height:min(94dvh,1000px);border-radius:18px}.gallery-modal-card--single-image{display:flex;width:min(94vw,720px);height:auto;max-height:92dvh;flex-direction:column}.gallery-modal-card--single-image .gallery-modal-media{width:100%;height:var(--gallery-single-image-height,min(48dvh,520px));flex:none;padding:.35rem}.gallery-modal-card--single-image .gallery-modal-info{width:100%}.gallery-modal-info{max-height:30dvh;border-top:1px solid #c4adff2c;border-left:0;border-radius:0 0 21px 21px;padding:1rem 1.2rem}.gallery-modal-media--collection{justify-content:center;gap:1rem;padding:1rem .75rem}.gallery-modal-piece{flex:0 1 auto}.gallery-modal-image-button,.gallery-modal-image-button img{max-width:min(100%,42vw);max-height:42dvh}.gallery-image-viewer-panel{width:min(96vw,820px);height:min(86dvh,820px);border-radius:18px}.gallery-image-viewer-close{top:.55rem;right:.55rem}}
-@media(max-width:430px){.gallery-title{font-size:clamp(3rem,17vw,4.2rem)}.gallery-card-media{aspect-ratio:1/1}.gallery-modal-media--collection{grid-template-columns:1fr 1fr;gap:.55rem}.gallery-modal-piece figcaption{font-size:.77rem}.gallery-modal-info h2{font-size:2rem}}
+@media(max-width:430px){.gallery-title{font-size:min(clamp(3rem,17vw,4.2rem),var(--gallery-heading-size,999px))}.gallery-card-media{aspect-ratio:1/1}.gallery-modal-media--collection{grid-template-columns:1fr 1fr;gap:.55rem}.gallery-modal-piece figcaption{font-size:.77rem}.gallery-modal-info h2{font-size:2rem}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}.gallery-card:hover .gallery-card-media::after,.gallery-card:focus-visible .gallery-card-media::after,.gallery-card:hover .gallery-card-media img,.gallery-card:focus-visible .gallery-card-media img{animation:none!important}}
 
 .gallery-card-description{display:-webkit-box;overflow:hidden;color:#d8d0ea;font: .78rem/1.45 'Comico',sans-serif;-webkit-box-orient:vertical;-webkit-line-clamp:2}
 .gallery-modal-description{margin:.7rem 0 1rem;color:#e4dcf7;font:clamp(.9rem,1vw,1rem)/1.65 'Comico',sans-serif;letter-spacing:0;text-transform:none;white-space:pre-line}
 .gallery-item-description{margin:.25rem 0 0;color:#bdb3d4;font:.78rem/1.5 'Comico',sans-serif;white-space:pre-line}
+.gallery-title{font-family:var(--gallery-heading-font,'Crosner'),'Comico',sans-serif;font-size:clamp(min(3.5rem,var(--gallery-heading-size,7rem)),9vw,var(--gallery-heading-size,7rem))}
+.gallery-card-title{font-family:var(--gallery-card-font,'Crosner'),'Comico',sans-serif;font-size:var(--gallery-card-title-size,clamp(1rem,1.35vw,1.25rem))}
+.gallery-grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,var(--gallery-card-min,245px)),1fr))}
+.gallery-intro{width:min(100%,1440px);margin:.6rem auto 0;color:#d8d0ea;font:clamp(1rem,1.5vw,1.3rem)/1.55 'Comico',sans-serif;white-space:pre-line}
+.gallery-intro[hidden]{display:none!important}
+@media(max-width:430px){.gallery-title{font-size:min(clamp(3rem,17vw,4.2rem),var(--gallery-heading-size,999px))}}
 
 /* Las colecciones muestran solo las imágenes y sus títulos, agrupadas en una grilla. */
 .gallery-modal-card--collection{border:0;border-radius:0;background:transparent;box-shadow:none}

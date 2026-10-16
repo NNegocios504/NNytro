@@ -738,10 +738,10 @@ function buildProjects(items) {
   const projects = [];
 
   items.forEach((item) => {
-    const custom = customProjectFor(item);
-    const relativePath = item.src.replace('./assets/gallery/', '').split('/');
+    const custom = item.adminEntryId ? null : customProjectFor(item);
+    const relativePath = item.src.startsWith('./assets/gallery/') ? item.src.replace('./assets/gallery/', '').split('/') : [];
     const nestedFolder = relativePath.length > 3 ? relativePath[2] : null;
-    const key = custom?.key || (nestedFolder
+    const key = item.adminEntryId ? `admin:${item.adminEntryId}` : custom?.key || (nestedFolder
       ? item.category + '::' + nestedFolder
       : item.category + '::' + item.src);
 
@@ -773,7 +773,7 @@ const uniqueGalleryItems = galleryItems.filter((item) => {
   return !duplicateBrokenCodesDrawing;
 });
 const categoryOrder = ['portadas', 'menus', 'renders', 'dibujos', 'modeloss blockbench', 'matt', 'skins', 'under news'];
-const projects = buildProjects(uniqueGalleryItems).sort((a, b) => {
+let projects = buildProjects(uniqueGalleryItems).sort((a, b) => {
   const categoryDifference = categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category);
   return categoryDifference || a.title.localeCompare(b.title, 'es', { sensitivity: 'base' });
 });
@@ -915,6 +915,56 @@ function renderCards(category = 'all') {
     card.addEventListener('click', () => openModal(project));
     grid.append(card);
   });
+}
+
+function applyPortfolioSettings(settings = {}) {
+  const title = document.querySelector('#gallery-page-title');
+  const intro = document.querySelector('#gallery-page-intro');
+  if (title && settings.pageTitle) title.textContent = settings.pageTitle;
+  if (intro) {
+    intro.textContent = settings.intro || '';
+    intro.hidden = !settings.intro;
+  }
+  const root = document.documentElement;
+  if (['Crosner', 'Comico'].includes(settings.headingFont)) root.style.setProperty('--gallery-heading-font', `'${settings.headingFont}'`);
+  if (['Crosner', 'Comico'].includes(settings.cardFont)) root.style.setProperty('--gallery-card-font', `'${settings.cardFont}'`);
+  if (Number.isFinite(Number(settings.headingSize))) root.style.setProperty('--gallery-heading-size', `${Math.max(40, Math.min(160, Number(settings.headingSize)))}px`);
+  if (Number.isFinite(Number(settings.cardTitleSize))) root.style.setProperty('--gallery-card-title-size', `${Math.max(12, Math.min(36, Number(settings.cardTitleSize)))}px`);
+  if (Number.isFinite(Number(settings.cardMinWidth))) root.style.setProperty('--gallery-card-min', `${Math.max(180, Math.min(440, Number(settings.cardMinWidth)))}px`);
+}
+
+async function loadAdminPublishedPortfolio() {
+  try {
+    const response = await fetch('/api/portfolio', { credentials: 'same-origin', cache: 'no-store' });
+    if (!response.ok) return;
+    const data = await response.json();
+    applyPortfolioSettings(data.settings);
+    const addedItems = Array.isArray(data.items) ? data.items.map(item => ({
+      category: item.category,
+      title: item.title,
+      description: item.description || '',
+      type: item.type,
+      src: item.src,
+      adminEntryId: item.id
+    })) : [];
+    if (addedItems.length) {
+      const activeCategory = document.querySelector('.gallery-filter.is-active')?.dataset.category || 'all';
+      const allItems = [...uniqueGalleryItems, ...addedItems];
+      projects = buildProjects(allItems).sort((a, b) => {
+        const aOrder = categoryOrder.includes(a.category) ? categoryOrder.indexOf(a.category) : categoryOrder.length;
+        const bOrder = categoryOrder.includes(b.category) ? categoryOrder.indexOf(b.category) : categoryOrder.length;
+        return aOrder - bOrder || a.title.localeCompare(b.title, 'es', { sensitivity: 'base' });
+      });
+      renderFilters();
+      const active = [...document.querySelectorAll('.gallery-filter')].find(button => button.dataset.category === activeCategory);
+      active?.classList.add('is-active');
+      renderCards(active ? activeCategory : 'all');
+    } else {
+      renderCards(document.querySelector('.gallery-filter.is-active')?.dataset.category || 'all');
+    }
+  } catch {
+    // The static portfolio remains available when the API is not configured.
+  }
 }
 
 function openModal(project) {
@@ -1205,6 +1255,7 @@ document.addEventListener('keydown', (event) => {
 
 renderFilters();
 renderCards();
+void loadAdminPublishedPortfolio();
 document.addEventListener('nnytro:language-applied', () => {
   translateViewerControls();
   const active = document.querySelector('.gallery-filter.is-active');

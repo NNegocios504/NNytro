@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#080718" />
+    <title>Personalizar portfolio — NNytro</title>
+    <link rel="stylesheet" href="./styles.css?v=zoom-reset-1" />
+    <link rel="stylesheet" href="./gallery.css?v=portfolio-admin-customizer-1" />
+    <link rel="stylesheet" href="./portfolio-admin.css?v=portfolio-admin-customizer-1" />
+  </head>
+  <body class="portfolio-admin-body">
+    <video class="page-background-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true"><source src="./assets/fondos/portfolio.webm" type="video/webm" /></video>
+    <main class="portfolio-admin-page">
+      <header class="unified-site-header" aria-label="Navegación de administración">
+        <a class="unified-site-brand" href="./index.html"><img class="brand-otter" src="./assets/nutria-logo.png" alt="" aria-hidden="true" /><span class="brand-copy">NNYTRO <span class="brand-section">/ ADMIN PORTFOLIO</span></span></a>
+        <nav class="unified-site-nav" aria-label="Navegación"><a href="./galeria.html">Ver portfolio</a><a href="./perfil-comisiones.html">Tu perfil</a></nav>
+        <div class="unified-site-actions"><a class="unified-site-menu" href="./perfil-comisiones.html">← Volver al perfil</a></div>
+      </header>
+      <section class="portfolio-admin-intro"><p class="portfolio-admin-kicker">PANEL PRIVADO · NNYTRO</p><h1>Personalizá tu portfolio</h1><p>Publicá piezas nuevas; los paneles, categorías y el orden se generan solos. Ajustá los textos y la tipografía y mirá los cambios en la galería.</p></section>
+      <section class="portfolio-admin-locked" id="portfolio-locked" hidden><h2>Acceso privado</h2><p id="portfolio-auth-status">Comprobando tu cuenta…</p><a href="/api/auth/google/start?return=%2Fadmin-portfolio.html">Iniciar sesión con Google</a></section>
+      <div class="portfolio-admin-content" id="portfolio-admin-content" hidden>
+        <p class="portfolio-admin-status" id="portfolio-page-status" role="status" aria-live="polite"></p>
+        <section class="portfolio-admin-panel" aria-labelledby="portfolio-style-heading">
+          <div class="portfolio-admin-panel-heading"><div><p class="portfolio-admin-kicker">01 / DISEÑO</p><h2 id="portfolio-style-heading">Textos y apariencia</h2></div><a href="./galeria.html" target="_blank" rel="noopener">Abrir vista previa ↗</a></div>
+          <form class="portfolio-admin-style-form" id="portfolio-style-form">
+            <label>Título de la página<input name="pageTitle" maxlength="80" placeholder="Vacío: Portfolio" /></label>
+            <label class="portfolio-admin-wide">Texto de introducción<textarea name="intro" maxlength="400" rows="2" placeholder="Opcional: se muestra debajo del título"></textarea></label>
+            <label>Fuente del título<select name="headingFont"><option value="Crosner">Crosner</option><option value="Comico">Comico</option></select></label>
+            <label>Tamaño del título (px)<input name="headingSize" type="number" min="40" max="160" step="1" required /></label>
+            <label>Fuente de las tarjetas<select name="cardFont"><option value="Crosner">Crosner</option><option value="Comico">Comico</option></select></label>
+            <label>Tamaño del título de tarjeta (px)<input name="cardTitleSize" type="number" min="12" max="36" step="1" required /></label>
+            <label>Ancho mínimo de cada tarjeta (px)<input name="cardMinWidth" type="number" min="180" max="440" step="5" required /></label>
+            <div class="portfolio-admin-actions"><button type="submit">Guardar apariencia</button><small id="portfolio-style-status" role="status" aria-live="polite"></small></div>
+          </form>
+        </section>
+        <section class="portfolio-admin-panel" aria-labelledby="portfolio-new-heading">
+          <div class="portfolio-admin-panel-heading"><div><p class="portfolio-admin-kicker">02 / PUBLICACIONES</p><h2 id="portfolio-new-heading">Crear una publicación</h2></div><button class="portfolio-admin-secondary" id="portfolio-new-button" type="button" hidden>Nueva publicación</button></div>
+          <p class="portfolio-admin-help">Subí una imagen o un video. Al guardar, se crea automáticamente su tarjeta y se agrega al filtro de categoría.</p>
+          <form class="portfolio-admin-entry-form" id="portfolio-entry-form">
+            <input name="id" type="hidden" />
+            <label>Título<input name="title" maxlength="120" required placeholder="Nombre de la obra" /></label>
+            <label>Categoría<select name="category" required><option value="portadas">Portadas</option><option value="menus">Menús</option><option value="renders">Renders</option><option value="dibujos">Dibujos</option><option value="modeloss blockbench">Modelos Blockbench</option><option value="matt">Matt</option><option value="skins">Skins</option><option value="under news">Under News</option></select></label>
+            <label class="portfolio-admin-wide">Descripción<textarea name="description" maxlength="1200" rows="3" placeholder="Texto que aparece al abrir la publicación"></textarea></label>
+            <label class="portfolio-admin-wide">Imagen o video <input name="media" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm" /></label>
+            <div class="portfolio-admin-current-media" id="portfolio-current-media" hidden></div>
+            <label class="portfolio-admin-publish-toggle"><input name="isPublished" type="checkbox" checked /> Visible en el portfolio</label>
+            <div class="portfolio-admin-actions"><button type="submit" id="portfolio-entry-save">Publicar en el portfolio</button><button class="portfolio-admin-secondary" id="portfolio-entry-cancel" type="button" hidden>Cancelar edición</button><small id="portfolio-entry-status" role="status" aria-live="polite"></small></div>
+          </form>
+        </section>
+        <section class="portfolio-admin-panel" aria-labelledby="portfolio-list-heading">
+          <div class="portfolio-admin-panel-heading"><div><p class="portfolio-admin-kicker">03 / TU ARCHIVO</p><h2 id="portfolio-list-heading">Publicaciones creadas acá</h2></div><span class="portfolio-admin-count" id="portfolio-entry-count">0</span></div>
+          <div class="portfolio-admin-entry-list" id="portfolio-entry-list"></div>
+        </section>
+      </div>
+      <footer class="portfolio-admin-footer"><span>NNYTRO / ADMIN PORTFOLIO</span><a href="./perfil-comisiones.html">VOLVER A TU PERFIL ↑</a></footer>
+    </main>
+    <script src="./portfolio-admin.js?v=portfolio-admin-customizer-1" defer></script>
+  </body>
+</html>

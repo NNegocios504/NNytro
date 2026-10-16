@@ -252,6 +252,7 @@
     byId('profile-new-order').hidden = !signed;
     byId('profile-email').textContent = signed ? user.email : '';
     byId('profile-admin').hidden=!(signed&&user.isAdmin);
+    byId('profile-portfolio-admin-link').hidden=!(signed&&user.isAdmin&&user.email?.toLowerCase()==='nnytro.online@gmail.com');
     if (!signed || !user.isAdmin) { byId('profile-admin-orders').replaceChildren(); byId('profile-admin-publications').replaceChildren(); }
     if(signed&&user.isAdmin)loadCommissionSettings();
     if (signed) { if (!nameInput.value) nameInput.value = user.name || ''; setMode(`${t('Sesión iniciada como')} ${user.name || user.email}. ${t('Los pedidos se consultan en el servidor.')}`); loadProfile(); loadOrders(); loadPaymentProviders(); }
