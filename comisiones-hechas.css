@@ -366,6 +366,9 @@ footer {
 
 @media(max-width:700px){.archive-page{padding-top:0}.archive-header{min-height:auto;padding:.55rem 1rem .65rem}.hero{min-height:460px;padding:4rem 22px 3rem}.archive{padding-inline:13px}.archive-count-row{margin-bottom:.9rem}}
 
+/* Alinea el texto de portada con el bloque explicativo inferior. */
+.hero{width:min(1280px,100%);margin-inline:auto;padding-inline:clamp(20px,7vw,105px)}
+
 body{background-image:radial-gradient(ellipse at 82% 18%,#174d8b30 0,transparent 38rem),radial-gradient(ellipse at 8% 36%,#43247535 0,transparent 42rem);background-size:auto,auto;background-position:82% 18%,8% 36%;animation:nnytro-archive-drift 48s ease-in-out infinite alternate}
 @keyframes nnytro-archive-drift{from{background-position:46% 54%,82% 18%,8% 36%}to{background-position:54% 46%,82% 18%,8% 36%}}
 @media(prefers-reduced-motion:reduce){body{animation:none!important}}
