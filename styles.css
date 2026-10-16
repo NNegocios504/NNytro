@@ -326,3 +326,4 @@ html[lang="en"] .home-intro h1 { font-size:clamp(2.3rem,4.15vw,3.25rem); letter-
     drop-shadow(0 0 13px var(--tv-image-glow-soft,rgba(74,202,255,.34)))
     drop-shadow(0 0 25px var(--tv-image-glow-soft,rgba(74,202,255,.34)));
 }
+html{zoom:.9}
