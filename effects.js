@@ -282,6 +282,9 @@
   const notificationPanel=document.createElement('section');notificationPanel.className='site-notifications';notificationPanel.id='site-notifications';notificationPanel.setAttribute('aria-label','Notificaciones');notificationPanel.hidden=true;
   notificationPanel.innerHTML='<header><strong>Notificaciones</strong><button type="button" class="site-notifications-close" aria-label="Cerrar notificaciones">×</button></header><div class="site-notification-list" aria-live="polite"></div>';
   accountTools.append(notificationToggle,profileToggle);
+  const editorToggle=document.createElement('button');editorToggle.type='button';editorToggle.className='site-editor-toggle';editorToggle.setAttribute('aria-label','Activar edición de página');editorToggle.title='Editar esta página';editorToggle.textContent='✎';editorToggle.hidden=true;
+  profileToggle.after(editorToggle);
+  fetch('/api/auth/me',{credentials:'same-origin',cache:'no-store'}).then(response=>response.ok?response.json():null).then(data=>{const user=data?.user;editorToggle.hidden=!(user?.isAdmin&&String(user.email||'').toLowerCase()==='nnytro.online@gmail.com');const link=document.createElement('link');link.rel='stylesheet';link.href='./inline-page-editor.css?v=inline-editor-backups-1';document.head.append(link);const script=document.createElement('script');script.src='./inline-page-editor.js?v=inline-editor-backups-1';document.body.append(script)}).catch(()=>{});
   const isMenuPage = /(?:^|\/)index(?:\.html)?\/?$/i.test(location.pathname);
   (isMenuPage ? document.body : document.querySelector(".unified-site-actions") || document.querySelector(".commission-header-actions") || document.querySelector(".unified-site-header") || document.body).append(accountTools);
   document.body.append(notificationPanel);

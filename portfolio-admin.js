@@ -183,9 +183,11 @@
       locked.hidden = true;
       adminContent.hidden = false;
       await loadData();
+      if (location.hash === '#new-publication') { setEditor(null); setTimeout(() => entryForm.scrollIntoView({ behavior: 'smooth', block: 'center' }), 120); }
     } catch (error) { showLocked(error.message, false); }
   }
 
   setEditor(null);
+  if (location.hash === '#new-publication') byId('portfolio-entry-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
   void initialize();
 })();
