@@ -40,4 +40,3 @@
 @media(max-width:760px){.support-ticket-columns{grid-template-columns:1fr}.support-ticket-list{max-height:260px}.support-ticket-chat-panel{min-height:320px}.profile-tickets-page .profile-auth-actions{grid-column:1/-1;justify-content:stretch}.profile-tickets-page .profile-provider-button{flex:1 1 9rem}}
 .profile-tickets-page [data-provider][hidden]{display:none!important}.profile-tickets-page .profile-tickets-page .profile-section-heading{align-items:flex-start}
 .profile-body .profile-header{position:sticky;top:0;z-index:100}
-.profile-admin-tool-link{width:fit-content;margin:.15rem 0 .25rem}

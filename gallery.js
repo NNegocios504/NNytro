@@ -752,7 +752,7 @@ function buildProjects(items) {
         title: custom?.title || nestedFolder || item.title,
         coverSrc: custom?.coverSrc || null,
         coverPosition: custom?.coverPosition || null,
-        description: custom?.description || "",
+        description: custom?.description || item.description || "",
         isGroup: Boolean(custom || nestedFolder),
         items: []
       };
@@ -763,7 +763,10 @@ function buildProjects(items) {
     projectMap.get(key).items.push(item);
   });
 
-  return projects;
+  return projects.map(project => {
+    if (project.items.some(item => item.adminEntryId) && project.items.length > 1) project.isGroup = true;
+    return project;
+  });
 }
 
 const uniqueGalleryItems = galleryItems.filter((item) => {
@@ -864,6 +867,14 @@ function renderCards(category = 'all') {
     const card = document.createElement('button');
     card.className = 'gallery-card';
     card.type = 'button';
+    const customEntry = project.items.find(item => item.adminEntryId);
+    if (customEntry) {
+      card.dataset.adminEntryId = customEntry.adminEntryId;
+      card.dataset.adminEntryMedia = JSON.stringify(customEntry.mediaUrls || [customEntry.src]);
+      card.dataset.adminEntryDescription = project.description || '';
+      card.dataset.adminEntryTitle = project.title;
+      card.dataset.adminEntryCategory = project.category;
+    }
     card.setAttribute('aria-label', 'Abrir ' + project.title);
 
     const media = document.createElement('div');
@@ -945,6 +956,7 @@ async function loadAdminPublishedPortfolio() {
       description: item.description || '',
       type: item.type,
       src: item.src,
+      mediaUrls: item.mediaUrls || [item.src],
       adminEntryId: item.id
     })) : [];
     if (addedItems.length) {
