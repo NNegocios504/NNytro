@@ -6,7 +6,7 @@
   toolbar.className = 'inline-editor-toolbar';
   toolbar.hidden = true;
   toolbar.setAttribute('aria-label', 'Editor visual de página');
-  toolbar.innerHTML = '<div class="inline-editor-top"><strong>NNYTRO / EDICIÓN</strong><small data-backup-count>0 respaldos</small><button type="button" data-action="undo" aria-label="Deshacer" title="Deshacer">↶</button><button type="button" data-action="redo" aria-label="Rehacer" title="Rehacer">↷</button><button type="button" data-action="close" aria-label="Cerrar editor" title="Cerrar">×</button></div><p class="inline-editor-hint">Hacé clic en un texto o imagen para editarlo. Los cambios se guardan solos.</p><label class="inline-editor-text-field">Texto<textarea rows="2" maxlength="3000" data-field="text" disabled></textarea></label><div class="inline-editor-style"><label>Fuente<select data-field="font" disabled><option value="Crosner">Crosner</option><option value="Comico">Comico</option></select></label><label>Tamaño<input data-field="size" type="number" min="8" max="160" disabled /></label><label>Color<input data-field="color" type="color" value="#ffffff" disabled /></label></div><div class="inline-editor-actions"><button type="button" data-action="image" disabled>Cambiar imagen</button><button type="button" data-action="add-text" disabled>＋ Texto</button><button type="button" data-action="add-image" disabled>＋ Imagen</button><input type="file" data-field="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden /></div><p class="inline-editor-status" role="status" aria-live="polite"></p>';
+  toolbar.innerHTML = '<div class="inline-editor-top"><strong>NNYTRO / EDICIÓN</strong><small data-backup-count>0 respaldos</small><button type="button" data-action="undo" aria-label="Deshacer" title="Deshacer">↶</button><button type="button" data-action="redo" aria-label="Rehacer" title="Rehacer">↷</button><button type="button" data-action="close" aria-label="Cerrar menú de edición" title="Cerrar menú de edición">×</button></div><p class="inline-editor-hint">Hacé clic en un texto o imagen para editarlo. Los cambios se guardan solos.</p><label class="inline-editor-text-field">Texto<textarea rows="2" maxlength="3000" data-field="text" disabled></textarea></label><div class="inline-editor-style"><label>Fuente<select data-field="font" disabled><option value="Crosner">Crosner</option><option value="Comico">Comico</option></select></label><label>Tamaño<input data-field="size" type="number" min="8" max="160" disabled /></label><label>Color<input data-field="color" type="color" value="#ffffff" disabled /></label></div><div class="inline-editor-actions"><button type="button" data-action="image" disabled>Cambiar imagen</button><button type="button" data-action="add-text" disabled>＋ Texto</button><button type="button" data-action="add-image" disabled>＋ Imagen</button><input type="file" data-field="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden /></div><p class="inline-editor-status" role="status" aria-live="polite"></p>';
   document.body.append(toolbar);
   const status = toolbar.querySelector('.inline-editor-status');
   const textField = toolbar.querySelector('[data-field="text"]');
@@ -15,6 +15,7 @@
   const colorField = toolbar.querySelector('[data-field="color"]');
   const fileField = toolbar.querySelector('[data-field="file"]');
   let selected = null;
+  let editingEnabled = false;
   let state = { current: { elements: {}, insertions: [] }, undo: [], redo: [], versions: [] };
   let saveQueue = Promise.resolve();
   let debounceTimer;
@@ -168,16 +169,26 @@
   }
 
   toggle.addEventListener('click', async () => {
-    const active = !toolbar.hidden;
-    toolbar.hidden = active;
-    document.body.classList.toggle('inline-editor-active', !active);
-    toggle.setAttribute('aria-pressed', String(!active));
-    if (active) { selected?.classList.remove('inline-editor-selected'); selected?.removeAttribute('contenteditable'); selected = null; return; }
-    prepareNodes(); applyState(); updateHistoryButtons(); status.textContent = 'Modo edición activo.';
+    if (!editingEnabled) {
+      editingEnabled = true;
+      toolbar.hidden = false;
+      document.body.classList.add('inline-editor-active');
+      toggle.setAttribute('aria-pressed', 'true');
+      prepareNodes(); applyState(); updateHistoryButtons(); status.textContent = 'Modo edición activo.';
+      return;
+    }
+    if (toolbar.hidden) { toolbar.hidden = false; return; }
+    toolbar.hidden = true;
+    editingEnabled = false;
+    document.body.classList.remove('inline-editor-active');
+    toggle.setAttribute('aria-pressed', 'false');
+    selected?.classList.remove('inline-editor-selected');
+    selected?.removeAttribute('contenteditable');
+    selected = null;
   });
   toolbar.addEventListener('click', event => {
     const action = event.target.closest('[data-action]')?.dataset.action;
-    if (action === 'close') toggle.click();
+    if (action === 'close') toolbar.hidden = true;
     if (action === 'undo' || action === 'redo') void history(action);
     if (action === 'image' && selected instanceof HTMLImageElement) { fileField.accept = 'image/jpeg,image/png,image/webp,image/gif'; fileField.click(); }
     if (action === 'add-text') void addElement('p');
@@ -210,7 +221,7 @@
     const postApi = async (path, options = {}) => { const response = await fetch(`/api/${path}`, { credentials: 'same-origin', cache: 'no-store', ...options, headers: { ...(options.body && !(options.body instanceof FormData) ? { 'content-type': 'application/json' } : {}), ...(options.headers || {}) } }); const data = await response.json().catch(() => ({})); if (!response.ok) throw Error(data.error || `Error del servidor (${response.status})`); return data; };
     const closeModal = () => { modal.hidden = true; editingPost = null; form.reset(); modal.querySelector('[data-replace-wrap]').hidden = true; modal.querySelector('[data-post-delete]').hidden = true; };
     const openPost = (card = null) => { editingPost = card ? { id: card.dataset.adminEntryId, title: card.dataset.adminEntryTitle || '', category: card.dataset.adminEntryCategory || 'portadas', description: card.dataset.adminEntryDescription || '', mediaUrls: JSON.parse(card.dataset.adminEntryMedia || '[]'), isPublished: true } : null; form.reset(); form.elements.title.value = editingPost?.title || ''; form.elements.category.value = editingPost?.category || 'portadas'; form.elements.description.value = editingPost?.description || ''; form.elements.media.required = !editingPost; modal.querySelector('#inline-gallery-post-title').textContent = editingPost ? 'Editar publicación' : 'Nueva publicación'; modal.querySelector('[data-post-save]').textContent = editingPost ? 'Guardar cambios' : 'Crear publicación'; modal.querySelector('[data-media-hint]').textContent = editingPost ? `${editingPost.mediaUrls.length} archivos actuales. Podés sumar archivos o reemplazarlos.` : 'Podés agregar hasta 20 imágenes o videos. Se mostrarán juntos en la publicación.'; modal.querySelector('[data-replace-wrap]').hidden = !editingPost; modal.querySelector('[data-post-delete]').hidden = !editingPost; modal.hidden = false; postStatus.textContent = ''; modal.querySelector('[name="title"]').focus(); };
-    const createAddCard = () => { if (!grid || toolbar.hidden || grid.querySelector('.inline-editor-gallery-add')) return; const card = document.createElement('button'); card.type = 'button'; card.className = 'gallery-card inline-editor-gallery-add'; card.setAttribute('aria-label', 'Crear una nueva publicación'); card.innerHTML = '<span class="inline-gallery-plus-art" aria-hidden="true">＋</span><span class="gallery-card-meta"><span class="gallery-card-title">Nueva publicación</span><span class="gallery-card-category">TÍTULO · IMÁGENES · VIDEO</span></span>'; card.addEventListener('click', () => openPost()); grid.append(card); };
+    const createAddCard = () => { if (!grid || toolbar.hidden || grid.querySelector('.inline-editor-gallery-add')) return; const card = document.createElement('button'); card.type = 'button'; card.className = 'gallery-card inline-editor-gallery-add'; card.setAttribute('aria-label', 'Crear una nueva publicación'); card.innerHTML = '<span class="inline-gallery-plus-art" aria-hidden="true">＋</span>'; card.addEventListener('click', () => openPost()); grid.append(card); };
     const setCardTools = () => { if (!grid) return; if (toolbar.hidden) { grid.querySelectorAll('.inline-gallery-card-tools').forEach(node => node.remove()); grid.querySelectorAll('.inline-editor-gallery-add').forEach(node => node.remove()); return; } createAddCard(); for (const card of grid.querySelectorAll('.gallery-card[data-admin-entry-id]')) { if (card.querySelector('.inline-gallery-card-tools')) continue; const tools = document.createElement('span'); tools.className = 'inline-gallery-card-tools'; const edit = document.createElement('span'); edit.setAttribute('role', 'button'); edit.tabIndex = 0; edit.textContent = '✎'; edit.title = 'Editar publicación'; edit.dataset.galleryAction = 'edit'; const remove = document.createElement('span'); remove.setAttribute('role', 'button'); remove.tabIndex = 0; remove.textContent = '×'; remove.title = 'Borrar publicación'; remove.dataset.galleryAction = 'delete'; tools.append(edit, remove); card.append(tools); } };
     const observer = grid ? new MutationObserver(setCardTools) : null; if (grid && observer) observer.observe(grid, { childList: true });
     toggle.addEventListener('click', () => { if (toolbar.hidden) { observer?.disconnect(); setCardTools(); if (grid) observer?.observe(grid, { childList: true }); } else setCardTools(); });
