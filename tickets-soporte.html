@@ -7,7 +7,7 @@
     <title>Tickets de soporte — NNytro</title>
     <link rel="stylesheet" href="./styles.css?v=nav-size-match-1" />
     <link rel="stylesheet" href="./effects.css?v=account-pages-1" />
-    <link rel="stylesheet" href="./perfil-comisiones.css?v=support-ticket-chat-1" />
+    <link rel="stylesheet" href="./perfil-comisiones.css?v=support-ticket-chat-2" />
     <link rel="stylesheet" href="./perfil-comisiones-admin.css?v=admin-published-tools-1" />
   </head>
   <body class="profile-body profile-tickets-page">
@@ -30,8 +30,9 @@
           <button class="profile-signout" id="profile-signout" type="button" hidden>Cerrar sesión</button>
         </div>
       </section>
-      <section class="profile-edit support-ticket-workspace" id="support-workspace" hidden>
+      <section class="support-ticket-workspace" id="support-workspace" hidden>
         <div class="profile-section-heading"><div><p class="profile-kicker" id="support-kicker">SOPORTE NNytro</p><h2 id="support-heading">Abrí un ticket nuevo</h2></div><small id="support-description">Los tickets son chats separados de tus pedidos. NNytro te responde desde esta cuenta.</small></div>
+        <p class="support-admin-note" id="support-admin-note" hidden>Esta es la bandeja de NNytro. Para abrir un ticket, cerrá la sesión administradora e ingresá con tu cuenta de cliente.</p>
         <form id="support-create-form" class="support-create-form">
           <label>Asunto<input name="subject" maxlength="120" required placeholder="¿Sobre qué necesitás ayuda?" /></label>
           <label>Mensaje<textarea name="message" maxlength="4000" rows="3" required placeholder="Contame cómo puedo ayudarte"></textarea></label>
@@ -45,9 +46,9 @@
       <p class="profile-order-empty support-login-hint" id="support-login-hint">Iniciá sesión para crear un ticket y conversar con NNytro.</p>
       <footer class="profile-footer"><span>NNYTRO / SOPORTE</span><a href="./perfil-comisiones.html">VOLVER A TU PERFIL ↑</a></footer>
     </main>
-    <script src="./i18n.js?v=support-ticket-chat-1" defer></script>
+    <script src="./i18n.js?v=support-ticket-chat-2" defer></script>
     <script src="./profile-config.js" defer></script>
-    <script src="./tickets-soporte.js?v=support-ticket-chat-1" defer></script>
+    <script src="./tickets-soporte.js?v=support-ticket-chat-2" defer></script>
     <script src="./effects.js?v=support-ticket-chat-1" defer></script>
   </body>
 </html>
