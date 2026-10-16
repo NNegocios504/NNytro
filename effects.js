@@ -288,7 +288,10 @@
   const notificationBadge=notificationToggle.querySelector('.site-notification-badge'),notificationList=notificationPanel.querySelector('.site-notification-list');
   const notificationT=value=>window.NNytroI18n?.t(value)||value;
   const pendingCartCount=()=>{try{const cart=JSON.parse(localStorage.getItem('nnytro-commission-cart-v1')||'{}');return Object.values(cart).reduce((n,q)=>n+Math.max(0,Number(q)||0),0)}catch{return 0}};
-  let notificationItems=[],notificationUser=null,notificationBusy=false;
+  let notificationItems=[],notificationUser=null,notificationBusy=false,notificationInitialized=false,notificationAudio=null;
+  function unlockNotificationSound(){if(notificationAudio)return;const AudioContext=window.AudioContext||window.webkitAudioContext;if(!AudioContext)return;try{notificationAudio=new AudioContext();notificationAudio.resume().catch(()=>{})}catch{notificationAudio=null}}
+  function playNotificationSound(){if(!notificationAudio||notificationAudio.state!=='running')return;try{const now=notificationAudio.currentTime,gain=notificationAudio.createGain(),osc=notificationAudio.createOscillator();osc.type='sine';osc.frequency.setValueAtTime(880,now);osc.frequency.setValueAtTime(1174,now+.11);gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(.12,now+.025);gain.gain.exponentialRampToValueAtTime(.0001,now+.3);osc.connect(gain);gain.connect(notificationAudio.destination);osc.start(now);osc.stop(now+.31)}catch{}}
+  document.addEventListener('pointerdown',unlockNotificationSound,{once:true});document.addEventListener('keydown',unlockNotificationSound,{once:true});
   const seenKey=()=>`nnytro-notifications-seen-v1:${notificationUser?.sub||'guest'}`;
   function renderNotifications(){
     notificationList.replaceChildren();
@@ -301,8 +304,8 @@
   }
   async function refreshNotifications(){
     if(notificationBusy||document.visibilityState==='hidden')return;notificationBusy=true;
-    try{const auth=await fetch('/api/auth/me',{credentials:'same-origin',cache:'no-store'});const me=auth.ok?await auth.json():{user:null},nextUser=me.user||null;if(nextUser?.sub!==notificationUser?.sub)notificationItems=[];notificationUser=nextUser;
-      if(notificationUser){let since='';try{since=localStorage.getItem(seenKey())||''}catch{}if(!since)since=new Date(Date.now()-7*86400000).toISOString();const response=await fetch(`/api/notifications?since=${encodeURIComponent(since)}`,{credentials:'same-origin',cache:'no-store'});if(response.ok){const data=await response.json(),incoming=[...(data.messages||[]).map(x=>({...x,type:'message'})),...(data.events||[]).map(x=>({...x,type:'event'}))];const known=new Set(notificationItems.map(x=>x.id));notificationItems.push(...incoming.filter(x=>!known.has(x.id)));notificationItems.sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at)));notificationItems=notificationItems.slice(0,30)}}
+    try{const auth=await fetch('/api/auth/me',{credentials:'same-origin',cache:'no-store'});const me=auth.ok?await auth.json():{user:null},nextUser=me.user||null;if(nextUser?.sub!==notificationUser?.sub){notificationItems=[];notificationInitialized=false}notificationUser=nextUser;
+      if(notificationUser){let since='';try{since=localStorage.getItem(seenKey())||''}catch{}if(!since)since=new Date(Date.now()-7*86400000).toISOString();const response=await fetch(`/api/notifications?since=${encodeURIComponent(since)}`,{credentials:'same-origin',cache:'no-store'});if(response.ok){const data=await response.json(),incoming=[...(data.messages||[]).map(x=>({...x,type:'message'})),...(data.events||[]).map(x=>({...x,type:'event'}))];const known=new Set(notificationItems.map(x=>x.id)),fresh=incoming.filter(x=>!known.has(x.id));if(notificationInitialized&&fresh.length)playNotificationSound();notificationItems.push(...fresh);notificationItems.sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at)));notificationItems=notificationItems.slice(0,30);notificationInitialized=true}}else notificationInitialized=false;
     }catch{}finally{notificationBusy=false;renderNotifications()}
   }
   function toggleNotifications(open){notificationPanel.hidden=!open;notificationToggle.setAttribute('aria-expanded',String(open));if(open){try{localStorage.setItem(seenKey(),new Date().toISOString())}catch{}notificationItems=[];renderNotifications();void refreshNotifications()}notificationToggle.focus()}
