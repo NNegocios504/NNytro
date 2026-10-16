@@ -276,8 +276,40 @@
   profileToggle.setAttribute('aria-label', 'Tu perfil');
   profileToggle.title = 'Tu perfil';
   profileToggle.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20a7.2 7.2 0 0 1 14.4 0"/></svg>';
+  const accountTools=document.createElement('div');accountTools.className='site-account-tools';
+  const notificationToggle=document.createElement('button');notificationToggle.type='button';notificationToggle.className='site-notification-toggle';notificationToggle.setAttribute('aria-label','Notificaciones');notificationToggle.setAttribute('aria-expanded','false');notificationToggle.setAttribute('aria-controls','site-notifications');
+  notificationToggle.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="site-notification-badge" hidden></span>';
+  const notificationPanel=document.createElement('section');notificationPanel.className='site-notifications';notificationPanel.id='site-notifications';notificationPanel.setAttribute('aria-label','Notificaciones');notificationPanel.hidden=true;
+  notificationPanel.innerHTML='<header><strong>Notificaciones</strong><button type="button" class="site-notifications-close" aria-label="Cerrar notificaciones">×</button></header><div class="site-notification-list" aria-live="polite"></div>';
+  accountTools.append(notificationToggle,profileToggle);
   const isMenuPage = /(?:^|\/)index(?:\.html)?\/?$/i.test(location.pathname);
-  (isMenuPage ? document.body : document.querySelector(".unified-site-actions") || document.querySelector(".commission-header-actions") || document.querySelector(".unified-site-header") || document.body).append(profileToggle);
+  (isMenuPage ? document.body : document.querySelector(".unified-site-actions") || document.querySelector(".commission-header-actions") || document.querySelector(".unified-site-header") || document.body).append(accountTools);
+  document.body.append(notificationPanel);
+  const notificationBadge=notificationToggle.querySelector('.site-notification-badge'),notificationList=notificationPanel.querySelector('.site-notification-list');
+  const notificationT=value=>window.NNytroI18n?.t(value)||value;
+  const pendingCartCount=()=>{try{const cart=JSON.parse(localStorage.getItem('nnytro-commission-cart-v1')||'{}');return Object.values(cart).reduce((n,q)=>n+Math.max(0,Number(q)||0),0)}catch{return 0}};
+  let notificationItems=[],notificationUser=null,notificationBusy=false;
+  const seenKey=()=>`nnytro-notifications-seen-v1:${notificationUser?.sub||'guest'}`;
+  function renderNotifications(){
+    notificationList.replaceChildren();
+    const cartCount=pendingCartCount();
+    if(cartCount){const item=document.createElement('a');item.className='site-notification-item';item.href='./comisiones.html#opciones';const title=document.createElement('strong'),detail=document.createElement('span');title.textContent=notificationT('Tenés un carrito pendiente');detail.textContent=notificationT(cartCount===1?'Hay un elemento en tu carrito; seguí con tu pedido.':'Hay elementos en tu carrito; seguí con tu pedido.');item.append(title,detail);notificationList.append(item)}
+    const news=document.createElement('a');news.className='site-notification-item site-notification-news';news.href='./comisiones.html';const newsTitle=document.createElement('strong'),newsDetail=document.createElement('span');newsTitle.textContent=notificationT('Novedades de NNytro');newsDetail.textContent=notificationT('Consultá tus pedidos y tickets desde tu perfil.');news.append(newsTitle,newsDetail);notificationList.append(news);
+    notificationItems.forEach(entry=>{const item=document.createElement('a');item.className='site-notification-item';item.href='./perfil-comisiones.html#profile-order-list';const title=document.createElement('strong'),detail=document.createElement('span'),code=document.createElement('small');title.textContent=entry.type==='message'?notificationT('Nuevo mensaje en un ticket de soporte'):notificationT('Hay una novedad en tu pedido');detail.textContent=entry.type==='message'?entry.body:notificationT('El estado del pedido cambió. Entrá a tu perfil para ver los detalles.');code.textContent=`NN-${String(entry.order_id||'').slice(0,8).toUpperCase()}`;item.append(title,detail,code);notificationList.append(item)});
+    if(!notificationUser){const login=document.createElement('a');login.className='site-notification-login';login.href='./perfil-comisiones.html';login.textContent=notificationT('Iniciá sesión para ver las novedades de tus pedidos.');notificationList.append(login)}
+    const unread=notificationItems.length+(cartCount?1:0);notificationBadge.hidden=!unread;notificationBadge.textContent=unread>99?'99+':String(unread);notificationToggle.setAttribute('aria-label',`${notificationT('Notificaciones')}${unread?`, ${unread} ${notificationT('sin leer')}`:''}`);
+  }
+  async function refreshNotifications(){
+    if(notificationBusy||document.visibilityState==='hidden')return;notificationBusy=true;
+    try{const auth=await fetch('/api/auth/me',{credentials:'same-origin',cache:'no-store'});const me=auth.ok?await auth.json():{user:null},nextUser=me.user||null;if(nextUser?.sub!==notificationUser?.sub)notificationItems=[];notificationUser=nextUser;
+      if(notificationUser){let since='';try{since=localStorage.getItem(seenKey())||''}catch{}if(!since)since=new Date(Date.now()-7*86400000).toISOString();const response=await fetch(`/api/notifications?since=${encodeURIComponent(since)}`,{credentials:'same-origin',cache:'no-store'});if(response.ok){const data=await response.json(),incoming=[...(data.messages||[]).map(x=>({...x,type:'message'})),...(data.events||[]).map(x=>({...x,type:'event'}))];const known=new Set(notificationItems.map(x=>x.id));notificationItems.push(...incoming.filter(x=>!known.has(x.id)));notificationItems.sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at)));notificationItems=notificationItems.slice(0,30)}}
+    }catch{}finally{notificationBusy=false;renderNotifications()}
+  }
+  function toggleNotifications(open){notificationPanel.hidden=!open;notificationToggle.setAttribute('aria-expanded',String(open));if(open){try{localStorage.setItem(seenKey(),new Date().toISOString())}catch{}notificationItems=[];renderNotifications();void refreshNotifications()}notificationToggle.focus()}
+  notificationToggle.addEventListener('click',()=>toggleNotifications(notificationPanel.hidden));notificationPanel.querySelector('.site-notifications-close').addEventListener('click',()=>toggleNotifications(false));
+  notificationPanel.addEventListener('click',event=>{if(event.target.closest('a'))toggleNotifications(false)});
+  document.addEventListener('nnytro:cart-change',renderNotifications);window.addEventListener('storage',renderNotifications);document.addEventListener('nnytro:language-applied',renderNotifications);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')void refreshNotifications()});
+  renderNotifications();void refreshNotifications();setInterval(()=>void refreshNotifications(),10000);
   document.body.append(toggle);
 
   // The currency selector is available only on the commissions page.

@@ -118,6 +118,7 @@ function saveOrders(orders) {
 }
 function saveCart() {
   try { localStorage.setItem(cartKey, JSON.stringify(cart)); } catch { /* The current tab still works if storage is disabled. */ }
+  document.dispatchEvent(new Event('nnytro:cart-change'));
 }
 const allServices = [...commissionGroups.flatMap(group => group.items.map(item => ({ ...item, group: group.title }))), { id: 'saludo', name: 'Un saludo mío', price: 0.01, group: 'Bonus' }];
 const formatUsd = value => Number(value).toLocaleString(({ 'pt-BR':'pt-BR', en:'en-US', es:'es-AR' })[window.NNytroI18n?.getLanguage?.() || 'es'], { minimumFractionDigits: Number.isInteger(Number(value)) ? 0 : 2, maximumFractionDigits: 2 });
