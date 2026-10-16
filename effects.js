@@ -280,7 +280,7 @@
   (isMenuPage ? document.body : document.querySelector(".unified-site-actions") || document.querySelector(".commission-header-actions") || document.querySelector(".unified-site-header") || document.body).append(profileToggle);
   document.body.append(toggle);
 
-  // Currency preference is shared between pages; commission prices convert from USD.
+  // The currency selector is available only on the commissions page.
   const currencyOptions = [
     ['USD','Dólar estadounidense','US dollar','Dólar americano'],['ARS','Peso argentino','Argentine peso','Peso argentino'],['BRL','Real brasileño','Brazilian real','Real brasileiro'],['EUR','Euro','Euro','Euro'],['MXN','Peso mexicano','Mexican peso','Peso mexicano'],['CLP','Peso chileno','Chilean peso','Peso chileno'],['COP','Peso colombiano','Colombian peso','Peso colombiano'],['PEN','Sol peruano','Peruvian sol','Sol peruano'],['UYU','Peso uruguayo','Uruguayan peso','Peso uruguaio'],['GBP','Libra esterlina','British pound','Libra esterlina'],['CAD','Dólar canadiense','Canadian dollar','Dólar canadense'],['AUD','Dólar australiano','Australian dollar','Dólar australiano'],['JPY','Yen japonés','Japanese yen','Iene japonês'],['CHF','Franco suizo','Swiss franc','Franco suíço'],['CNY','Yuan chino','Chinese yuan','Yuan chinês'],['INR','Rupia india','Indian rupee','Rupia indiana'],['NZD','Dólar neozelandés','New Zealand dollar','Dólar neozelandês'],['ZAR','Rand sudafricano','South African rand','Rand sul-africano'],['SEK','Corona sueca','Swedish krona','Coroa sueca'],['NOK','Corona noruega','Norwegian krone','Coroa norueguesa'],['DKK','Corona danesa','Danish krone','Coroa dinamarquesa'],['PLN','Zloty polaco','Polish złoty','Złoty polonês'],['TRY','Lira turca','Turkish lira','Lira turca']
   ];
@@ -351,7 +351,7 @@
     const option = event.target.closest('[data-currency-choice]'); if (!option) return;
     setCurrency(option.dataset.currencyChoice); currencyToggle.setAttribute('aria-expanded','false'); currencyMenu.hidden = true;
   });
-  document.body.append(currencyToggle, currencyMenu);
+  if (document.body.classList.contains('commissions-body')) document.body.append(currencyToggle, currencyMenu);
 
   // Language control is shared site-wide and delegates translations to the i18n module.
   const languageToggle = document.createElement('button');
