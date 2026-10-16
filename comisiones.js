@@ -88,15 +88,14 @@ let commissionImageOffset = { x:0, y:0 };
 let commissionImageDrag = null;
 const commissionHeroImageButton = document.querySelector('.commission-hero-image-open');
 const orderPreview = document.querySelector('#commission-order-preview');
-const copyOrderButton = document.querySelector('#commission-copy-order');
 const copyStatus = document.querySelector('#commission-copy-status');
 const submitRequest = document.querySelector('#commission-submit-request');
-const emailLink = document.querySelector('#commission-email-link');
 const clientContact = document.querySelector('#commission-client-contact');
 const clientDetails = document.querySelector('#commission-client-details');
 const dialogFootnote = document.querySelector('#commission-dialog-footnote');
+const orderIntro = document.querySelector('#commission-dialog-intro');
+const requestSuccess = document.querySelector('#commission-request-success');
 const t = value => window.NNytroI18n?.t(value) || value;
-let orderFallbackBody='';
 
 function renderMailModeCopy() {
   dialogFootnote.textContent=t(liveApiMode?'El pedido se guarda para que NNytro lo revise. No inicia ningún pago.':'Esta demo guarda el pedido solo en este navegador; no envía correos automáticamente.');
@@ -337,11 +336,10 @@ function orderText() {
 }
 async function openOrderDialog() {
   if(!commissionStatusReady||!commissionsOpen){copyStatus.textContent=commissionStatusReady?'Las comisiones están cerradas por el momento.':'No se pudo consultar si las comisiones están abiertas. Probá de nuevo más tarde.';return}
-  clientContact.value = ''; clientDetails.value = ''; orderFallbackBody='';
+  clientContact.value = ''; clientDetails.value = '';
+  orderPreview.hidden=false;clientContact.closest('label').hidden=false;clientDetails.closest('label').hidden=false;orderIntro.hidden=false;submitRequest.hidden=false;dialogFootnote.hidden=false;copyStatus.hidden=false;requestSuccess.hidden=true;
   const summary = document.createElement('pre'); summary.textContent = orderText(); orderPreview.replaceChildren(summary); copyStatus.textContent = '';
-  submitRequest.disabled = false; emailLink.removeAttribute('aria-disabled'); emailLink.tabIndex = 0;
-  const subject = encodeURIComponent('Consulta de comisión NNytro');
-  emailLink.href = `mailto:nnytro.online@gmail.com?subject=${subject}&body=${encodeURIComponent(orderText())}`;
+  submitRequest.disabled = false;
   clientContact.addEventListener('input', scheduleRefreshOrderText); clientDetails.addEventListener('input', scheduleRefreshOrderText);
   if (typeof orderDialog.showModal === 'function') orderDialog.showModal(); else orderDialog.setAttribute('open', '');
   setOrderLoginGate(liveApiMode);
@@ -353,9 +351,13 @@ function loadOrderAuthProviders(){if(orderAuthProvidersRequest)return orderAuthP
 let orderTextRefreshTimer;
 function scheduleRefreshOrderText(){clearTimeout(orderTextRefreshTimer);orderTextRefreshTimer=setTimeout(refreshOrderText,180)}
 function refreshOrderText() {
-  const body=orderFallbackBody||orderText();
-  const summary = document.createElement('pre'); summary.textContent = body; orderPreview.replaceChildren(summary);
-  emailLink.href = `mailto:nnytro.online@gmail.com?subject=${encodeURIComponent('Consulta de comisión NNytro')}&body=${encodeURIComponent(body)}`;
+  if(orderPreview.hidden)return;
+  const summary = document.createElement('pre'); summary.textContent = orderText(); orderPreview.replaceChildren(summary);
+}
+
+function showRequestSuccess() {
+  orderIntro.hidden=true;orderPreview.hidden=true;clientContact.closest('label').hidden=true;clientDetails.closest('label').hidden=true;submitRequest.hidden=true;dialogFootnote.hidden=true;copyStatus.hidden=true;requestSuccess.hidden=false;
+  requestSuccess.focus();
 }
 
 renderCatalog(); renderCart(); updateDisplayedPrices(); setCartOpen(false); loadCurrencyRates(); const commissionStatusPromise=loadCommissionStatus();
@@ -405,11 +407,9 @@ sendOrder.addEventListener('click', () => { void openOrderDialog(); });
 orderLoginBack?.addEventListener('click',()=>{setOrderLoginGate(false);orderAuthProvidersRequest=null;try{sessionStorage.removeItem(orderLoginReturnKey)}catch{}});
 orderAuthLinks.forEach(link=>link.addEventListener('click',event=>{if(link.getAttribute('aria-disabled')==='true'){event.preventDefault();return}try{sessionStorage.setItem(orderLoginReturnKey,'./comisiones.html?resumeOrder=1')}catch{event.preventDefault();orderLoginStatus.textContent=t('No se pudo guardar el pedido antes de iniciar sesión. Activá el almacenamiento del navegador y probá de nuevo.')}}));
 orderDialog.addEventListener('close',()=>{try{sessionStorage.removeItem(orderLoginReturnKey)}catch{}});
-emailLink.addEventListener('click', event => { if (!clientContact.validity.valid) { event.preventDefault(); clientContact.reportValidity(); return; } if(!orderFallbackBody)refreshOrderText(); });
 submitRequest.addEventListener('click', async () => {
   const selected = allServices.filter(item => Number(cart[item.id]) > 0).map(item => ({ id: item.id, name: item.name, quantity: Number(cart[item.id]) }));
   if (!selected.length || !clientContact.validity.valid) { clientContact.reportValidity(); return; }
-  const mailFallback=orderText();
   if (liveApiMode) {
     submitRequest.disabled=true;copyStatus.textContent='Enviando pedido al servidor seguro…';
     try {
@@ -419,29 +419,18 @@ submitRequest.addEventListener('click', async () => {
       const items=selected.map(item=>({id:item.id==='saludo'?'un-saludo':item.id,quantity:item.quantity}));
       const response=await fetch('/api/orders',{method:'POST',credentials:'same-origin',headers:{'content-type':'application/json'},body:JSON.stringify({items,contact:clientContact.value.trim(),details:clientDetails.value.trim(),displayName:String(profile.name||auth.user.name||'').trim()})});
       const body=await response.json().catch(()=>({}));if(!response.ok)throw new Error(body.error||`No se pudo enviar (${response.status})`);
-      orderFallbackBody=mailFallback;Object.keys(cart).forEach(key=>delete cart[key]);saveCart();renderCart();
-      orderPreview.replaceChildren();const created=document.createElement('p');created.className='commission-request-created';created.textContent=`Pedido ${String(body.order?.id||'').slice(0,8).toUpperCase()} enviado para revisión. No se inició ningún pago.`;orderPreview.append(created);
-      const adminEmail=body.email?.admin,customerEmail=body.email?.customer;
-      if(adminEmail==='sent')copyStatus.textContent=t(customerEmail==='sent'?'Pedido guardado y aviso enviado a NNytro; también te mandamos una confirmación a tu correo.':'Pedido guardado y aviso enviado a NNytro. Podés seguirlo desde tu perfil.');
-      else if(adminEmail==='not_configured')copyStatus.textContent=t('El pedido quedó guardado, pero falta configurar el servicio de correo. Abrí el correo de tu dispositivo para avisarle a NNytro.');
-      else copyStatus.textContent=t('El pedido quedó guardado, pero falló el envío del correo a NNytro. Abrí el correo de tu dispositivo para avisarle.');
-      emailLink.href=`mailto:nnytro.online@gmail.com?subject=${encodeURIComponent('Consulta de comisión NNytro')}&body=${encodeURIComponent(mailFallback)}`;
-      submitRequest.disabled=true;
-      if(adminEmail==='sent')setTimeout(()=>{if(orderDialog.open)orderDialog.close()},2800);return;
+      Object.keys(cart).forEach(key=>delete cart[key]);saveCart();renderCart();
+      showRequestSuccess();return;
     } catch(error) {copyStatus.textContent=`No se pudo enviar el pedido: ${error.message}`;submitRequest.disabled=false;return}
   }
   const orders = loadOrders();
   const id = `NN-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
   const profile = (() => { try { return JSON.parse(localStorage.getItem(profileKey) || '{}'); } catch { return {}; } })();
   orders.push({ id, createdAt: new Date().toISOString(), items: selected, customerName: String(profile.name || '').trim().slice(0, 48), clientContact: clientContact.value.trim(), details: clientDetails.value.trim(), status: 'requested', contactCheckedByClient: true, spokeConfirmed: false, total: null, paymentPlan: null, paymentUrl: '' });
-  orderFallbackBody=mailFallback;saveOrders(orders); Object.keys(cart).forEach(key => delete cart[key]); saveCart(); renderCart();
-  orderPreview.innerHTML = `<p class="commission-request-created"><strong>Pedido ${id} creado en esta demo local.</strong><br />Ahora aparece en el panel de prueba.</p>`;
-  copyStatus.textContent = 'El pedido quedó en esta demo local; abrí el enlace de correo para avisarme.';
-  submitRequest.disabled = true;
-  emailLink.href=`mailto:nnytro.online@gmail.com?subject=${encodeURIComponent('Consulta de comisión NNytro')}&body=${encodeURIComponent(mailFallback)}`;
+  saveOrders(orders); Object.keys(cart).forEach(key => delete cart[key]); saveCart(); renderCart();
+  showRequestSuccess();
 });
 renderMailModeCopy();
 document.addEventListener('nnytro:language-applied', () => { renderCatalog(); renderCart(); renderMailModeCopy(); if (orderDialog.open) refreshOrderText(); });
 clearCart.addEventListener('click', () => { Object.keys(cart).forEach(id => delete cart[id]); saveCart(); renderCart(); });
-copyOrderButton.addEventListener('click', async () => { try { await navigator.clipboard.writeText(orderText()); copyStatus.textContent = 'Pedido copiado. Pegalo en un mensaje y contame tu idea.'; } catch { copyStatus.textContent = 'No pude copiarlo automáticamente. Seleccioná el texto de arriba y copialo.'; } });
 orderDialog.addEventListener('click', event => { if (event.target === orderDialog) orderDialog.close(); });
