@@ -260,6 +260,8 @@
   async function loadProfile(){try{const result=await api('profile');if(result.profile){nameInput.value=result.profile.name||'';authenticatedUser={...authenticatedUser,name:result.profile.name,picture:result.profile.picture||authenticatedUser.picture};updateAvatar();}}catch(error){byId('profile-save-status').textContent=`${t('No se pudo cargar el perfil:')} ${t(error.message)}`}}
   async function setupOAuthProviders() {
     const links=[...document.querySelectorAll('[data-provider]')];
+    const returnPath=['/perfil-comisiones.html','/mis-pedidos.html','/tickets-soporte.html'].includes(location.pathname)?location.pathname:'/perfil-comisiones.html';
+    links.forEach(link=>{link.href=`/api/auth/${link.dataset.provider}/start?return=${encodeURIComponent(returnPath)}`});
     links.forEach(link=>link.addEventListener('click',event=>{if(link.getAttribute('aria-disabled')==='true')event.preventDefault()}));
     const names={google:'Google',discord:'Discord',x:'Twitter'};
     const missing={google:'Configurá GOOGLE_CLIENT_ID y GOOGLE_CLIENT_SECRET en Cloudflare Pages y registrá /api/auth/google/callback en Google.',discord:'Configurá DISCORD_CLIENT_ID y DISCORD_CLIENT_SECRET en Cloudflare y registrá /api/auth/discord/callback en Discord.',x:'Configurá X_CLIENT_ID y X_CLIENT_SECRET en Cloudflare y registrá /api/auth/x/callback en X.'};

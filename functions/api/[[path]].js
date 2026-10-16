@@ -14,6 +14,7 @@ async function cryptoKey(env){if(!env.SESSION_SECRET||env.SESSION_SECRET.length<
 async function userFrom(r,env){try{const item=(r.headers.get('Cookie')||'').split(';').map(x=>x.trim()).find(x=>x.startsWith(COOKIE+'='));if(!item)return null;const [p,s,x]=decodeURIComponent(item.slice(COOKIE.length+1)).split('.');if(!p||!s||x||!await crypto.subtle.verify('HMAC',await cryptoKey(env),unb64(s),new TextEncoder().encode(p)))return null;const u=JSON.parse(new TextDecoder().decode(unb64(p)));if(!u.sub||!u.email||u.exp<Date.now()/1000)return null;u.provider=u.provider||(u.sub.includes(':')?'':'google');u.isAdmin=u.provider==='google'&&ADMIN_EMAILS.has(u.email.toLowerCase());return u}catch{return null}}
 const cookie=(r,name,value,age)=>`${name}=${encodeURIComponent(value)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${age}${new URL(r.url).protocol==='https:'?'; Secure':''}`;
 function redirect(url,cookies=[]){const headers=new Headers({location:url,'cache-control':'no-store'});for(const value of cookies)headers.append('set-cookie',value);return new Response(null,{status:302,headers})}
+const profileReturnPath=value=>['/perfil-comisiones.html','/mis-pedidos.html','/tickets-soporte.html'].includes(value)?value:'/perfil-comisiones.html';
 async function randomToken(bytes=32){const v=crypto.getRandomValues(new Uint8Array(bytes));return b64(v)}
 async function oauthStart(r,env,provider){
  const discord=provider==='discord',id=discord?env.DISCORD_CLIENT_ID:env.X_CLIENT_ID,secret=discord?env.DISCORD_CLIENT_SECRET:env.X_CLIENT_SECRET;
@@ -21,13 +22,13 @@ async function oauthStart(r,env,provider){
  const u=new URL(r.url),state=await randomToken(),redirectUri=u.origin+'/api/auth/'+provider+'/callback';
  const params=new URLSearchParams({client_id:id,response_type:'code',redirect_uri:redirectUri,scope:discord?'identify email':'users.read users.email',state});
  const headers=new Headers({location:(discord?'https://discord.com/oauth2/authorize?':'https://x.com/i/oauth2/authorize?')+params.toString(),'cache-control':'no-store'});
- headers.append('set-cookie',cookie(r,`nnytro_${provider}_state`,state,600));
+ headers.append('set-cookie',cookie(r,`nnytro_${provider}_state`,state,600));headers.append('set-cookie',cookie(r,`nnytro_${provider}_return`,profileReturnPath(u.searchParams.get('return')),600));
  if(!discord){const verifier=await randomToken(48),challenge=b64(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier))));params.set('code_challenge',challenge);params.set('code_challenge_method','S256');headers.set('location','https://x.com/i/oauth2/authorize?'+params.toString());headers.append('set-cookie',cookie(r,`nnytro_${provider}_verifier`,verifier,600))}
  return new Response(null,{status:302,headers})
 }
 async function oauthCallback(r,env,provider){
  const discord=provider==='discord',id=discord?env.DISCORD_CLIENT_ID:env.X_CLIENT_ID,secret=discord?env.DISCORD_CLIENT_SECRET:env.X_CLIENT_SECRET,u=new URL(r.url),state=u.searchParams.get('state')||'',code=u.searchParams.get('code')||'',cookies=Object.fromEntries((r.headers.get('Cookie')||'').split(';').map(x=>x.trim().split('=').map(decodeURIComponent)).filter(x=>x.length===2));
- const clear=[cookie(r,`nnytro_${provider}_state`,'',0),cookie(r,`nnytro_${provider}_verifier`,'',0)],back=new URL('/perfil-comisiones.html',u.origin),stateOk=Boolean(state&&cookies[`nnytro_${provider}_state`]===state),verifier=cookies[`nnytro_${provider}_verifier`];
+ const clear=[cookie(r,`nnytro_${provider}_state`,'',0),cookie(r,`nnytro_${provider}_verifier`,'',0),cookie(r,`nnytro_${provider}_return`,'',0)],back=new URL(profileReturnPath(cookies[`nnytro_${provider}_return`]),u.origin),stateOk=Boolean(state&&cookies[`nnytro_${provider}_state`]===state),verifier=cookies[`nnytro_${provider}_verifier`];
  if(u.searchParams.has('error')||!id||!secret||!env.SESSION_SECRET||!code||!stateOk||(!discord&&!verifier)){back.searchParams.set('login','failed');back.searchParams.set('provider',provider);return redirect(back.toString(),clear)}
  try{
   const redirectUri=u.origin+'/api/auth/'+provider+'/callback',body=new URLSearchParams({grant_type:'authorization_code',code,redirect_uri:redirectUri,client_id:id,...(!discord?{code_verifier:verifier}:{})}),auth='Basic '+btoa(id+':'+secret);
@@ -44,10 +45,10 @@ async function googleOauthStart(r,env){
  if(!id||!secret||!env.SESSION_SECRET)return new Response('OAuth de Google no configurado. Configurá GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET y SESSION_SECRET en el entorno de Pages.',{status:503});
  const u=new URL(r.url),state=await randomToken(),verifier=await randomToken(48),challenge=b64(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(verifier)))),redirectUri=u.origin+'/api/auth/google/callback';
  const params=new URLSearchParams({client_id:id,response_type:'code',redirect_uri:redirectUri,scope:'openid email profile',state,code_challenge:challenge,code_challenge_method:'S256',access_type:'online'});
- return redirect('https://accounts.google.com/o/oauth2/v2/auth?'+params.toString(),[cookie(r,'nnytro_google_state',state,600),cookie(r,'nnytro_google_verifier',verifier,600)]);
+ return redirect('https://accounts.google.com/o/oauth2/v2/auth?'+params.toString(),[cookie(r,'nnytro_google_state',state,600),cookie(r,'nnytro_google_verifier',verifier,600),cookie(r,'nnytro_google_return',profileReturnPath(u.searchParams.get('return')),600)]);
 }
 async function googleOauthCallback(r,env){
- const u=new URL(r.url),id=env.GOOGLE_CLIENT_ID,secret=env.GOOGLE_CLIENT_SECRET,state=u.searchParams.get('state')||'',code=u.searchParams.get('code')||'',cookies=Object.fromEntries((r.headers.get('Cookie')||'').split(';').map(x=>x.trim().split('=').map(decodeURIComponent)).filter(x=>x.length===2)),clear=[cookie(r,'nnytro_google_state','',0),cookie(r,'nnytro_google_verifier','',0)],back=new URL('/perfil-comisiones.html',u.origin),stateOk=Boolean(state&&cookies.nnytro_google_state===state),verifier=cookies.nnytro_google_verifier;
+ const u=new URL(r.url),id=env.GOOGLE_CLIENT_ID,secret=env.GOOGLE_CLIENT_SECRET,state=u.searchParams.get('state')||'',code=u.searchParams.get('code')||'',cookies=Object.fromEntries((r.headers.get('Cookie')||'').split(';').map(x=>x.trim().split('=').map(decodeURIComponent)).filter(x=>x.length===2)),clear=[cookie(r,'nnytro_google_state','',0),cookie(r,'nnytro_google_verifier','',0),cookie(r,'nnytro_google_return','',0)],back=new URL(profileReturnPath(cookies.nnytro_google_return),u.origin),stateOk=Boolean(state&&cookies.nnytro_google_state===state),verifier=cookies.nnytro_google_verifier;
  if(u.searchParams.has('error')||!id||!secret||!env.SESSION_SECRET||!code||!stateOk||!verifier){back.searchParams.set('login','failed');back.searchParams.set('provider','google');return redirect(back.toString(),clear)}
  try{
   const redirectUri=u.origin+'/api/auth/google/callback',body=new URLSearchParams({grant_type:'authorization_code',code,redirect_uri:redirectUri,client_id:id,client_secret:secret,code_verifier:verifier}),token=await fetch('https://oauth2.googleapis.com/token',{method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},body});
