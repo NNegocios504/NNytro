@@ -6,8 +6,8 @@
     <meta name="theme-color" content="#080718" />
     <title>Tickets de soporte — NNytro</title>
     <link rel="stylesheet" href="./styles.css?v=nav-size-match-1" />
-    <link rel="stylesheet" href="./effects.css?v=support-notifications-2" />
-    <link rel="stylesheet" href="./perfil-comisiones.css?v=profile-dashboard-v4" />
+    <link rel="stylesheet" href="./effects.css?v=account-pages-1" />
+    <link rel="stylesheet" href="./perfil-comisiones.css?v=profile-dashboard-v5" />
     <link rel="stylesheet" href="./perfil-comisiones-admin.css?v=admin-published-tools-1" />
   </head>
   <body class="profile-body profile-tickets-page">
@@ -21,9 +21,9 @@
 
       <section class="profile-intro">
         <h1>Tickets de soporte</h1>
-          <p>Elegí un pedido para abrir su conversación privada con NNytro.</p>
+          <p>Cada pedido tiene un ticket privado. Abrilo para escribirnos y seguir la conversación.</p>
       </section>
-      <nav class="profile-subnav" aria-label="Secciones de tu cuenta"><a href="./perfil-comisiones.html">Tu perfil</a><a href="./mis-pedidos.html">Mis pedidos</a><a aria-current="page" href="./tickets-soporte.html">Tickets de soporte</a><a href="./comisiones-hechas.html">Comisiones realizadas</a></nav>
+      <nav class="profile-subnav" aria-label="Secciones de tu cuenta"><a href="./perfil-comisiones.html">Tu perfil</a><a href="./mis-pedidos.html">Mis pedidos</a><a aria-current="page" href="./tickets-soporte.html">Tickets de soporte</a><a href="./comisiones-finalizadas.html">Comisiones realizadas</a></nav>
 
       <section class="profile-signin" aria-labelledby="signin-title">
         <div class="profile-avatar" id="profile-avatar" aria-hidden="true">N</div>
@@ -43,7 +43,7 @@
       <nav class="profile-account-links" aria-label="Secciones de tu cuenta">
         <a class="profile-account-link profile-account-link-orders" href="./mis-pedidos.html"><span class="profile-account-icon" aria-hidden="true">▤</span><span><strong>Mis pedidos</strong><small>Estado, cotizaciones y pagos</small></span><span aria-hidden="true">→</span></a>
         <a class="profile-account-link profile-account-link-tickets" href="./tickets-soporte.html"><span class="profile-account-icon" aria-hidden="true">✉</span><span><strong>Tickets de soporte</strong><small>Conversaciones privadas sobre tus pedidos</small></span><span aria-hidden="true">→</span></a>
-        <a class="profile-account-link profile-account-link-completed" href="./comisiones-hechas.html"><span class="profile-account-icon" aria-hidden="true">✦</span><span><strong>Comisiones realizadas</strong><small>Trabajos terminados y publicados</small></span><span aria-hidden="true">→</span></a>
+        <a class="profile-account-link profile-account-link-completed" href="./comisiones-finalizadas.html"><span class="profile-account-icon" aria-hidden="true">✦</span><span><strong>Comisiones realizadas</strong><small>Trabajos terminados y publicados</small></span><span aria-hidden="true">→</span></a>
       </nav>
 
       <section class="profile-edit profile-request-section" aria-labelledby="profile-request-title" id="profile-new-order" hidden>
@@ -66,7 +66,7 @@
       </section>
 
       <section class="profile-overview" aria-label="Resumen de tu cuenta">
-        <article class="profile-panel profile-orders"><div class="profile-section-heading"><div><p class="profile-kicker">02 / SEGUIMIENTO</p><h2>Conversaciones por pedido</h2></div><span id="profile-order-count" class="profile-count">0</span></div><div id="profile-order-list" class="profile-order-list"></div></article>
+        <article class="profile-panel profile-orders"><div class="profile-section-heading"><div><p class="profile-kicker">SOPORTE</p><h2>Abrí un ticket</h2></div><span id="profile-order-count" class="profile-count">0</span></div><div id="profile-order-list" class="profile-order-list"></div></article>
         <article class="profile-panel profile-cart-panel"><p class="profile-kicker">03 / LISTA DE IDEAS</p><h2>Tu carrito</h2><p id="profile-cart-summary">Todavía no agregaste opciones.</p><a class="profile-action-link" href="./comisiones.html#opciones">Seguir armando mi pedido <span aria-hidden="true">↗</span></a></article>
         <article class="profile-panel profile-completed-panel"><p class="profile-kicker">04 / TU HISTORIAL</p><h2>Comisiones realizadas</h2><p>Cuando un encargo esté terminado y pagado, aparecerá acá. Si el cliente acepta, también puede dejar una reseña en la publicación.</p><a class="profile-action-link" href="./comisiones-hechas.html">Ver comisiones hechas <span aria-hidden="true">↗</span></a></article>
         <article class="profile-panel profile-chat-panel"><p class="profile-kicker">05 / SOPORTE</p><h2>Tickets de soporte</h2><p>Cada pedido tiene un ticket privado. Abrilo desde tus pedidos para conversar con NNytro; el panel se actualiza automáticamente mientras está abierto.</p><div class="profile-chat-actions"><a class="profile-action-link" href="#profile-order-list">Ir a mis pedidos <span aria-hidden="true">↓</span></a></div></article>
@@ -74,6 +74,6 @@
 
       <footer class="profile-footer"><span>NNYTRO / PERFIL DE CLIENTE</span><a href="./comisiones.html">VOLVER A COMISIONES ↑</a></footer>
     </main>
-    <script src="./i18n.js?v=support-notifications-2" defer></script><script src="./profile-config.js" defer></script><script src="./perfil-comisiones.js?v=profile-account-pages-1" defer></script><script src="./effects.js?v=support-notifications-2" defer></script>
+    <script src="./i18n.js?v=account-pages-1" defer></script><script src="./profile-config.js" defer></script><script src="./perfil-comisiones.js?v=profile-completed-page-1" defer></script><script src="./effects.js?v=account-pages-1" defer></script>
   </body>
 </html>

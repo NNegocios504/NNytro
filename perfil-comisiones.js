@@ -71,6 +71,8 @@
     return body;
   }
   const t = value => window.NNytroI18n?.t(value) || value;
+  const completedPage=location.pathname.endsWith('/comisiones-finalizadas.html');
+  const ticketsPage=location.pathname.endsWith('/tickets-soporte.html');
   const loginQuery=new URLSearchParams(location.search);
   const requestedNext=loginQuery.get('next');
   if(requestedNext){try{const target=new URL(requestedNext,location.origin);if(target.origin===location.origin&&target.pathname.endsWith('/comisiones.html'))sessionStorage.setItem(orderLoginReturnKey,`${target.pathname}${target.search}${target.hash}`)}catch{}loginQuery.delete('next');history.replaceState(null,'',`${location.pathname}${loginQuery.size?'?'+loginQuery.toString():''}${location.hash}`)}
@@ -85,9 +87,10 @@
   }
   document.addEventListener('nnytro:language-applied', () => renderCartSummary());
   function showOrders(orders) {
+    if(completedPage)orders=orders.filter(order=>order.status==='completed_paid'&&(!authenticatedUser?.isAdmin||order.user_sub===authenticatedUser.sub));
     orderList.querySelectorAll('.profile-chat-thread').forEach(chat=>chat.hidden?clearInterval(chat._refreshTimer):closeSupportTicket(chat));
     orderList.replaceChildren(); byId('profile-order-count').textContent = String(orders.length);
-    if (!orders.length) { const p = document.createElement('p'); p.className = 'profile-order-empty'; p.textContent = t('Todavía no hay pedidos asociados a tu cuenta.'); orderList.append(p); return; }
+    if (!orders.length) { const p = document.createElement('p'); p.className = 'profile-order-empty'; p.textContent = t(completedPage?'Todavía no tenés comisiones finalizadas.':'Todavía no hay pedidos asociados a tu cuenta.'); orderList.append(p); return; }
     const labels = { requested:'Esperando revisión de NNytro', accepted:'Pedido aceptado · preparando cotización', rejected:'Pedido rechazado', awaiting_full_payment:'Esperando pago completo', awaiting_advance:'Esperando adelanto', advance_paid:'Adelanto recibido · trabajo pendiente', in_progress:'Trabajo en curso', paid:'Pago recibido', awaiting_balance:'Falta pagar el saldo', awaiting_publication:'Terminado · publicación pendiente', completed_paid:'Comisión terminada y pagada', cancelled:'Pedido cancelado' };
     orders.forEach(order => {
       const card = document.createElement('article'); card.className = 'profile-order-card';
@@ -260,7 +263,7 @@
   async function loadProfile(){try{const result=await api('profile');if(result.profile){nameInput.value=result.profile.name||'';authenticatedUser={...authenticatedUser,name:result.profile.name,picture:result.profile.picture||authenticatedUser.picture};updateAvatar();}}catch(error){byId('profile-save-status').textContent=`${t('No se pudo cargar el perfil:')} ${t(error.message)}`}}
   async function setupOAuthProviders() {
     const links=[...document.querySelectorAll('[data-provider]')];
-    const returnPath=['/perfil-comisiones.html','/mis-pedidos.html','/tickets-soporte.html'].includes(location.pathname)?location.pathname:'/perfil-comisiones.html';
+  const returnPath=['/perfil-comisiones.html','/mis-pedidos.html','/tickets-soporte.html','/comisiones-finalizadas.html'].includes(location.pathname)?location.pathname:'/perfil-comisiones.html';
     links.forEach(link=>{link.href=`/api/auth/${link.dataset.provider}/start?return=${encodeURIComponent(returnPath)}`});
     links.forEach(link=>link.addEventListener('click',event=>{if(link.getAttribute('aria-disabled')==='true')event.preventDefault()}));
     const names={google:'Google',discord:'Discord',x:'Twitter'};
