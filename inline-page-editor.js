@@ -174,6 +174,7 @@
       toolbar.hidden = false;
       document.body.classList.add('inline-editor-active');
       toggle.setAttribute('aria-pressed', 'true');
+      document.dispatchEvent(new CustomEvent('site-editor-mode-change', { detail: { active: true } }));
       prepareNodes(); applyState(); updateHistoryButtons(); status.textContent = 'Modo edición activo.';
       return;
     }
@@ -182,6 +183,7 @@
     editingEnabled = false;
     document.body.classList.remove('inline-editor-active');
     toggle.setAttribute('aria-pressed', 'false');
+    document.dispatchEvent(new CustomEvent('site-editor-mode-change', { detail: { active: false } }));
     selected?.classList.remove('inline-editor-selected');
     selected?.removeAttribute('contenteditable');
     selected = null;
@@ -214,21 +216,179 @@
   });
   if (page === 'galeria') {
     const grid = document.querySelector('#gallery-grid');
-    const modal = document.createElement('section'); modal.className = 'inline-gallery-post-modal'; modal.hidden = true; modal.setAttribute('role', 'dialog'); modal.setAttribute('aria-modal', 'true'); modal.setAttribute('aria-labelledby', 'inline-gallery-post-title');
-    modal.innerHTML = '<form class="inline-gallery-post-form"><div class="inline-gallery-post-heading"><div><small>NNYTRO / PORTFOLIO</small><h2 id="inline-gallery-post-title">Nueva publicación</h2></div><button type="button" data-post-close aria-label="Cerrar">×</button></div><label>Título<input name="title" maxlength="120" required placeholder="Nombre de la publicación"></label><label>Categoría<select name="category" required><option value="portadas">Portadas</option><option value="menus">Menús</option><option value="renders">Renders</option><option value="dibujos">Dibujos</option><option value="modeloss blockbench">Modelos Blockbench</option><option value="matt">Matt</option><option value="skins">Skins</option><option value="under news">Under News</option></select></label><label>Descripción<textarea name="description" maxlength="1200" rows="3" placeholder="Opcional"></textarea></label><label>Imágenes o videos<input name="media" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm" multiple></label><small class="inline-gallery-media-hint" data-media-hint>Podés agregar hasta 20 archivos. Se mostrarán juntos en la publicación.</small><label class="inline-gallery-replace" data-replace-wrap hidden><input name="replaceMedia" type="checkbox"> Reemplazar los archivos actuales</label><p class="inline-gallery-post-status" role="status" aria-live="polite"></p><div class="inline-gallery-post-actions"><button type="button" class="inline-gallery-delete" data-post-delete hidden>Borrar publicación</button><span></span><button type="button" data-post-cancel>Cancelar</button><button type="submit" data-post-save>Crear publicación</button></div></form>';
+    const galleryModal = document.querySelector('#gallery-modal');
+    const galleryInfo = galleryModal?.querySelector('.gallery-modal-info');
+    const modal = document.createElement('section');
+    modal.className = 'inline-gallery-post-modal';
+    modal.hidden = true;
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'inline-gallery-post-title');
+    modal.innerHTML = '<form class="inline-gallery-post-form"><div class="inline-gallery-post-heading"><div><small>NNYTRO / PORTFOLIO</small><h2 id="inline-gallery-post-title">Nueva publicación</h2></div><button type="button" data-post-close aria-label="Cerrar">×</button></div><label>Título<input name="title" maxlength="120" required placeholder="Nombre de la publicación"></label><label>Categoría<select name="category" required><option value="portadas">Portadas</option><option value="menus">Menús</option><option value="renders">Renders</option><option value="dibujos">Dibujos</option><option value="modeloss blockbench">Modelos Blockbench</option><option value="matt">Matt</option><option value="skins">Skins</option><option value="under news">Under News</option></select></label><label>Descripción<textarea name="description" maxlength="1200" rows="3" placeholder="Opcional"></textarea></label><section class="inline-gallery-current-media" data-media-list aria-label="Archivos de la publicación"></section><label>Agregar imágenes o videos<input name="media" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm" multiple></label><small class="inline-gallery-media-hint" data-media-hint>Podés agregar hasta 20 imágenes o videos. Se mostrarán juntos en la publicación.</small><p class="inline-gallery-post-status" role="status" aria-live="polite"></p><div class="inline-gallery-post-actions"><button type="button" class="inline-gallery-delete" data-post-delete hidden>Borrar publicación</button><span></span><button type="button" data-post-cancel>Cancelar</button><button type="submit" data-post-save>Crear publicación</button></div></form>';
     document.body.append(modal);
-    const form = modal.querySelector('form'); const postStatus = modal.querySelector('.inline-gallery-post-status'); let editingPost = null;
-    const postApi = async (path, options = {}) => { const response = await fetch(`/api/${path}`, { credentials: 'same-origin', cache: 'no-store', ...options, headers: { ...(options.body && !(options.body instanceof FormData) ? { 'content-type': 'application/json' } : {}), ...(options.headers || {}) } }); const data = await response.json().catch(() => ({})); if (!response.ok) throw Error(data.error || `Error del servidor (${response.status})`); return data; };
-    const closeModal = () => { modal.hidden = true; editingPost = null; form.reset(); modal.querySelector('[data-replace-wrap]').hidden = true; modal.querySelector('[data-post-delete]').hidden = true; };
-    const openPost = (card = null) => { editingPost = card ? { id: card.dataset.adminEntryId, title: card.dataset.adminEntryTitle || '', category: card.dataset.adminEntryCategory || 'portadas', description: card.dataset.adminEntryDescription || '', mediaUrls: JSON.parse(card.dataset.adminEntryMedia || '[]'), isPublished: true } : null; form.reset(); form.elements.title.value = editingPost?.title || ''; form.elements.category.value = editingPost?.category || 'portadas'; form.elements.description.value = editingPost?.description || ''; form.elements.media.required = !editingPost; modal.querySelector('#inline-gallery-post-title').textContent = editingPost ? 'Editar publicación' : 'Nueva publicación'; modal.querySelector('[data-post-save]').textContent = editingPost ? 'Guardar cambios' : 'Crear publicación'; modal.querySelector('[data-media-hint]').textContent = editingPost ? `${editingPost.mediaUrls.length} archivos actuales. Podés sumar archivos o reemplazarlos.` : 'Podés agregar hasta 20 imágenes o videos. Se mostrarán juntos en la publicación.'; modal.querySelector('[data-replace-wrap]').hidden = !editingPost; modal.querySelector('[data-post-delete]').hidden = !editingPost; modal.hidden = false; postStatus.textContent = ''; modal.querySelector('[name="title"]').focus(); };
-    const createAddCard = () => { if (!grid || toolbar.hidden || grid.querySelector('.inline-editor-gallery-add')) return; const card = document.createElement('button'); card.type = 'button'; card.className = 'gallery-card inline-editor-gallery-add'; card.setAttribute('aria-label', 'Crear una nueva publicación'); card.innerHTML = '<span class="inline-gallery-plus-art" aria-hidden="true">＋</span>'; card.addEventListener('click', () => openPost()); grid.append(card); };
-    const setCardTools = () => { if (!grid) return; if (toolbar.hidden) { grid.querySelectorAll('.inline-gallery-card-tools').forEach(node => node.remove()); grid.querySelectorAll('.inline-editor-gallery-add').forEach(node => node.remove()); return; } createAddCard(); for (const card of grid.querySelectorAll('.gallery-card[data-admin-entry-id]')) { if (card.querySelector('.inline-gallery-card-tools')) continue; const tools = document.createElement('span'); tools.className = 'inline-gallery-card-tools'; const edit = document.createElement('span'); edit.setAttribute('role', 'button'); edit.tabIndex = 0; edit.textContent = '✎'; edit.title = 'Editar publicación'; edit.dataset.galleryAction = 'edit'; const remove = document.createElement('span'); remove.setAttribute('role', 'button'); remove.tabIndex = 0; remove.textContent = '×'; remove.title = 'Borrar publicación'; remove.dataset.galleryAction = 'delete'; tools.append(edit, remove); card.append(tools); } };
-    const observer = grid ? new MutationObserver(setCardTools) : null; if (grid && observer) observer.observe(grid, { childList: true });
-    toggle.addEventListener('click', () => { if (toolbar.hidden) { observer?.disconnect(); setCardTools(); if (grid) observer?.observe(grid, { childList: true }); } else setCardTools(); });
-    document.addEventListener('click', async event => { const action = event.target.closest('[data-gallery-action]')?.dataset.galleryAction; if (!action) return; event.preventDefault(); event.stopPropagation(); event.stopImmediatePropagation(); const card = event.target.closest('.gallery-card[data-admin-entry-id]'); if (action === 'edit' && card) openPost(card); if (action === 'delete' && card && window.confirm(`¿Borrar “${card.dataset.adminEntryTitle || 'esta publicación'}” del portfolio?`)) { try { await postApi(`admin/portfolio/${encodeURIComponent(card.dataset.adminEntryId)}`, { method: 'DELETE' }); location.reload(); } catch (error) { status.textContent = error.message; } } }, true);
-    modal.addEventListener('click', event => { if (event.target === modal || event.target.closest('[data-post-close],[data-post-cancel]')) closeModal(); if (event.target.closest('[data-post-delete]') && editingPost && window.confirm(`¿Borrar “${editingPost.title}” del portfolio?`)) { postApi(`admin/portfolio/${encodeURIComponent(editingPost.id)}`, { method: 'DELETE' }).then(() => location.reload()).catch(error => { postStatus.textContent = error.message; }); } });
-    form.addEventListener('submit', async event => { event.preventDefault(); const button = modal.querySelector('[data-post-save]'); button.disabled = true; postStatus.textContent = 'Subiendo archivos…'; try { const files = [...form.elements.media.files]; if (!editingPost && !files.length) throw Error('Elegí al menos una imagen o un video.'); if (editingPost && form.elements.replaceMedia.checked && !files.length) throw Error('Elegí los archivos nuevos para reemplazar los actuales.'); let mediaUrls = editingPost ? [...editingPost.mediaUrls] : []; if (form.elements.replaceMedia.checked) mediaUrls = []; for (const file of files) { const data = new FormData(); data.set('file', file); const uploaded = await postApi('media/upload', { method: 'POST', body: data }); mediaUrls.push(uploaded.url); } if (mediaUrls.length > 20) throw Error('Una publicación puede tener hasta 20 archivos.'); const payload = { title: form.elements.title.value.trim(), category: form.elements.category.value, description: form.elements.description.value.trim(), mediaUrls, isPublished: true }; postStatus.textContent = 'Guardando publicación…'; if (editingPost) await postApi(`admin/portfolio/${encodeURIComponent(editingPost.id)}`, { method: 'PATCH', body: JSON.stringify(payload) }); else await postApi('admin/portfolio', { method: 'POST', body: JSON.stringify(payload) }); postStatus.textContent = 'Listo. Se creó el panel de la publicación.'; setTimeout(() => location.reload(), 450); } catch (error) { postStatus.textContent = error.message; button.disabled = false; } });
-    document.addEventListener('keydown', event => { if (event.key === 'Escape' && !modal.hidden) closeModal(); if ((event.key === 'Enter' || event.key === ' ') && event.target.matches('[data-gallery-action]')) { event.preventDefault(); event.target.click(); } });
+    const form = modal.querySelector('form');
+    const postStatus = modal.querySelector('.inline-gallery-post-status');
+    const mediaList = modal.querySelector('[data-media-list]');
+    let editingPost = null;
+    let activeProject = null;
+    const postApi = async (path, options = {}) => {
+      const response = await fetch(`/api/${path}`, { credentials: 'same-origin', cache: 'no-store', ...options, headers: { ...(options.body && !(options.body instanceof FormData) ? { 'content-type': 'application/json' } : {}), ...(options.headers || {}) } });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw Error(data.error || `Error del servidor (${response.status})`);
+      return data;
+    };
+    const postFromProject = project => {
+      const custom = project?.items?.find(item => item.adminEntryId);
+      return { id: custom?.adminEntryId || '', sourceKey: custom?.sourceKey || project?.key || '', title: project?.title || '', category: project?.category || 'portadas', description: project?.description || '', mediaUrls: project?.items?.map(item => new URL(item.src, location.href).href) || [] };
+    };
+    const postFromCard = card => ({
+      id: card.dataset.adminEntryId || '',
+      sourceKey: card.dataset.adminEntrySourceKey || card.dataset.portfolioProjectKey || '',
+      title: card.dataset.adminEntryTitle || card.dataset.portfolioProjectTitle || '',
+      category: card.dataset.adminEntryCategory || card.dataset.portfolioProjectCategory || 'portadas',
+      description: card.dataset.adminEntryDescription || card.dataset.portfolioProjectDescription || '',
+      mediaUrls: JSON.parse(card.dataset.adminEntryMedia || card.dataset.portfolioProjectMedia || '[]').map(src => new URL(src, location.href).href)
+    });
+    const refreshMediaList = () => {
+      mediaList.replaceChildren();
+      const mediaUrls = editingPost?.mediaUrls || [];
+      mediaList.hidden = !mediaUrls.length;
+      mediaUrls.forEach((src, index) => {
+        const item = document.createElement('div');
+        item.className = 'inline-gallery-current-media-item';
+        const url = new URL(src, location.href).href;
+        const preview = /\.(mp4|webm)(?:$|\?)/i.test(url) ? document.createElement('video') : document.createElement('img');
+        preview.src = url;
+        if (preview instanceof HTMLVideoElement) { preview.muted = true; preview.playsInline = true; preview.preload = 'metadata'; }
+        else { preview.alt = `Archivo ${index + 1}`; preview.loading = 'lazy'; }
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.textContent = '×';
+        remove.title = 'Quitar este archivo';
+        remove.setAttribute('aria-label', `Quitar archivo ${index + 1}`);
+        remove.addEventListener('click', () => { editingPost.mediaUrls.splice(index, 1); refreshMediaList(); });
+        item.append(preview, remove);
+        mediaList.append(item);
+      });
+    };
+    const openPost = post => {
+      editingPost = post ? { ...post, mediaUrls: [...post.mediaUrls] } : null;
+      form.reset();
+      form.elements.title.value = editingPost?.title || '';
+      form.elements.category.value = editingPost?.category || 'portadas';
+      form.elements.description.value = editingPost?.description || '';
+      refreshMediaList();
+      modal.querySelector('#inline-gallery-post-title').textContent = editingPost ? 'Editar publicación' : 'Nueva publicación';
+      modal.querySelector('[data-post-save]').textContent = editingPost ? 'Guardar cambios' : 'Crear publicación';
+      modal.querySelector('[data-media-hint]').textContent = editingPost ? 'Quitá archivos con ×, agregá otros o dejá todo como está.' : 'Podés agregar hasta 20 imágenes o videos. Se mostrarán juntos en la publicación.';
+      modal.querySelector('[data-post-delete]').hidden = !editingPost;
+      modal.hidden = false;
+      postStatus.textContent = '';
+      modal.querySelector('[name="title"]').focus();
+    };
+    const closePostModal = () => { modal.hidden = true; editingPost = null; form.reset(); };
+    const deletePost = async post => {
+      if (post.id) return postApi(`admin/portfolio/${encodeURIComponent(post.id)}`, { method: 'DELETE' });
+      if (post.sourceKey) return postApi('admin/portfolio', { method: 'POST', body: JSON.stringify({ sourceKey: post.sourceKey, deleted: true }) });
+      throw Error('No se pudo identificar esta publicación.');
+    };
+    const createAddCard = () => {
+      if (!grid || !document.body.classList.contains('inline-editor-active') || grid.querySelector('.inline-editor-gallery-add')) return;
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'gallery-card inline-editor-gallery-add';
+      card.setAttribute('aria-label', 'Crear una nueva publicación');
+      card.innerHTML = '<span class="inline-gallery-plus-art" aria-hidden="true">＋</span>';
+      card.addEventListener('click', () => openPost(null));
+      grid.append(card);
+    };
+    const setCardTools = () => {
+      if (!grid) return;
+      if (!document.body.classList.contains('inline-editor-active')) {
+        grid.querySelectorAll('.inline-gallery-card-tools').forEach(node => node.remove());
+        grid.querySelectorAll('.inline-editor-gallery-add').forEach(node => node.remove());
+        return;
+      }
+      createAddCard();
+      for (const card of grid.querySelectorAll('.gallery-card[data-portfolio-project-key]')) {
+        if (card.querySelector('.inline-gallery-card-tools')) continue;
+        const tools = document.createElement('span');
+        tools.className = 'inline-gallery-card-tools';
+        const edit = document.createElement('span');
+        edit.setAttribute('role', 'button'); edit.tabIndex = 0; edit.textContent = '✎'; edit.title = 'Editar publicación'; edit.dataset.galleryAction = 'edit';
+        const remove = document.createElement('span');
+        remove.setAttribute('role', 'button'); remove.tabIndex = 0; remove.textContent = '×'; remove.title = 'Borrar publicación'; remove.dataset.galleryAction = 'delete';
+        tools.append(edit, remove);
+        card.append(tools);
+      }
+    };
+    const syncDetailTools = () => {
+      galleryInfo?.querySelector('.inline-gallery-detail-tools')?.remove();
+      if (!document.body.classList.contains('inline-editor-active') || !activeProject || galleryModal?.hidden || !galleryInfo) return;
+      const tools = document.createElement('div');
+      tools.className = 'inline-gallery-detail-tools';
+      const edit = document.createElement('button'); edit.type = 'button'; edit.dataset.galleryAction = 'edit-detail'; edit.textContent = 'Editar publicación';
+      const remove = document.createElement('button'); remove.type = 'button'; remove.dataset.galleryAction = 'delete-detail'; remove.textContent = 'Borrar publicación';
+      tools.append(edit, remove);
+      galleryInfo.append(tools);
+    };
+    const observer = grid ? new MutationObserver(setCardTools) : null;
+    if (grid && observer) observer.observe(grid, { childList: true });
+    toggle.addEventListener('click', () => {
+      if (toolbar.hidden) { observer?.disconnect(); setCardTools(); if (grid) observer?.observe(grid, { childList: true }); }
+      else setCardTools();
+      syncDetailTools();
+    });
+    document.addEventListener('gallery:project-open', event => { activeProject = event.detail; syncDetailTools(); });
+    document.addEventListener('gallery:project-close', () => { activeProject = null; syncDetailTools(); });
+    document.addEventListener('site-editor-mode-change', syncDetailTools);
+    document.addEventListener('click', async event => {
+      const action = event.target.closest('[data-gallery-action]')?.dataset.galleryAction;
+      if (!action) return;
+      event.preventDefault(); event.stopPropagation(); event.stopImmediatePropagation();
+      const card = event.target.closest('.gallery-card[data-portfolio-project-key]');
+      const post = card ? postFromCard(card) : postFromProject(activeProject);
+      if (action === 'edit' && card) openPost(post);
+      if (action === 'edit-detail' && activeProject) openPost(post);
+      if ((action === 'delete' && card || action === 'delete-detail' && activeProject) && window.confirm(`¿Borrar “${post.title || 'esta publicación'}” del portfolio?`)) {
+        try { await deletePost(post); location.reload(); }
+        catch (error) { status.textContent = error.message; }
+      }
+    }, true);
+    modal.addEventListener('click', event => {
+      if (event.target === modal || event.target.closest('[data-post-close],[data-post-cancel]')) closePostModal();
+      if (event.target.closest('[data-post-delete]') && editingPost && window.confirm(`¿Borrar “${editingPost.title}” del portfolio?`)) {
+        deletePost(editingPost).then(() => location.reload()).catch(error => { postStatus.textContent = error.message; });
+      }
+    });
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      const button = modal.querySelector('[data-post-save]');
+      button.disabled = true;
+      postStatus.textContent = 'Subiendo archivos…';
+      try {
+        const files = [...form.elements.media.files];
+        let mediaUrls = editingPost ? [...editingPost.mediaUrls] : [];
+        for (const file of files) {
+          const data = new FormData(); data.set('file', file);
+          const uploaded = await postApi('media/upload', { method: 'POST', body: data });
+          mediaUrls.push(uploaded.url);
+        }
+        if (!mediaUrls.length) throw Error('La publicación necesita al menos una imagen o un video.');
+        if (mediaUrls.length > 20) throw Error('Una publicación puede tener hasta 20 archivos.');
+        const payload = { title: form.elements.title.value.trim(), category: form.elements.category.value, description: form.elements.description.value.trim(), mediaUrls, isPublished: true };
+        if (editingPost?.sourceKey && !editingPost.id) payload.sourceKey = editingPost.sourceKey;
+        postStatus.textContent = 'Guardando publicación…';
+        if (editingPost?.id) await postApi(`admin/portfolio/${encodeURIComponent(editingPost.id)}`, { method: 'PATCH', body: JSON.stringify(payload) });
+        else await postApi('admin/portfolio', { method: 'POST', body: JSON.stringify(payload) });
+        postStatus.textContent = 'Publicación guardada.';
+        setTimeout(() => location.reload(), 450);
+      } catch (error) { postStatus.textContent = error.message; button.disabled = false; }
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && !modal.hidden) closePostModal();
+      if ((event.key === 'Enter' || event.key === ' ') && event.target.matches('[data-gallery-action]')) { event.preventDefault(); event.target.click(); }
+    });
   }
   void (async () => { try { const result = await api(); state = result.state; prepareNodes(); applyState(); updateHistoryButtons(); } catch { /* Las páginas siguen mostrando su contenido original si el historial no está disponible. */ } })();
 })();

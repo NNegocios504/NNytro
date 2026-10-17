@@ -748,6 +748,7 @@ function buildProjects(items) {
     if (!projectMap.has(key)) {
       const project = {
         key,
+        sourceKey: item.sourceKey || '',
         category: custom?.category || item.category,
         title: custom?.title || nestedFolder || item.title,
         coverSrc: custom?.coverSrc || null,
@@ -868,8 +869,14 @@ function renderCards(category = 'all') {
     card.className = 'gallery-card';
     card.type = 'button';
     const customEntry = project.items.find(item => item.adminEntryId);
+    card.dataset.portfolioProjectKey = customEntry ? (customEntry.sourceKey || '') : project.key;
+    card.dataset.portfolioProjectMedia = JSON.stringify(project.items.map(item => item.src));
+    card.dataset.portfolioProjectDescription = project.description || '';
+    card.dataset.portfolioProjectTitle = project.title;
+    card.dataset.portfolioProjectCategory = project.category;
     if (customEntry) {
       card.dataset.adminEntryId = customEntry.adminEntryId;
+      card.dataset.adminEntrySourceKey = customEntry.sourceKey || '';
       card.dataset.adminEntryMedia = JSON.stringify(customEntry.mediaUrls || [customEntry.src]);
       card.dataset.adminEntryDescription = project.description || '';
       card.dataset.adminEntryTitle = project.title;
@@ -950,6 +957,10 @@ async function loadAdminPublishedPortfolio() {
     if (!response.ok) return;
     const data = await response.json();
     applyPortfolioSettings(data.settings);
+    const hiddenSourceKeys = new Set(Array.isArray(data.hiddenSourceKeys) ? data.hiddenSourceKeys : []);
+    const originalProjectKeys = new Map();
+    buildProjects(uniqueGalleryItems).forEach(project => project.items.forEach(item => originalProjectKeys.set(item, project.key)));
+    const baseItems = uniqueGalleryItems.filter(item => !hiddenSourceKeys.has(originalProjectKeys.get(item)));
     const addedItems = Array.isArray(data.items) ? data.items.map(item => ({
       category: item.category,
       title: item.title,
@@ -957,31 +968,30 @@ async function loadAdminPublishedPortfolio() {
       type: item.type,
       src: item.src,
       mediaUrls: item.mediaUrls || [item.src],
-      adminEntryId: item.id
+      adminEntryId: item.id,
+      sourceKey: item.sourceKey || ''
     })) : [];
-    if (addedItems.length) {
-      const activeCategory = document.querySelector('.gallery-filter.is-active')?.dataset.category || 'all';
-      const allItems = [...uniqueGalleryItems, ...addedItems];
-      projects = buildProjects(allItems).sort((a, b) => {
-        const aOrder = categoryOrder.includes(a.category) ? categoryOrder.indexOf(a.category) : categoryOrder.length;
-        const bOrder = categoryOrder.includes(b.category) ? categoryOrder.indexOf(b.category) : categoryOrder.length;
-        return aOrder - bOrder || a.title.localeCompare(b.title, 'es', { sensitivity: 'base' });
-      });
-      renderFilters();
-      const active = [...document.querySelectorAll('.gallery-filter')].find(button => button.dataset.category === activeCategory);
-      active?.classList.add('is-active');
-      renderCards(active ? activeCategory : 'all');
-    } else {
-      renderCards(document.querySelector('.gallery-filter.is-active')?.dataset.category || 'all');
-    }
+    const activeCategory = document.querySelector('.gallery-filter.is-active')?.dataset.category || 'all';
+    const allItems = [...baseItems, ...addedItems];
+    projects = buildProjects(allItems).sort((a, b) => {
+      const aOrder = categoryOrder.includes(a.category) ? categoryOrder.indexOf(a.category) : categoryOrder.length;
+      const bOrder = categoryOrder.includes(b.category) ? categoryOrder.indexOf(b.category) : categoryOrder.length;
+      return aOrder - bOrder || a.title.localeCompare(b.title, 'es', { sensitivity: 'base' });
+    });
+    renderFilters();
+    const active = [...document.querySelectorAll('.gallery-filter')].find(button => button.dataset.category === activeCategory);
+    active?.classList.add('is-active');
+    renderCards(active ? activeCategory : 'all');
   } catch {
     // The static portfolio remains available when the API is not configured.
   }
 }
 
 function openModal(project) {
+  window.currentPortfolioProject = project;
   const isCollection = project.isGroup && project.items.length > 1;
   modal.hidden = false;
+  document.dispatchEvent(new CustomEvent('gallery:project-open', { detail: project }));
   document.body.classList.add('modal-open');
   modalCard.classList.toggle('gallery-modal-card--collection', isCollection);
   modalCard.classList.toggle('gallery-modal-card--single-image', project.items.length === 1 && project.items[0]?.type === 'image');
@@ -1183,6 +1193,7 @@ function closeModal() {
   modalMedia.classList.remove('gallery-modal-media--collection');
   modalCard.classList.remove('gallery-modal-card--collection', 'gallery-modal-card--single-image');
   document.body.classList.remove('modal-open');
+  document.dispatchEvent(new CustomEvent('gallery:project-close'));
 }
 window.addEventListener('resize', fitSingleModalImage);
 
