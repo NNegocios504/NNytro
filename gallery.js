@@ -666,7 +666,7 @@ function customProjectFor(item) {
     return { key: 'septimo-refugio', title: 'Séptimo Refugio', category: 'renders', coverSrc: './assets/gallery/renders/renders/Render Anuncio 7Refugio/Render 7Refugio 1.png', coverPosition: '82% center', description: description['septimo-refugio'], sketchfabId: '1863e0cd20654faca0c77a290bfc4684', sketchfabUrl: 'https://sketchfab.com/3d-models/entidad-001-septimo-refugio-1863e0cd20654faca0c77a290bfc4684' };
   }
   if (/gravity\s*core/i.test(title + ' ' + source) || /^menu libro/i.test(title) || /menu libro/i.test(source)) {
-    return { key: 'gravity-core', title: 'Gravity Core', category: 'menus', coverSrc: './assets/gallery/menus/menus/GravityCore menu.webp', description: description['gravity-core'], sketchfabId: 'c3c987f533a243ecad5c7de6d3c99998', sketchfabUrl: 'https://sketchfab.com/3d-models/shmebulock-gnome-c3c987f533a243ecad5c7de6d3c99998' };
+    return { key: 'gravity-core', title: 'Gravity Core', category: 'menus', coverSrc: './assets/gallery/menus/menus/GravityCore menu.webp', description: description['gravity-core'], sketchfabModels: [{ id: 'c3c987f533a243ecad5c7de6d3c99998', title: 'Shmebulock Gnome', url: 'https://sketchfab.com/3d-models/shmebulock-gnome-c3c987f533a243ecad5c7de6d3c99998' }, { id: 'f8f27afdc8ef4d328e53f97429bbeaba', title: 'Patotective GravityCore', url: 'https://sketchfab.com/3d-models/patotective-gravitycore-f8f27afdc8ef4d328e53f97429bbeaba' }] };
   }
   if (/Skin Diddy/i.test(title + ' ' + source)) {
     return { key: 'skin-diddy', title: 'Skin Diddy', category: 'skins', coverSrc: './assets/gallery/skins/skins/Skin Diddy/Skin Diddy.png', coverPosition: '50% 0%', description: description['skin-diddy'] };
@@ -755,8 +755,9 @@ function buildProjects(items) {
         coverSrc: custom?.coverSrc || null,
         coverPosition: custom?.coverPosition || null,
         description: custom?.description || item.description || "",
-        sketchfabId: item.sketchfabId || seeded?.sketchfabId || '',
-        sketchfabUrl: item.sketchfabUrl || seeded?.sketchfabUrl || '',
+        sketchfabModels: item.sketchfabConfigured
+          ? (item.sketchfabModels || [])
+          : (item.sketchfabModels?.length ? item.sketchfabModels : seeded?.sketchfabModels || (seeded?.sketchfabId ? [{ id: seeded.sketchfabId, url: seeded.sketchfabUrl || '', title: seeded.title || custom?.title || item.title }] : [])),
         isGroup: Boolean(custom || nestedFolder),
         items: []
       };
@@ -877,8 +878,7 @@ function renderCards(category = 'all') {
     card.dataset.portfolioProjectDescription = project.description || '';
     card.dataset.portfolioProjectTitle = project.title;
     card.dataset.portfolioProjectCategory = project.category;
-    card.dataset.portfolioProjectSketchfabId = project.sketchfabId || '';
-    card.dataset.portfolioProjectSketchfabUrl = project.sketchfabUrl || '';
+    card.dataset.portfolioProjectSketchfabModels = JSON.stringify(project.sketchfabModels || []);
     if (customEntry) {
       card.dataset.adminEntryId = customEntry.adminEntryId;
       card.dataset.adminEntrySourceKey = customEntry.sourceKey || '';
@@ -886,8 +886,7 @@ function renderCards(category = 'all') {
       card.dataset.adminEntryDescription = project.description || '';
       card.dataset.adminEntryTitle = project.title;
       card.dataset.adminEntryCategory = project.category;
-      card.dataset.adminEntrySketchfabId = customEntry.sketchfabId || project.sketchfabId || '';
-      card.dataset.adminEntrySketchfabUrl = customEntry.sketchfabUrl || project.sketchfabUrl || '';
+      card.dataset.adminEntrySketchfabModels = JSON.stringify(customEntry.sketchfabConfigured ? customEntry.sketchfabModels || [] : project.sketchfabModels || []);
     }
     card.setAttribute('aria-label', 'Abrir ' + project.title);
 
@@ -988,8 +987,8 @@ async function loadAdminPublishedPortfolio() {
       mediaUrls: (item.mediaUrls || [item.src]).map(localMediaUrl),
       adminEntryId: item.id,
       sourceKey: item.sourceKey || '',
-      sketchfabId: item.sketchfabId || '',
-      sketchfabUrl: item.sketchfabUrl || ''
+      sketchfabModels: item.sketchfabModels || [],
+      sketchfabConfigured: Boolean(item.sketchfabConfigured)
     })) : [];
     const activeCategory = document.querySelector('.gallery-filter.is-active')?.dataset.category || 'all';
     const allItems = [...baseItems, ...addedItems];
@@ -1069,22 +1068,24 @@ function openModal(project) {
     }
   }
 
-  if (project.sketchfabId) {
+  for (const model of project.sketchfabModels || []) {
+    if (!/^[a-f0-9]{32}$/i.test(model.id || '')) continue;
     const section = document.createElement('section');
     section.className = 'gallery-sketchfab';
-    section.setAttribute('aria-label', `Modelo 3D: ${project.title}`);
+    const modelTitle = model.title || project.title;
+    section.setAttribute('aria-label', `Modelo 3D: ${modelTitle}`);
     const heading = document.createElement('h3');
-    heading.textContent = 'Explorá el modelo 3D';
+    heading.textContent = modelTitle;
     const frame = document.createElement('iframe');
-    frame.title = project.title + ' — modelo 3D interactivo';
-    frame.src = `https://sketchfab.com/models/${encodeURIComponent(project.sketchfabId)}/embed?autostart=0&animation_autoplay=0&ui_controls=1&ui_animations=1&ui_infos=0&ui_watermark=0`;
+    frame.title = modelTitle + ' — modelo 3D interactivo';
+    frame.src = `https://sketchfab.com/models/${encodeURIComponent(model.id)}/embed?autostart=0&animation_autoplay=0&ui_controls=1&ui_animations=1&ui_infos=0&ui_watermark=0`;
     frame.allow = 'autoplay; fullscreen; xr-spatial-tracking';
     frame.setAttribute('allowfullscreen', '');
     frame.setAttribute('loading', 'lazy');
     frame.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
     const link = document.createElement('a');
     link.className = 'gallery-sketchfab-link';
-    link.href = project.sketchfabUrl || `https://sketchfab.com/3d-models/${encodeURIComponent(project.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''))}-${encodeURIComponent(project.sketchfabId)}`;
+    link.href = model.url || `https://sketchfab.com/3d-models/${encodeURIComponent(modelTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''))}-${encodeURIComponent(model.id)}`;
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
     link.textContent = 'Ver modelo en Sketchfab ↗';

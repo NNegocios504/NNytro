@@ -230,7 +230,7 @@
     modal.setAttribute('role', 'dialog');
     modal.setAttribute('aria-modal', 'true');
     modal.setAttribute('aria-labelledby', 'inline-gallery-post-title');
-    modal.innerHTML = '<form class="inline-gallery-post-form"><div class="inline-gallery-post-heading"><div><small>NNYTRO / PORTFOLIO</small><h2 id="inline-gallery-post-title">Nueva publicación</h2></div><button type="button" data-post-close aria-label="Cerrar">×</button></div><label>Título<input name="title" maxlength="120" required placeholder="Nombre de la publicación"></label><label>Categoría<select name="category" required><option value="portadas">Portadas</option><option value="menus">Menús</option><option value="renders">Renders</option><option value="dibujos">Dibujos</option><option value="modeloss blockbench">Modelos Blockbench</option><option value="matt">Matt</option><option value="skins">Skins</option><option value="under news">Under News</option></select></label><label>Descripción<textarea name="description" maxlength="1200" rows="3" placeholder="Opcional"></textarea></label><label>Visor 3D de Sketchfab (opcional)<input name="sketchfab" type="url" maxlength="300" placeholder="Pegá el link del modelo de Sketchfab"></label><small class="inline-gallery-media-hint">Si el modelo tiene animaciones, el visor permite reproducirlas y explorarlo. Dejá vacío para quitarlo.</small><section class="inline-gallery-current-media" data-media-list aria-label="Archivos de la publicación"></section><label>Agregar imágenes o videos<input name="media" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm" multiple></label><small class="inline-gallery-media-hint" data-media-hint>Podés agregar hasta 20 archivos JPG, PNG, WEBP, GIF, MP4 o WEBM de hasta 24 MB cada uno.</small><p class="inline-gallery-post-status" role="status" aria-live="polite"></p><div class="inline-gallery-post-actions"><button type="button" class="inline-gallery-delete" data-post-delete hidden>Borrar publicación</button><span></span><button type="button" data-post-cancel>Cancelar</button><button type="submit" data-post-save>Crear publicación</button></div></form>';
+    modal.innerHTML = '<form class="inline-gallery-post-form"><div class="inline-gallery-post-heading"><div><small>NNYTRO / PORTFOLIO</small><h2 id="inline-gallery-post-title">Nueva publicación</h2></div><button type="button" data-post-close aria-label="Cerrar">×</button></div><label>Título<input name="title" maxlength="120" required placeholder="Nombre de la publicación"></label><label>Categoría<select name="category" required><option value="portadas">Portadas</option><option value="menus">Menús</option><option value="renders">Renders</option><option value="dibujos">Dibujos</option><option value="modeloss blockbench">Modelos Blockbench</option><option value="matt">Matt</option><option value="skins">Skins</option><option value="under news">Under News</option></select></label><label>Descripción<textarea name="description" maxlength="1200" rows="3" placeholder="Opcional"></textarea></label><label>Visores 3D de Sketchfab (opcional)<textarea name="sketchfab" maxlength="2400" rows="3" placeholder="Pegá un enlace por línea"></textarea></label><small class="inline-gallery-media-hint">Podés agregar varios modelos, uno por línea. Si tienen animaciones, se pueden controlar desde el visor. Borrá los enlaces para quitarlos.</small><section class="inline-gallery-current-media" data-media-list aria-label="Archivos de la publicación"></section><label>Agregar imágenes o videos<input name="media" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm" multiple></label><small class="inline-gallery-media-hint" data-media-hint>Podés agregar hasta 20 archivos JPG, PNG, WEBP, GIF, MP4 o WEBM de hasta 24 MB cada uno.</small><p class="inline-gallery-post-status" role="status" aria-live="polite"></p><div class="inline-gallery-post-actions"><button type="button" class="inline-gallery-delete" data-post-delete hidden>Borrar publicación</button><span></span><button type="button" data-post-cancel>Cancelar</button><button type="submit" data-post-save>Crear publicación</button></div></form>';
     document.body.append(modal);
     const form = modal.querySelector('form');
     const postStatus = modal.querySelector('.inline-gallery-post-status');
@@ -245,7 +245,7 @@
     };
     const postFromProject = project => {
       const custom = project?.items?.find(item => item.adminEntryId);
-      return { id: custom?.adminEntryId || '', sourceKey: custom?.sourceKey || project?.key || '', title: project?.title || '', category: project?.category || 'portadas', description: project?.description || '', sketchfabId: project?.sketchfabId || '', sketchfabUrl: project?.sketchfabUrl || '', mediaUrls: project?.items?.map(item => new URL(item.src, location.href).href) || [] };
+      return { id: custom?.adminEntryId || '', sourceKey: custom?.sourceKey || project?.key || '', title: project?.title || '', category: project?.category || 'portadas', description: project?.description || '', sketchfabModels: project?.sketchfabModels || [], mediaUrls: project?.items?.map(item => new URL(item.src, location.href).href) || [] };
     };
     const postFromCard = card => ({
       id: card.dataset.adminEntryId || '',
@@ -253,8 +253,7 @@
       title: card.dataset.adminEntryTitle || card.dataset.portfolioProjectTitle || '',
       category: card.dataset.adminEntryCategory || card.dataset.portfolioProjectCategory || 'portadas',
       description: card.dataset.adminEntryDescription || card.dataset.portfolioProjectDescription || '',
-      sketchfabId: card.dataset.adminEntrySketchfabId || card.dataset.portfolioProjectSketchfabId || '',
-      sketchfabUrl: card.dataset.adminEntrySketchfabUrl || card.dataset.portfolioProjectSketchfabUrl || '',
+      sketchfabModels: JSON.parse(card.dataset.adminEntrySketchfabModels || card.dataset.portfolioProjectSketchfabModels || '[]'),
       mediaUrls: JSON.parse(card.dataset.adminEntryMedia || card.dataset.portfolioProjectMedia || '[]').map(src => new URL(src, location.href).href)
     });
     const refreshMediaList = () => {
@@ -285,7 +284,7 @@
       form.elements.title.value = editingPost?.title || '';
       form.elements.category.value = editingPost?.category || 'portadas';
       form.elements.description.value = editingPost?.description || '';
-      form.elements.sketchfab.value = editingPost?.sketchfabUrl || (editingPost?.sketchfabId ? `https://sketchfab.com/models/${editingPost.sketchfabId}/embed` : '');
+      form.elements.sketchfab.value = (editingPost?.sketchfabModels || []).map(model => model.url || `https://sketchfab.com/models/${model.id}/embed`).join('\n');
       refreshMediaList();
       modal.querySelector('#inline-gallery-post-title').textContent = editingPost ? 'Editar publicación' : 'Nueva publicación';
       modal.querySelector('[data-post-save]').textContent = editingPost ? 'Guardar cambios' : 'Crear publicación';
@@ -385,7 +384,7 @@
         }
         if (!mediaUrls.length) throw Error('La publicación necesita al menos una imagen o un video.');
         if (mediaUrls.length > 20) throw Error('Una publicación puede tener hasta 20 archivos.');
-        const payload = { title: form.elements.title.value.trim(), category: form.elements.category.value, description: form.elements.description.value.trim(), mediaUrls, sketchfabUrl: form.elements.sketchfab.value.trim(), isPublished: true };
+        const payload = { title: form.elements.title.value.trim(), category: form.elements.category.value, description: form.elements.description.value.trim(), mediaUrls, sketchfabUrls: form.elements.sketchfab.value.split(/\r?\n/).map(value => value.trim()).filter(Boolean), isPublished: true };
         if (editingPost?.sourceKey && !editingPost.id) payload.sourceKey = editingPost.sourceKey;
         postStatus.textContent = 'Guardando publicación…';
         if (editingPost?.id) await postApi(`admin/portfolio/${encodeURIComponent(editingPost.id)}`, { method: 'PATCH', body: JSON.stringify(payload) });
