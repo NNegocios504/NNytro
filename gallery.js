@@ -738,7 +738,8 @@ function buildProjects(items) {
   const projects = [];
 
   items.forEach((item) => {
-    const custom = item.adminEntryId ? null : customProjectFor(item);
+    const seeded = customProjectFor(item);
+    const custom = item.adminEntryId ? null : seeded;
     const relativePath = item.src.startsWith('./assets/gallery/') ? item.src.replace('./assets/gallery/', '').split('/') : [];
     const nestedFolder = relativePath.length > 3 ? relativePath[2] : null;
     const key = item.adminEntryId ? `admin:${item.adminEntryId}` : custom?.key || (nestedFolder
@@ -754,8 +755,8 @@ function buildProjects(items) {
         coverSrc: custom?.coverSrc || null,
         coverPosition: custom?.coverPosition || null,
         description: custom?.description || item.description || "",
-        sketchfabId: item.sketchfabId || custom?.sketchfabId || '',
-        sketchfabUrl: item.sketchfabUrl || custom?.sketchfabUrl || '',
+        sketchfabId: item.sketchfabId || seeded?.sketchfabId || '',
+        sketchfabUrl: item.sketchfabUrl || seeded?.sketchfabUrl || '',
         isGroup: Boolean(custom || nestedFolder),
         items: []
       };
