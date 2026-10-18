@@ -663,7 +663,7 @@ function customProjectFor(item) {
     return { key: 'under-news', title: 'Under News', category: 'under news', coverSrc: './assets/gallery/renders/renders/UnderNews Anuncios.webp', description: description['under-news'] };
   }
   if (/Render Anuncio 7Refugio/i.test(source) || /^render menu(?: video)?$/i.test(title)) {
-    return { key: 'septimo-refugio', title: 'Séptimo Refugio', category: 'renders', coverSrc: './assets/gallery/renders/renders/Render Anuncio 7Refugio/Render 7Refugio 1.png', coverPosition: '82% center', description: description['septimo-refugio'] };
+    return { key: 'septimo-refugio', title: 'Séptimo Refugio', category: 'renders', coverSrc: './assets/gallery/renders/renders/Render Anuncio 7Refugio/Render 7Refugio 1.png', coverPosition: '82% center', description: description['septimo-refugio'], sketchfabId: '1863e0cd20654faca0c77a290bfc4684', sketchfabUrl: 'https://sketchfab.com/3d-models/entidad-001-septimo-refugio-1863e0cd20654faca0c77a290bfc4684' };
   }
   if (/gravity\s*core/i.test(title + ' ' + source) || /^menu libro/i.test(title) || /menu libro/i.test(source)) {
     return { key: 'gravity-core', title: 'Gravity Core', category: 'menus', coverSrc: './assets/gallery/menus/menus/GravityCore menu.webp', description: description['gravity-core'], sketchfabId: 'c3c987f533a243ecad5c7de6d3c99998', sketchfabUrl: 'https://sketchfab.com/3d-models/shmebulock-gnome-c3c987f533a243ecad5c7de6d3c99998' };
