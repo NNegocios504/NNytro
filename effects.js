@@ -286,6 +286,10 @@
   profileToggle.after(editorToggle);
   fetch('/api/auth/me',{credentials:'same-origin',cache:'no-store'}).then(response=>response.ok?response.json():null).then(data=>{const user=data?.user;editorToggle.hidden=!(user?.isAdmin&&String(user.email||'').toLowerCase()==='nnytro.online@gmail.com');const link=document.createElement('link');link.rel='stylesheet';link.href='./inline-page-editor.css?v=inline-editor-news-1';document.head.append(link);const script=document.createElement('script');script.src='./inline-page-editor.js?v=inline-editor-news-1';document.body.append(script)}).catch(()=>{});
   const isMenuPage = /(?:^|\/)index(?:\.html)?\/?$/i.test(location.pathname);
+  if (isMenuPage) {
+    const homeNewsFeed = document.querySelector('[data-home-news]');
+    if (homeNewsFeed) accountTools.prepend(homeNewsFeed);
+  }
   (isMenuPage ? document.body : document.querySelector(".unified-site-actions") || document.querySelector(".commission-header-actions") || document.querySelector(".unified-site-header") || document.body).append(accountTools);
   document.body.append(notificationPanel);
   const notificationBadge=notificationToggle.querySelector('.site-notification-badge'),notificationList=notificationPanel.querySelector('.site-notification-list');
