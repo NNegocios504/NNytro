@@ -958,16 +958,27 @@ async function loadAdminPublishedPortfolio() {
     const data = await response.json();
     applyPortfolioSettings(data.settings);
     const hiddenSourceKeys = new Set(Array.isArray(data.hiddenSourceKeys) ? data.hiddenSourceKeys : []);
+    // A published admin entry with a sourceKey replaces its built-in project.
+    for (const item of Array.isArray(data.items) ? data.items : []) {
+      if (item.isPublished && item.sourceKey) hiddenSourceKeys.add(item.sourceKey);
+    }
     const originalProjectKeys = new Map();
     buildProjects(uniqueGalleryItems).forEach(project => project.items.forEach(item => originalProjectKeys.set(item, project.key)));
     const baseItems = uniqueGalleryItems.filter(item => !hiddenSourceKeys.has(originalProjectKeys.get(item)));
+    const recoveredMedia = {
+      'https://nnytro.online/api/media/gallery/c65fd830-8886-401a-9d91-a035c8dd9a82.gif': './assets/gallery/menus/menus/Gravity Core/Borramentes animado.gif',
+      'https://nnytro.online/api/media/gallery/09970b33-19d2-456b-9040-23821d657954.gif': './assets/gallery/menus/menus/Gravity Core/Gnomo test animation.gif',
+      'https://nnytro.online/api/media/gallery/90fd087d-a17e-48b0-8e3b-7b8d9884a63a.gif': './assets/gallery/menus/menus/Gravity Core/Gnomo caminando.gif',
+      'https://nnytro.online/api/media/gallery/c6d6090e-15cb-43ef-87a2-0cd6c0e158a9.gif': './assets/gallery/menus/menus/Gravity Core/Gnomo saltando.gif'
+    };
+    const localMediaUrl = url => recoveredMedia[url] || url;
     const addedItems = Array.isArray(data.items) ? data.items.map(item => ({
       category: item.category,
       title: item.title,
       description: item.description || '',
       type: item.type,
-      src: item.src,
-      mediaUrls: item.mediaUrls || [item.src],
+      src: localMediaUrl(item.src),
+      mediaUrls: (item.mediaUrls || [item.src]).map(localMediaUrl),
       adminEntryId: item.id,
       sourceKey: item.sourceKey || ''
     })) : [];
@@ -1004,18 +1015,23 @@ function openModal(project) {
   modalMedia.classList.toggle('gallery-modal-media--collection', isCollection);
 
   if (isCollection) {
-    const imageItems = project.items.filter((item) => item.type === 'image');
     project.items.forEach((item) => {
       const piece = document.createElement('figure');
       piece.className = 'gallery-modal-piece';
       const media = createMedia(item, true);
+      media.addEventListener('error', () => {
+        if (!piece.isConnected) return;
+        piece.remove();
+        project.items = project.items.filter(candidate => candidate !== item);
+        modalType.textContent = `${project.items.length} piezas relacionadas / portfolio interna`;
+      }, { once: true });
       if (item.type === 'image') {
         const zoomButton = document.createElement('button');
         zoomButton.type = 'button';
         zoomButton.className = 'gallery-modal-image-button';
         zoomButton.setAttribute('aria-label', 'Abrir imagen ampliada: ' + item.title);
         zoomButton.append(media);
-        zoomButton.addEventListener('click', () => openImageViewer(item, zoomButton, imageItems));
+        zoomButton.addEventListener('click', () => openImageViewer(item, zoomButton, project.items.filter(candidate => candidate.type === 'image')));
         piece.append(zoomButton);
       } else {
         piece.append(media);
