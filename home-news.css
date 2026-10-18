@@ -2,7 +2,7 @@
 @media(max-width:700px){.home-news-feed{position:relative;inset:auto;order:4;width:min(100%,34rem);max-height:none;margin:.35rem auto 1rem}.home-news-admin{padding:.55rem}.home-news-admin-panel{padding:.8rem}.home-news-admin-columns{grid-template-columns:1fr}.home-news-admin-list{max-height:10rem;overflow:auto}}
 
 /* Keep the homepage announcement under the intro copy without covering it. */
-.home-intro{top:46%}
+.home-intro--with-news{top:46%}
 .home-intro>.home-news-feed{position:relative;inset:auto;display:grid;width:100%;max-height:28vh;gap:.45rem;margin:1rem 0 0;overflow:auto;pointer-events:auto;transform:none}
 .home-intro>.home-news-feed .home-news-card{border-color:#8b80ed;background:linear-gradient(120deg,rgba(18,18,51,.96),rgba(9,18,56,.96));box-shadow:0 8px 26px #0008,0 0 18px #3a68ff50}
 .home-intro>.home-news-feed .home-news-link{grid-template-columns:minmax(6rem,34%) minmax(0,1fr);min-height:clamp(8rem,18vh,12rem)}

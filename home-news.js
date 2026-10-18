@@ -34,7 +34,11 @@
         event.preventDefault(); event.stopPropagation();
         const ids = dismissed(); ids.add(item.id);
         try { localStorage.setItem(dismissedKey, JSON.stringify([...ids])); } catch {}
-        card.remove(); if (!feed.querySelector('.home-news-card')) feed.hidden = true;
+        card.remove();
+        if (!feed.querySelector('.home-news-card')) {
+          feed.hidden = true;
+          intro?.classList.remove('home-intro--with-news');
+        }
       });
       card.append(link, close); feed.append(card);
     }
