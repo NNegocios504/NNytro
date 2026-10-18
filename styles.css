@@ -156,7 +156,7 @@ html[lang="en"] .home-intro h1 { font-size:clamp(2.3rem,4.15vw,3.25rem); letter-
   .home-page { min-height:100svh; padding:.75rem; overflow-x:clip; overflow-y:visible; background-position:center; }
   .home-brand { font-size:1.35rem; }
   .home-layout { display:flex; flex:0 0 auto; flex-direction:column; align-items:stretch; justify-content:flex-start; gap:.8rem; min-height:0; padding:.5rem 0 1rem; }
-  .home-intro { position:relative; top:auto; left:auto; width:min(88%,26rem); max-width:26rem; padding:.7rem .85rem; transform:none; }
+  .home-intro { position:relative; z-index:2; isolation:isolate; top:auto; left:auto; width:min(88%,26rem); max-width:26rem; padding:.7rem .85rem; transform:none; }
   .home-intro h1 { font-size:clamp(2.25rem,11vw,3.5rem); }
   html[lang="en"] .home-intro h1 { font-size:clamp(2rem,9vw,3.25rem); }
   .home-intro p { margin-top:.45rem; font-size:.95rem; }
