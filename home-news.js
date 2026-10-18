@@ -1,9 +1,9 @@
 (() => {
   const feed = document.querySelector('[data-home-news]');
   if (!feed) return;
-  // Place the rendered announcement beside the notification bell on the home page.
-  const accountTools = document.querySelector('.site-account-tools');
-  if (accountTools && /(?:^|\/)index(?:\.html)?\/?$/i.test(location.pathname)) accountTools.prepend(feed);
+  // Keep the homepage announcement directly under the intro copy.
+  const intro = document.querySelector('.home-intro');
+  if (intro && /(?:^|\/)index(?:\.html)?\/?$/i.test(location.pathname)) intro.append(feed);
   const dismissedKey = 'nnytro-dismissed-news-v1';
   const api = async (path, options = {}) => {
     const response = await fetch(`/api/${path}`, {
