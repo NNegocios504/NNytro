@@ -312,8 +312,9 @@ html[lang="en"] .home-intro h1 { font-size:clamp(2.3rem,4.15vw,3.25rem); letter-
 @media (max-width:700px) {
   .home-scene { margin-top:clamp(-9rem,-26vw,-7rem); margin-bottom:clamp(-3rem,-8vw,-2rem); }
   .home-intro { background:linear-gradient(90deg,rgba(4,5,32,.28),rgba(4,5,32,.08) 76%,transparent); border-left-color:rgba(190,174,255,.92); }
-  .home-intro h1 { color:#fff; text-shadow:0 2px 2px rgba(0,0,0,.9),0 0 10px rgba(118,157,255,.45),0 0 26px rgba(145,105,255,.42); }
-  .home-intro p { color:#fff; text-shadow:0 2px 4px rgba(0,0,0,.96),0 0 10px rgba(9,20,68,.9); }
+  .home-intro h1,.home-intro p { color:#fff!important; -webkit-text-fill-color:#fff!important; -webkit-text-stroke:0 transparent!important; paint-order:normal; opacity:1!important; filter:none!important; mix-blend-mode:normal; }
+  .home-intro h1 { text-shadow:0 2px 2px rgba(0,0,0,.9),0 0 10px rgba(118,157,255,.45),0 0 26px rgba(145,105,255,.42); }
+  .home-intro p { text-shadow:0 2px 4px rgba(0,0,0,.96),0 0 10px rgba(9,20,68,.9); }
   .home-intro.fx-reveal { opacity:1; filter:none; }
   .home-page.fx-page-enter { animation:none; }
 }
