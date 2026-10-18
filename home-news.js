@@ -3,7 +3,8 @@
   if (!feed) return;
   // Keep the homepage announcement directly under the intro copy.
   const intro = document.querySelector('.home-intro');
-  if (intro && /(?:^|\/)index(?:\.html)?\/?$/i.test(location.pathname)) intro.append(feed);
+  const isHomePage = location.pathname === '/' || /(?:^|\/)index(?:\.html)?\/?$/i.test(location.pathname);
+  if (intro && isHomePage) intro.append(feed);
   const dismissedKey = 'nnytro-dismissed-news-v1';
   const api = async (path, options = {}) => {
     const response = await fetch(`/api/${path}`, {
