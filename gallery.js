@@ -758,6 +758,7 @@ function buildProjects(items) {
         sketchfabModels: item.sketchfabConfigured
           ? (item.sketchfabModels || [])
           : (item.sketchfabModels?.length ? item.sketchfabModels : seeded?.sketchfabModels || (seeded?.sketchfabId ? [{ id: seeded.sketchfabId, url: seeded.sketchfabUrl || '', title: seeded.title || custom?.title || item.title }] : [])),
+        organization: item.organization || null,
         isGroup: Boolean(custom || nestedFolder),
         items: []
       };
@@ -978,8 +979,13 @@ async function loadAdminPublishedPortfolio() {
       'https://nnytro.online/api/media/gallery/c6d6090e-15cb-43ef-87a2-0cd6c0e158a9.gif': './assets/gallery/menus/menus/Gravity Core/Gnomo saltando.gif'
     };
     const localMediaUrl = url => recoveredMedia[url] || url;
-    const addedItems = Array.isArray(data.items) ? data.items.flatMap(item => {
-      const mediaUrls = (item.mediaUrls || [item.src]).map(localMediaUrl).filter(Boolean);
+    const selectedEntries = new Map();
+    for (const item of Array.isArray(data.items) ? data.items : []) {
+      const key = item.sourceKey || item.id || item.src;
+      if (key && !selectedEntries.has(key)) selectedEntries.set(key, item);
+    }
+    const addedItems = [...selectedEntries.values()].flatMap(item => {
+      const mediaUrls = [...new Set((item.mediaUrls || [item.src]).map(localMediaUrl).filter(Boolean))];
       return mediaUrls.map((src, index) => ({
         category: item.category,
         title: index === 0 ? item.title : `${item.title} — ${index + 1}`,
@@ -990,9 +996,10 @@ async function loadAdminPublishedPortfolio() {
         adminEntryId: item.id,
         sourceKey: item.sourceKey || '',
         sketchfabModels: item.sketchfabModels || [],
-        sketchfabConfigured: Boolean(item.sketchfabConfigured)
+        sketchfabConfigured: Boolean(item.sketchfabConfigured),
+        organization: item.organization || null
       }));
-    }) : [];
+    });
     const activeCategory = document.querySelector('.gallery-filter.is-active')?.dataset.category || 'all';
     const allItems = [...baseItems, ...addedItems];
     projects = buildProjects(allItems).sort((a, b) => {
@@ -1011,9 +1018,8 @@ async function loadAdminPublishedPortfolio() {
 
 function openModal(project) {
   window.currentPortfolioProject = project;
-  const isCollection = project.isGroup && project.items.length > 1;
+  const isCollection = project.items.length + (project.sketchfabModels || []).length > 1;
   modal.hidden = false;
-  document.dispatchEvent(new CustomEvent('gallery:project-open', { detail: project }));
   document.body.classList.add('modal-open');
   modalCard.classList.toggle('gallery-modal-card--collection', isCollection);
   modalCard.classList.toggle('gallery-modal-card--single-image', project.items.length === 1 && project.items[0]?.type === 'image');
@@ -1116,10 +1122,26 @@ function openModal(project) {
     const models = (project.sketchfabModels || []).filter(model => /^[a-f0-9]{32}$/i.test(model.id || ''));
     models.forEach(model => addToGroup(modelGroup(model), { type: 'model', value: model }));
     const gravityOrder = ['Menús y libros', 'Gnomos', 'Patotective', 'Borramentes', 'Gobblewonker', 'McGucket', 'Pacifica', 'Otros elementos', 'Modelos 3D'];
-    const orderedGroups = [...groups.entries()].sort(([a], [b]) => isGravityCore
+    const defaultGroups = [...groups.entries()].sort(([a], [b]) => isGravityCore
       ? gravityOrder.indexOf(a) - gravityOrder.indexOf(b)
       : a.localeCompare(b, 'es', { sensitivity: 'base' }));
-    orderedGroups.forEach(([name, entries]) => {
+    const organizationGroups = Array.isArray(project.organization?.groups) ? project.organization.groups : [];
+    if (organizationGroups.length) {
+      const savedGroupByKey = new Map();
+      organizationGroups.forEach(group => (Array.isArray(group.items) ? group.items : []).forEach(key => savedGroupByKey.set(key, group.name)));
+      const organized = new Map(organizationGroups.filter(group => typeof group.name === 'string' && group.name.trim()).map(group => [group.name, []]));
+      for (const [defaultName, entries] of defaultGroups) for (const entry of entries) {
+        const key = portfolioEntryKey(entry);
+        const name = savedGroupByKey.get(key) || defaultName;
+        if (!organized.has(name)) organized.set(name, []);
+        organized.get(name).push(entry);
+      }
+      project.displayGroups = [...organized.entries()].map(([name, entries]) => ({ name, entries }));
+    } else {
+      project.displayGroups = defaultGroups.map(([name, entries]) => ({ name, entries }));
+    }
+    document.dispatchEvent(new CustomEvent('gallery:project-open', { detail: project }));
+    project.displayGroups.forEach(({ name, entries }) => {
       const heading = document.createElement('h3');
       heading.className = 'gallery-collection-heading';
       heading.textContent = name;
@@ -1128,6 +1150,20 @@ function openModal(project) {
     });
   } else {
     const item = project.items[0];
+    const singleEntries = [{ type: 'item', value: item }, ...(project.sketchfabModels || []).filter(model => /^[a-f0-9]{32}$/i.test(model.id || '')).map(value => ({ type: 'model', value }))];
+    const singleOrganization = Array.isArray(project.organization?.groups) ? project.organization.groups : [];
+    if (singleOrganization.length) {
+      const saved = new Map();
+      singleOrganization.forEach(group => (Array.isArray(group.items) ? group.items : []).forEach(key => saved.set(key, group.name)));
+      const organized = new Map(singleOrganization.filter(group => typeof group.name === 'string' && group.name.trim()).map(group => [group.name, []]));
+      singleEntries.forEach(entry => {
+        const name = saved.get(portfolioEntryKey(entry)) || singleOrganization[0].name;
+        if (!organized.has(name)) organized.set(name, []);
+        organized.get(name).push(entry);
+      });
+      project.displayGroups = [...organized.entries()].map(([name, entries]) => ({ name, entries }));
+    } else project.displayGroups = [{ name: 'Contenido', entries: singleEntries }];
+    document.dispatchEvent(new CustomEvent('gallery:project-open', { detail: project }));
     if (item.type === 'image') {
       singleModalImage = createMedia(item, true);
       singleModalImage.addEventListener('load', fitSingleModalImage, { once:true });
@@ -1155,6 +1191,12 @@ function openModal(project) {
       ? 'video / reproducción disponible'
       : 'imagen / archivo visual';
   modal.querySelector('.gallery-modal-close').focus();
+}
+
+function portfolioEntryKey(entry) {
+  if (entry.type === 'model') return `model:${entry.value.id}`;
+  try { return `asset:${new URL(entry.value.src, location.href).pathname}`; }
+  catch { return `asset:${entry.value.src}`; }
 }
 
 function fitSingleModalImage() {

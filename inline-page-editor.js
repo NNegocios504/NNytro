@@ -237,6 +237,7 @@
     const mediaList = modal.querySelector('[data-media-list]');
     let editingPost = null;
     let activeProject = null;
+    let organizerGroups = [];
     const postApi = async (path, options = {}) => {
       const response = await fetch(`/api/${path}`, { credentials: 'same-origin', cache: 'no-store', ...options, headers: { ...(options.body && !(options.body instanceof FormData) ? { 'content-type': 'application/json' } : {}), ...(options.headers || {}) } });
       const data = await response.json().catch(() => ({}));
@@ -245,7 +246,8 @@
     };
     const postFromProject = project => {
       const custom = project?.items?.find(item => item.adminEntryId);
-      return { id: custom?.adminEntryId || '', sourceKey: custom?.sourceKey || project?.key || '', title: project?.title || '', category: project?.category || 'portadas', description: project?.description || '', sketchfabModels: project?.sketchfabModels || [], mediaUrls: project?.items?.map(item => new URL(item.src, location.href).href) || [] };
+      const mediaUrls = [...new Set(custom?.mediaUrls?.length ? custom.mediaUrls : project?.items?.map(item => new URL(item.src, location.href).href) || [])];
+      return { id: custom?.adminEntryId || '', sourceKey: custom?.sourceKey || project?.sourceKey || project?.key || '', title: project?.title || '', category: project?.category || 'portadas', description: project?.description || '', sketchfabModels: project?.sketchfabModels || [], mediaUrls };
     };
     const postFromCard = card => ({
       id: card.dataset.adminEntryId || '',
@@ -332,13 +334,87 @@
     };
     const syncDetailTools = () => {
       galleryInfo?.querySelector('.inline-gallery-detail-tools')?.remove();
+      galleryInfo?.querySelector('.inline-gallery-organizer')?.remove();
       if (!document.body.classList.contains('inline-editor-active') || !activeProject || galleryModal?.hidden || !galleryInfo) return;
       const tools = document.createElement('div');
       tools.className = 'inline-gallery-detail-tools';
-      const edit = document.createElement('button'); edit.type = 'button'; edit.dataset.galleryAction = 'edit-detail'; edit.textContent = 'Editar publicación';
-      const remove = document.createElement('button'); remove.type = 'button'; remove.dataset.galleryAction = 'delete-detail'; remove.textContent = 'Borrar publicación';
-      tools.append(edit, remove);
+      const organize = document.createElement('button'); organize.type = 'button'; organize.dataset.galleryAction = 'organize-detail'; organize.className = 'inline-gallery-organize-button'; organize.textContent = '✎'; organize.title = 'Ordenar categorías y piezas'; organize.setAttribute('aria-label', 'Ordenar categorías y piezas');
+      const edit = document.createElement('button'); edit.type = 'button'; edit.className = 'inline-gallery-edit-button'; edit.dataset.galleryAction = 'edit-detail'; edit.textContent = 'Editar publicación';
+      const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'inline-gallery-delete-button'; remove.dataset.galleryAction = 'delete-detail'; remove.textContent = 'Borrar publicación';
+      tools.append(organize, edit, remove);
       galleryInfo.append(tools);
+    };
+    const entryKey = entry => entry.type === 'model'
+      ? `model:${entry.value.id}`
+      : `asset:${new URL(entry.value.src, location.href).pathname}`;
+    const renderOrganizer = panel => {
+      panel.replaceChildren();
+      const heading = document.createElement('div'); heading.className = 'inline-gallery-organizer-heading';
+      const title = document.createElement('strong'); title.textContent = 'Ordenar contenido';
+      const add = document.createElement('button'); add.type = 'button'; add.textContent = '+ Categoría';
+      add.addEventListener('click', () => {
+        const name = window.prompt('Nombre de la nueva categoría:')?.trim();
+        if (!name || organizerGroups.some(group => group.name.toLowerCase() === name.toLowerCase())) return;
+        organizerGroups.push({ name, entries: [] }); renderOrganizer(panel);
+      });
+      heading.append(title, add); panel.append(heading);
+      for (const group of organizerGroups) {
+        const section = document.createElement('section'); section.className = 'inline-gallery-organizer-group';
+        const name = document.createElement('input'); name.type = 'text'; name.maxLength = 80; name.value = group.name; name.setAttribute('aria-label', 'Nombre de la categoría');
+        name.addEventListener('input', () => {
+          group.name = name.value;
+          panel.querySelectorAll('.inline-gallery-organizer-row select').forEach(select => {
+            const selectedGroup = organizerGroups[Number(select.dataset.groupIndex)];
+            [...select.options].forEach((option, index) => { option.value = organizerGroups[index]?.name || ''; option.textContent = organizerGroups[index]?.name || 'Categoría sin nombre'; });
+            if (selectedGroup) select.value = selectedGroup.name;
+          });
+        });
+        const removeGroup = document.createElement('button'); removeGroup.type = 'button'; removeGroup.textContent = '×'; removeGroup.title = 'Quitar categoría vacía'; removeGroup.disabled = group.entries.length > 0;
+        removeGroup.addEventListener('click', () => { if (!group.entries.length) { organizerGroups = organizerGroups.filter(item => item !== group); renderOrganizer(panel); } });
+        const groupHead = document.createElement('div'); groupHead.className = 'inline-gallery-organizer-group-heading'; groupHead.append(name, removeGroup); section.append(groupHead);
+        group.entries.forEach((entry, index) => {
+          const row = document.createElement('div'); row.className = 'inline-gallery-organizer-row';
+          const label = document.createElement('span'); label.textContent = entry.type === 'model' ? (entry.value.title || 'Modelo 3D') : (entry.value.title || entry.value.src.split('/').pop()); label.title = label.textContent;
+          const select = document.createElement('select'); select.dataset.groupIndex = String(organizerGroups.indexOf(group)); select.setAttribute('aria-label', `Categoría de ${label.textContent}`);
+          organizerGroups.forEach(target => { const option = document.createElement('option'); option.value = target.name; option.textContent = target.name || 'Categoría sin nombre'; option.selected = target === group; select.append(option); });
+          select.addEventListener('change', () => { const destination = organizerGroups.find(item => item.name === select.value); if (destination && destination !== group) { group.entries.splice(index, 1); destination.entries.push(entry); renderOrganizer(panel); } });
+          const up = document.createElement('button'); up.type = 'button'; up.textContent = '↑'; up.title = 'Subir'; up.disabled = index === 0;
+          up.addEventListener('click', () => { [group.entries[index - 1], group.entries[index]] = [group.entries[index], group.entries[index - 1]]; renderOrganizer(panel); });
+          const down = document.createElement('button'); down.type = 'button'; down.textContent = '↓'; down.title = 'Bajar'; down.disabled = index === group.entries.length - 1;
+          down.addEventListener('click', () => { [group.entries[index + 1], group.entries[index]] = [group.entries[index], group.entries[index + 1]]; renderOrganizer(panel); });
+          row.append(label, select, up, down); section.append(row);
+        });
+        panel.append(section);
+      }
+      const statusLine = document.createElement('p'); statusLine.className = 'inline-gallery-organizer-status'; statusLine.setAttribute('role', 'status'); panel.append(statusLine);
+      const save = document.createElement('button'); save.type = 'button'; save.className = 'inline-gallery-organizer-save'; save.textContent = 'Guardar organización';
+      save.addEventListener('click', async () => {
+        const names = organizerGroups.map(group => group.name.trim());
+        if (names.some(name => !name) || new Set(names.map(name => name.toLowerCase())).size !== names.length) { statusLine.textContent = 'Poné un nombre distinto en cada categoría.'; return; }
+        save.disabled = true; statusLine.textContent = 'Guardando…';
+        const organization = { groups: organizerGroups.map(group => ({ name: group.name.trim(), items: group.entries.map(entryKey) })) };
+        try {
+          const post = postFromProject(activeProject);
+          if (post.id) await postApi(`admin/portfolio/${encodeURIComponent(post.id)}/organization`, { method: 'PATCH', body: JSON.stringify({ organization }) });
+          else {
+            const payload = { title: post.title, category: post.category, description: post.description, mediaUrls: post.mediaUrls, sketchfabUrls: post.sketchfabModels.map(model => model.url || model.id), sourceKey: post.sourceKey, isPublished: true, organization };
+            await postApi('admin/portfolio', { method: 'POST', body: JSON.stringify(payload) });
+          }
+          activeProject.organization = organization;
+          activeProject.displayGroups = organizerGroups.map(group => ({ name: group.name.trim(), entries: group.entries }));
+          statusLine.textContent = 'Organización guardada.';
+          setTimeout(() => location.reload(), 500);
+        } catch (error) { statusLine.textContent = error.message; save.disabled = false; }
+      });
+      panel.append(save);
+    };
+    const openOrganizer = () => {
+      if (!activeProject || !galleryInfo) return;
+      galleryInfo.querySelector('.inline-gallery-organizer')?.remove();
+      organizerGroups = (activeProject.displayGroups || []).map(group => ({ name: group.name, entries: [...group.entries] }));
+      if (!organizerGroups.length) organizerGroups = [{ name: 'Contenido', entries: [...(activeProject.items || []).map(value => ({ type: 'item', value }))] }];
+      const panel = document.createElement('section'); panel.className = 'inline-gallery-organizer';
+      galleryInfo.append(panel); renderOrganizer(panel);
     };
     const observer = grid ? new MutationObserver(setCardTools) : null;
     if (grid && observer) observer.observe(grid, { childList: true });
@@ -358,6 +434,7 @@
       const post = card ? postFromCard(card) : postFromProject(activeProject);
       if (action === 'edit' && card) openPost(post);
       if (action === 'edit-detail' && activeProject) openPost(post);
+      if (action === 'organize-detail' && activeProject) openOrganizer();
       if ((action === 'delete' && card || action === 'delete-detail' && activeProject) && window.confirm(`¿Borrar “${post.title || 'esta publicación'}” del portfolio?`)) {
         try { await deletePost(post); location.reload(); }
         catch (error) { status.textContent = error.message; }
