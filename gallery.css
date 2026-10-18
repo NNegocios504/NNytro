@@ -132,6 +132,7 @@ body.modal-open{overflow:hidden}
 @media(max-width:760px){.gallery-image-viewer-nav{width:2.3rem;height:2.3rem}.gallery-image-viewer-nav--previous{left:.4rem}.gallery-image-viewer-nav--next{right:.4rem}}
 
 /* Los visores Sketchfab ocupan una celda, como cada imagen de la colección. */
-.gallery-modal-card--collection .gallery-sketchfab{grid-column:auto;width:100%;max-width:none;min-width:0;margin:0;padding:.75rem}
+.gallery-modal-card--collection .gallery-sketchfab{grid-column:span 2;width:100%;max-width:none;min-width:0;margin:0;padding:.75rem}
 .gallery-modal-card--collection .gallery-sketchfab iframe{aspect-ratio:4/3}
+@media(max-width:420px){.gallery-modal-card--collection .gallery-sketchfab{grid-column:1/-1}}
 
