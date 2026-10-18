@@ -83,6 +83,11 @@ body.modal-open{overflow:hidden}
 
 /* Las colecciones muestran solo las imágenes y sus títulos, agrupadas en una grilla. */
 .gallery-modal-card--collection{border:0;border-radius:0;background:transparent;box-shadow:none}
+.gallery-sketchfab{grid-column:1/-1;width:min(100%,980px);margin:1rem auto;padding:1rem;border:1px solid rgba(157,212,255,.28);border-radius:16px;background:linear-gradient(145deg,rgba(18,14,43,.92),rgba(5,8,25,.94));box-shadow:0 12px 32px #0006}
+.gallery-sketchfab h3{margin:0 0 .75rem;color:#a7eaff;font-family:var(--gallery-heading-font,'Crosner'),sans-serif;font-size:1.35rem}
+.gallery-sketchfab iframe{display:block;width:100%;aspect-ratio:16/10;border:0;border-radius:11px;background:#080a17}
+.gallery-sketchfab-link{display:inline-flex;margin-top:.75rem;padding:.6rem .85rem;border:1px solid #a77aff;border-radius:8px;color:#e8d9ff;text-decoration:none;font-weight:700;transition:background .18s,color .18s}
+.gallery-sketchfab-link:hover{background:#8f57f2;color:#fff}
 .gallery-modal-card--collection .gallery-modal-media--collection{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));align-content:start;align-items:start;justify-content:stretch;gap:clamp(1rem,2vw,1.5rem);overflow:auto;padding:1.25rem clamp(.75rem,2vw,1.5rem);background:transparent}
 .gallery-modal-card--collection .gallery-modal-piece{display:grid;width:100%;max-width:none;min-width:0;align-content:start;margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;transition:transform .25s ease}
 .gallery-modal-card--collection .gallery-modal-piece:hover{transform:translateY(-3px)}

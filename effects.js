@@ -284,7 +284,7 @@
   accountTools.append(notificationToggle,profileToggle);
   const editorToggle=document.createElement('button');editorToggle.type='button';editorToggle.className='site-editor-toggle';editorToggle.setAttribute('aria-label','Activar edición de página');editorToggle.title='Editar esta página';editorToggle.textContent='✎';editorToggle.hidden=true;
   profileToggle.after(editorToggle);
-  fetch('/api/auth/me',{credentials:'same-origin',cache:'no-store'}).then(response=>response.ok?response.json():null).then(data=>{const user=data?.user;editorToggle.hidden=!(user?.isAdmin&&String(user.email||'').toLowerCase()==='nnytro.online@gmail.com');const link=document.createElement('link');link.rel='stylesheet';link.href='./inline-page-editor.css?v=inline-editor-news-1';document.head.append(link);const script=document.createElement('script');script.src='./inline-page-editor.js?v=inline-editor-news-1';document.body.append(script)}).catch(()=>{});
+  fetch('/api/auth/me',{credentials:'same-origin',cache:'no-store'}).then(response=>response.ok?response.json():null).then(data=>{const user=data?.user;editorToggle.hidden=!(user?.isAdmin&&String(user.email||'').toLowerCase()==='nnytro.online@gmail.com');const link=document.createElement('link');link.rel='stylesheet';link.href='./inline-page-editor.css?v=portfolio-sketchfab-1';document.head.append(link);const script=document.createElement('script');script.src='./inline-page-editor.js?v=portfolio-sketchfab-1';document.body.append(script)}).catch(()=>{});
   const isMenuPage = location.pathname === '/' || /(?:^|\/)index(?:\.html)?\/?$/i.test(location.pathname);
   if (isMenuPage) {
     const homeNewsFeed = document.querySelector('[data-home-news]');
