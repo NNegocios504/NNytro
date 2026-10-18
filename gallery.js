@@ -717,7 +717,7 @@ function customProjectFor(item) {
     return { key: 'tryer', title: 'Tryer OC', category: 'dibujos', description: description.tryer };
   }
   if (/^zona 0 render$/i.test(title)) {
-    return { key: 'zona-0', title: 'Zona 0 render', category: 'renders', description: description['zona-0'] };
+    return { key: 'zona-0', title: 'Zona 0 render', category: 'renders', description: description['zona-0'], sketchfabId: '42c3c400b65f40bbb4ec60fd8d2f9822', sketchfabUrl: 'https://sketchfab.com/3d-models/emurph-creature-zona0-42c3c400b65f40bbb4ec60fd8d2f9822' };
   }
   if (/^Shiden, Wasabi, NNytro Skins$/i.test(title)) {
     return { key: 'skins', title: 'Shiden, Wasabi, NNytro skins', category: 'skins', description: description.skins };
