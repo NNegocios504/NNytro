@@ -978,18 +978,21 @@ async function loadAdminPublishedPortfolio() {
       'https://nnytro.online/api/media/gallery/c6d6090e-15cb-43ef-87a2-0cd6c0e158a9.gif': './assets/gallery/menus/menus/Gravity Core/Gnomo saltando.gif'
     };
     const localMediaUrl = url => recoveredMedia[url] || url;
-    const addedItems = Array.isArray(data.items) ? data.items.map(item => ({
-      category: item.category,
-      title: item.title,
-      description: item.description || '',
-      type: item.type,
-      src: localMediaUrl(item.src),
-      mediaUrls: (item.mediaUrls || [item.src]).map(localMediaUrl),
-      adminEntryId: item.id,
-      sourceKey: item.sourceKey || '',
-      sketchfabModels: item.sketchfabModels || [],
-      sketchfabConfigured: Boolean(item.sketchfabConfigured)
-    })) : [];
+    const addedItems = Array.isArray(data.items) ? data.items.flatMap(item => {
+      const mediaUrls = (item.mediaUrls || [item.src]).map(localMediaUrl).filter(Boolean);
+      return mediaUrls.map((src, index) => ({
+        category: item.category,
+        title: index === 0 ? item.title : `${item.title} — ${index + 1}`,
+        description: item.description || '',
+        type: /\.(mp4|webm)$/i.test(src) ? 'video' : 'image',
+        src,
+        mediaUrls,
+        adminEntryId: item.id,
+        sourceKey: item.sourceKey || '',
+        sketchfabModels: item.sketchfabModels || [],
+        sketchfabConfigured: Boolean(item.sketchfabConfigured)
+      }));
+    }) : [];
     const activeCategory = document.querySelector('.gallery-filter.is-active')?.dataset.category || 'all';
     const allItems = [...baseItems, ...addedItems];
     projects = buildProjects(allItems).sort((a, b) => {
@@ -1022,54 +1025,34 @@ function openModal(project) {
   modalMedia.replaceChildren();
   modalMedia.classList.toggle('gallery-modal-media--collection', isCollection);
 
-  if (isCollection) {
-    project.items.forEach((item) => {
-      const piece = document.createElement('figure');
-      piece.className = 'gallery-modal-piece';
-      const media = createMedia(item, true);
-      media.addEventListener('error', () => {
-        if (!piece.isConnected) return;
-        piece.remove();
-        project.items = project.items.filter(candidate => candidate !== item);
-        modalType.textContent = `${project.items.length} piezas relacionadas / portfolio interna`;
-      }, { once: true });
-      if (item.type === 'image') {
-        const zoomButton = document.createElement('button');
-        zoomButton.type = 'button';
-        zoomButton.className = 'gallery-modal-image-button';
-        zoomButton.setAttribute('aria-label', 'Abrir imagen ampliada: ' + item.title);
-        zoomButton.append(media);
-        zoomButton.addEventListener('click', () => openImageViewer(item, zoomButton, project.items.filter(candidate => candidate.type === 'image')));
-        piece.append(zoomButton);
-      } else {
-        piece.append(media);
-      }
-      const caption = document.createElement('figcaption');
-      caption.textContent = item.title;
-      piece.append(caption);
-      modalMedia.append(piece);
-    });
-  } else {
-    const item = project.items[0];
+  const appendItem = item => {
+    const piece = document.createElement('figure');
+    piece.className = 'gallery-modal-piece';
     const media = createMedia(item, true);
+    media.addEventListener('error', () => {
+      if (!piece.isConnected) return;
+      piece.remove();
+      project.items = project.items.filter(candidate => candidate !== item);
+      modalType.textContent = `${project.items.length} piezas relacionadas / portfolio interna`;
+    }, { once: true });
     if (item.type === 'image') {
-      singleModalImage = media;
-      media.addEventListener('load', fitSingleModalImage, { once:true });
-      if (media.complete) requestAnimationFrame(fitSingleModalImage);
       const zoomButton = document.createElement('button');
       zoomButton.type = 'button';
-      zoomButton.className = 'gallery-modal-single-image-button';
+      zoomButton.className = 'gallery-modal-image-button';
       zoomButton.setAttribute('aria-label', 'Abrir imagen ampliada: ' + item.title);
       zoomButton.append(media);
-      zoomButton.addEventListener('click', () => openImageViewer(item, zoomButton, [item]));
-      modalMedia.append(zoomButton);
+      zoomButton.addEventListener('click', () => openImageViewer(item, zoomButton, project.items.filter(candidate => candidate.type === 'image')));
+      piece.append(zoomButton);
     } else {
-      modalMedia.append(media);
+      piece.append(media);
     }
-  }
+    const caption = document.createElement('figcaption');
+    caption.textContent = item.title;
+    piece.append(caption);
+    modalMedia.append(piece);
+  };
 
-  for (const model of project.sketchfabModels || []) {
-    if (!/^[a-f0-9]{32}$/i.test(model.id || '')) continue;
+  const appendSketchfab = model => {
     const section = document.createElement('section');
     section.className = 'gallery-sketchfab';
     const modelTitle = model.title || project.title;
@@ -1091,6 +1074,75 @@ function openModal(project) {
     link.textContent = 'Ver modelo en Sketchfab ↗';
     section.append(heading, frame, link);
     modalMedia.append(section);
+  };
+
+  const normalizedText = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const isGravityCore = project.key === 'gravity-core' || project.sourceKey === 'gravity-core';
+  const itemGroup = item => {
+    const text = normalizedText(`${item.title} ${item.src}`);
+    if (isGravityCore) {
+      if (/gnomo|shmebulock/.test(text)) return 'Gnomos';
+      if (/patotective/.test(text)) return 'Patotective';
+      if (/borramentes/.test(text)) return 'Borramentes';
+      if (/gobblewonker|cobblewonker/.test(text)) return 'Gobblewonker';
+      if (/mccucket/.test(text)) return 'McGucket';
+      if (/pacifica/.test(text)) return 'Pacifica';
+      if (/gravitycore menu|menu libro|\bui\b|\bmenu\b/.test(text)) return 'Menús y libros';
+      return 'Otros elementos';
+    }
+    const src = String(item.src || '').replace(/^\.\//, '');
+    const pathParts = src.startsWith('assets/gallery/') ? src.slice('assets/gallery/'.length).split('/') : [];
+    let projectFolder = pathParts.length > 3 ? pathParts[2] || '' : '';
+    try { projectFolder = decodeURIComponent(projectFolder); } catch { /* Keep the visible folder name as-is. */ }
+    if (projectFolder && !/^https?:/i.test(projectFolder)) return projectFolder;
+    if (/boceto|inicial|medio|proceso/.test(text)) return 'Bocetos y proceso';
+    if (/final|resultado/.test(text)) return 'Resultados';
+    if (item.type === 'video' || /\.(gif|webm|mp4)(?:$|\?)/i.test(item.src || '')) return 'Animaciones';
+    return 'Imágenes y recursos';
+  };
+  const modelGroup = model => isGravityCore && /patotective/i.test(normalizedText(model.title))
+    ? 'Patotective'
+    : isGravityCore && /gnomo|shmebulock/i.test(normalizedText(model.title))
+      ? 'Gnomos'
+      : 'Modelos 3D';
+
+  if (isCollection) {
+    const groups = new Map();
+    const addToGroup = (name, entry) => {
+      if (!groups.has(name)) groups.set(name, []);
+      groups.get(name).push(entry);
+    };
+    project.items.forEach(item => addToGroup(itemGroup(item), { type: 'item', value: item }));
+    const models = (project.sketchfabModels || []).filter(model => /^[a-f0-9]{32}$/i.test(model.id || ''));
+    models.forEach(model => addToGroup(modelGroup(model), { type: 'model', value: model }));
+    const gravityOrder = ['Menús y libros', 'Gnomos', 'Patotective', 'Borramentes', 'Gobblewonker', 'McGucket', 'Pacifica', 'Otros elementos', 'Modelos 3D'];
+    const orderedGroups = [...groups.entries()].sort(([a], [b]) => isGravityCore
+      ? gravityOrder.indexOf(a) - gravityOrder.indexOf(b)
+      : a.localeCompare(b, 'es', { sensitivity: 'base' }));
+    orderedGroups.forEach(([name, entries]) => {
+      const heading = document.createElement('h3');
+      heading.className = 'gallery-collection-heading';
+      heading.textContent = name;
+      modalMedia.append(heading);
+      entries.forEach(entry => entry.type === 'item' ? appendItem(entry.value) : appendSketchfab(entry.value));
+    });
+  } else {
+    const item = project.items[0];
+    if (item.type === 'image') {
+      singleModalImage = createMedia(item, true);
+      singleModalImage.addEventListener('load', fitSingleModalImage, { once:true });
+      if (singleModalImage.complete) requestAnimationFrame(fitSingleModalImage);
+      const zoomButton = document.createElement('button');
+      zoomButton.type = 'button';
+      zoomButton.className = 'gallery-modal-single-image-button';
+      zoomButton.setAttribute('aria-label', 'Abrir imagen ampliada: ' + item.title);
+      zoomButton.append(singleModalImage);
+      zoomButton.addEventListener('click', () => openImageViewer(item, zoomButton, [item]));
+      modalMedia.append(zoomButton);
+    } else {
+      modalMedia.append(createMedia(item, true));
+    }
+    (project.sketchfabModels || []).filter(model => /^[a-f0-9]{32}$/i.test(model.id || '')).forEach(appendSketchfab);
   }
 
   modalCategory.textContent = labelFor(project.category);
