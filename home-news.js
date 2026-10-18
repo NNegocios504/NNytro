@@ -38,6 +38,7 @@
       card.append(link, close); feed.append(card);
     }
     feed.hidden = !feed.childElementCount;
+    intro?.classList.toggle('home-intro--with-news', !feed.hidden);
   }
   async function load() { try { const result = await api('news'); render(result.items || []); } catch { feed.hidden = true; } }
 

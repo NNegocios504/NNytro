@@ -11,4 +11,9 @@
 .home-intro>.home-news-feed .home-news-copy:only-child{grid-column:1/-1}
 .home-intro>.home-news-feed .home-news-copy strong{font-size:clamp(1.15rem,1.6vw,1.55rem)}
 .home-intro>.home-news-feed .home-news-copy>span{font-size:clamp(.82rem,1vw,1rem)}
-@media(max-width:700px){.home-intro{top:auto}.home-intro>.home-news-feed{width:100%;max-height:none;margin:.7rem 0 0}.home-intro>.home-news-feed .home-news-link{grid-template-columns:minmax(6rem,34%) minmax(0,1fr);min-height:7.5rem}.home-intro>.home-news-feed .home-news-link>img,.home-intro>.home-news-feed .home-news-link>video{min-height:7.5rem;max-height:9rem}.home-intro>.home-news-feed .home-news-copy{gap:.3rem;padding:.65rem 1.8rem .65rem .7rem}.home-intro>.home-news-feed .home-news-copy strong{font-size:1.05rem}.home-intro>.home-news-feed .home-news-copy>span{font-size:.78rem}}
+.home-intro--with-news{box-sizing:border-box;width:min(70vw,62rem);max-width:62rem;display:grid;grid-template-columns:minmax(13rem,.8fr) minmax(23rem,1.2fr);grid-template-areas:"title news" "description news";align-content:center;column-gap:clamp(1rem,3vw,3rem);row-gap:.35rem}
+.home-intro--with-news h1{grid-area:title}
+.home-intro--with-news p{grid-area:description;margin:.5rem 0 0}
+.home-intro--with-news>.home-news-feed{grid-area:news;align-self:center;margin:0;max-height:38vh}
+@media(max-width:950px) and (min-width:701px){.home-intro--with-news{width:68vw;grid-template-columns:minmax(12rem,.8fr) minmax(20rem,1.2fr);column-gap:1.2rem}}
+@media(max-width:700px){.home-intro,.home-intro--with-news{top:auto;display:block;width:min(88%,26rem);max-width:26rem}.home-intro>.home-news-feed{width:100%;max-height:none;margin:.7rem 0 0}.home-intro>.home-news-feed .home-news-link{grid-template-columns:minmax(6rem,34%) minmax(0,1fr);min-height:7.5rem}.home-intro>.home-news-feed .home-news-link>img,.home-intro>.home-news-feed .home-news-link>video{min-height:7.5rem;max-height:9rem}.home-intro>.home-news-feed .home-news-copy{gap:.3rem;padding:.65rem 1.8rem .65rem .7rem}.home-intro>.home-news-feed .home-news-copy strong{font-size:1.05rem}.home-intro>.home-news-feed .home-news-copy>span{font-size:.78rem}}
