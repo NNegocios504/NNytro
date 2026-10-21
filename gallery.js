@@ -625,7 +625,7 @@ const categoryLabels = {
 };
 
 function labelFor(category) {
-  const label = categoryLabels[category] || category;
+  const label = category === 'featured' ? 'Destacados' : categoryLabels[category] || category;
   return window.NNytroI18n?.t(label) || label;
 }
 
@@ -853,10 +853,22 @@ function createMedia(item, isModal = false) {
   return element;
 }
 
+// Stable source keys also match projects republished through the admin panel.
+const featuredProjectKeys = ['gravity-core', 'septimo-refugio', 'under-news', 'brokencodes', 'nyxza', 'calavera'];
+function featuredRank(project) {
+  const key = project.sourceKey || project.key;
+  const index = featuredProjectKeys.indexOf(key);
+  return index === -1 ? featuredProjectKeys.length : index;
+}
+function isFeaturedProject(project) {
+  return featuredRank(project) < featuredProjectKeys.length;
+}
+
 function renderCards(category = 'all') {
   const visibleProjects = category === 'all'
-    ? projects
-    : projects.filter((project) => project.category === category);
+    ? [...projects]
+    : projects.filter((project) => category === 'featured' ? isFeaturedProject(project) : project.category === category);
+  visibleProjects.sort((a, b) => featuredRank(a) - featuredRank(b));
 
   grid.replaceChildren();
   count.textContent = visibleProjects.length + ' proyectos / ' + labelFor(category);
@@ -872,6 +884,7 @@ function renderCards(category = 'all') {
   visibleProjects.forEach((project) => {
     const card = document.createElement('button');
     card.className = 'gallery-card';
+    card.classList.toggle('gallery-card--featured', isFeaturedProject(project));
     card.type = 'button';
     const customEntry = project.items.find(item => item.adminEntryId);
     card.dataset.portfolioProjectKey = customEntry ? (customEntry.sourceKey || '') : project.key;
@@ -897,6 +910,12 @@ function renderCards(category = 'all') {
     const coverMedia = createMedia(cover);
     if (project.coverPosition && coverMedia instanceof HTMLImageElement) coverMedia.style.objectPosition = project.coverPosition;
     media.append(coverMedia);
+    if (isFeaturedProject(project)) {
+      const featuredBadge = document.createElement('span');
+      featuredBadge.className = 'gallery-card-featured';
+      featuredBadge.textContent = '★ ' + (window.NNytroI18n?.t('Destacado') || 'Destacado');
+      media.append(featuredBadge);
+    }
 
     if (project.isGroup) {
       const groupBadge = document.createElement('span');
@@ -1341,13 +1360,13 @@ function closeModal() {
 window.addEventListener('resize', fitSingleModalImage);
 
 function renderFilters() {
-  const categories = ['all', ...new Set(projects.map((project) => project.category))];
+  const categories = ['all', 'featured', ...new Set(projects.map((project) => project.category))];
   filters.replaceChildren();
 
   categories.forEach((category) => {
     const categoryCount = category === 'all'
       ? projects.length
-      : projects.filter((project) => project.category === category).length;
+      : projects.filter((project) => category === 'featured' ? isFeaturedProject(project) : project.category === category).length;
     const button = document.createElement('button');
     button.className = 'gallery-filter';
     button.type = 'button';
