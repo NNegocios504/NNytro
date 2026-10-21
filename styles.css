@@ -1,6 +1,6 @@
 @font-face { font-family: 'Comico'; src: url('./assets/Comico-Regular.otf') format('opentype'); font-style: normal; font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Crosner'; src: url('./assets/Crosner-Regular.ttf') format('truetype'); font-style: normal; font-weight: 400; font-display: swap; }
-:is(.home-brand,.home-intro h1,.home-link,.home-tv-title,.detail-title,.about-title,.tipazo-modal-content h2,.modal-action,.gallery-title,.gallery-card-title,.gallery-modal-info h2,.gallery-image-viewer-controls button,.unified-site-brand,.commissions-hero h1,.commission-steps h2,.commission-hero-art-title,.commission-catalog-heading h2,.commission-greeting h2,.commission-category-heading h3,.commission-service-copy h4,.greeting-price,.commission-steps strong,.cart-summary-text strong,.commission-order-dialog h2,.contact-index,.discord-copy-button,.channel-copy strong,.contact-footer,.music-brand,.music-hero h1,.music-cta,.console-frequency,.music-section-heading h2,.music-note h2,.cover-card strong,.music-feature h1,.music-platform-heading h2,.music-youtube-card strong,.profile-intro h1,.profile-signin-copy h2,.profile-section-heading h2,.profile-panel h2,.profile-avatar,.profile-admin-publish h3,.xp-guns-logo,.channel-icon--guns,.contact-sticker span) {
+:is(.home-intro h1,.detail-title,.about-title,.tipazo-modal-content h2,.gallery-title,.commissions-hero h1,.commission-steps h2,.commission-hero-art-title,.commission-catalog-heading h2,.music-hero h1,.console-frequency,.music-feature h1,.profile-intro h1) {
   -webkit-text-stroke:.32px rgba(2,2,12,.84) !important;
   paint-order:stroke fill;
   letter-spacing:.045em !important;
@@ -24,7 +24,8 @@ img,svg { max-width:100%; }
 .home-page::after { opacity:.18; background:repeating-linear-gradient(0deg,rgba(255,255,255,.12) 0 1px,transparent 1px 4px); mix-blend-mode:screen; }
 .home-header,.home-layout { position:relative; z-index:2; }
 .home-header { display:flex; align-items:center; min-height:2.5rem; }
-.home-brand { display:inline-flex; align-items:center; gap:.22em; color:#f5f8ff; font:1.65rem/1 'Crosner','Comico',sans-serif; letter-spacing:.035em; text-decoration:none; text-shadow:2px 2px 0 #203476,0 0 14px rgba(115,211,255,.48); }
+.home-brand { display:inline-flex; align-items:center; gap:.22em; color:#f5f8ff; font:1.65rem/1 'Comico',sans-serif; letter-spacing:.035em; text-decoration:none; text-shadow:2px 2px 0 #203476,0 0 14px rgba(115,211,255,.48); font-family:Comico,Arial,sans-serif!important;-webkit-text-stroke:0!important;letter-spacing:normal!important;line-height:1.3;}
+.brand-tag { display:block; width:3.25em; height:auto; flex:0 0 auto; object-fit:contain; filter:drop-shadow(2px 2px 0 #203476) drop-shadow(0 0 7px rgba(115,211,255,.58)); }
 .brand-otter { display:block; width:1.35em; height:1.35em; flex:0 0 auto; object-fit:contain; filter:drop-shadow(0 0 3px rgba(117,246,255,.78)) drop-shadow(0 0 8px rgba(71,133,255,.62)); }
 .brand-otter--menu { width:1.45em; height:1.45em; }
 .home-layout { position:relative; display:block; flex:1; width:100%; margin:0 auto; pointer-events:none; }
@@ -33,7 +34,7 @@ img,svg { max-width:100%; }
 html[lang="en"] .home-intro h1 { font-size:clamp(2.3rem,4.15vw,3.25rem); letter-spacing:0; }
 .home-intro p { max-width:23rem; margin:1rem 0 0; color:#e9f4ff; font:clamp(1rem,1.25vw,1.12rem)/1.65 'Comico',sans-serif; text-shadow:0 2px 8px #000; }
 .home-menu { position:absolute; top:50%; right:0; z-index:3; display:grid; grid-auto-rows:4.55rem; gap:.7rem; width:min(25%,31rem); transform:translateY(-50%) rotate(-2deg); pointer-events:auto; }
-.home-link { position:relative; display:flex; box-sizing:border-box; align-items:center; justify-content:space-between; gap:.6rem; width:100%; height:4.55rem; min-width:0; min-height:0; padding:.45rem 1.25rem .45rem 1.65rem; border:1px solid rgba(255,255,255,.94); color:#1c3154; background:linear-gradient(180deg,#f7fbff 0%,#dfeaf8 43%,#b7cae4 50%,#e7f0fc 100%); box-shadow:inset 1px 1px 0 #fff,inset -1px -1px 0 rgba(32,56,93,.45),0 5px 13px rgba(0,0,25,.48); clip-path:polygon(2% 12%,96% 0,100% 80%,8% 100%,0 72%); font:clamp(1.15rem,1.8vw,1.7rem)/1.2 'Crosner','Comico',sans-serif; letter-spacing:.015em; text-decoration:none; transition:transform 180ms ease,filter 180ms ease,color 180ms ease,background 180ms ease; }
+.home-link { position:relative; display:flex; box-sizing:border-box; align-items:center; justify-content:space-between; gap:.6rem; width:100%; height:4.55rem; min-width:0; min-height:0; padding:.45rem 1.25rem .45rem 1.65rem; border:1px solid rgba(255,255,255,.94); color:#1c3154; background:linear-gradient(180deg,#f7fbff 0%,#dfeaf8 43%,#b7cae4 50%,#e7f0fc 100%); box-shadow:inset 1px 1px 0 #fff,inset -1px -1px 0 rgba(32,56,93,.45),0 5px 13px rgba(0,0,25,.48); clip-path:polygon(2% 12%,96% 0,100% 80%,8% 100%,0 72%); font:clamp(1.15rem,1.8vw,1.7rem)/1.2 'Comico',sans-serif; letter-spacing:.015em; text-decoration:none; transition:transform 180ms ease,filter 180ms ease,color 180ms ease,background 180ms ease; font-family:Comico,Arial,sans-serif!important;-webkit-text-stroke:0!important;letter-spacing:normal!important;line-height:1.3;}
 .home-link:nth-child(odd) { transform:translateX(.65rem) rotate(-.8deg); }
 .home-link:nth-child(even) { transform:translateX(-.2rem) rotate(.7deg); }
 .home-link b { color:inherit; font:1.45rem/1 Arial,sans-serif; opacity:0; text-shadow:0 0 8px rgba(95,226,255,.9); transition:opacity 160ms ease,transform 180ms ease; }
@@ -51,7 +52,7 @@ html[lang="en"] .home-intro h1 { font-size:clamp(2.3rem,4.15vw,3.25rem); letter-
 .home-tv-content.is-tuned { opacity:1; background:linear-gradient(115deg,color-mix(in srgb,var(--screen-tint,#193cff) 16%,transparent),rgba(24,8,56,.1) 62%,rgba(5,8,25,.06)); }
 .home-tv-image { position:absolute; top:var(--tv-image-top,14.5%); left:3.5%; z-index:1; display:block; width:var(--tv-image-width,51.5%); height:var(--tv-image-height,60%); min-width:0; min-height:0; max-width:none; max-height:none; object-fit:cover; object-position:center; opacity:.9; mix-blend-mode:screen; filter:drop-shadow(1px 0 rgba(255,0,90,.14)) drop-shadow(-1px 0 rgba(0,220,255,.12)); }
 .home-tv-copy { position:absolute; top:75%; left:12%; z-index:2; width:74%; height:25%; overflow:hidden; padding:.12em .25em; background:linear-gradient(90deg,rgba(4,13,47,.26),rgba(4,13,47,.14) 78%,transparent); }
-.home-tv-title { margin:0; font:clamp(.82rem,1.35vw,1.25rem)/1.1 'Crosner','Comico',sans-serif; overflow-wrap:anywhere; }
+.home-tv-title { margin:0; font:clamp(.82rem,1.35vw,1.25rem)/1.1 'Comico',sans-serif; overflow-wrap:anywhere; font-family:Comico,Arial,sans-serif!important;-webkit-text-stroke:0!important;letter-spacing:normal!important;line-height:1.3;}
 .home-tv-description { margin:.32em 0 0; font:clamp(.68rem,.95vw,.95rem)/1.25 'Comico',sans-serif; overflow-wrap:anywhere; }
 .tipazo-link { position:absolute; top:72.7%; left:27%; z-index:5; display:block; width:9.6%; min-width:64px; max-width:220px; padding:0; border:0; background:transparent; box-shadow:none; cursor:pointer; pointer-events:auto; transform:rotate(-7deg); transition:transform 180ms ease,filter 180ms ease; }
 .tipazo-link img { display:block; width:100%; height:auto; filter:drop-shadow(0 5px 8px #0008); }
@@ -112,7 +113,7 @@ html[lang="en"] .home-intro h1 { font-size:clamp(2.3rem,4.15vw,3.25rem); letter-
 .modal-content { align-self:center; padding:1rem 1rem 1rem 0; }
 .tipazo-modal-content h2 { margin:0; color:#fff; font:clamp(2.5rem,5vw,4rem)/1.05 'Crosner','Comico',sans-serif; letter-spacing:.015em; }
 .tipazo-modal-content p { max-width:29rem; color:#e4eaff; font:1rem/1.75 'Comico',sans-serif; letter-spacing:.005em; }
-.modal-action { margin-top:.8rem; border:1px solid rgba(203,181,255,.7); padding:.75rem 1rem; color:#f3eaff; background:rgba(69,43,128,.55); cursor:pointer; font:1rem/1.2 'Crosner','Comico',sans-serif; }
+.modal-action { margin-top:.8rem; border:1px solid rgba(203,181,255,.7); padding:.75rem 1rem; color:#f3eaff; background:rgba(69,43,128,.55); cursor:pointer; font:1rem/1.2 'Comico',sans-serif; font-family:Comico,Arial,sans-serif!important;-webkit-text-stroke:0!important;letter-spacing:normal!important;line-height:1.3;}
 .modal-action:hover,.modal-action:focus-visible { background:rgba(112,73,184,.8); outline:2px solid #d3baff; }
 
 /* Portafolio: reglas de respaldo para mantener legible la página si falta su hoja propia */
@@ -131,7 +132,7 @@ html[lang="en"] .home-intro h1 { font-size:clamp(2.3rem,4.15vw,3.25rem); letter-
 .gallery-card-media { position:relative; display:grid; min-height:13rem; aspect-ratio:4/3; place-items:center; overflow:hidden; background:#09091b; }
 .gallery-card-media img,.gallery-card-media video { display:block; width:100%; height:100%; object-fit:contain; }
 .gallery-card-meta { padding:.7rem .8rem .9rem; }
-.gallery-card-title { margin:0; color:white; font:1.1rem/1.2 'Crosner','Comico',sans-serif; }
+.gallery-card-title { margin:0; color:white; font:1.1rem/1.2 'Comico',sans-serif; font-family:Comico,Arial,sans-serif!important;-webkit-text-stroke:0!important;letter-spacing:normal!important;line-height:1.3;}
 .gallery-card-category,.gallery-card-group,.gallery-card-play { color:#b9a8ea; font:9px/1.4 ui-monospace,monospace; letter-spacing:.1em; }
 .gallery-modal { position:fixed; inset:0; z-index:50; display:grid; place-items:center; padding:1rem; }
 .gallery-modal-backdrop { position:absolute; inset:0; border:0; background:rgba(0,0,12,.82); backdrop-filter:blur(7px); }
@@ -140,7 +141,7 @@ html[lang="en"] .home-intro h1 { font-size:clamp(2.3rem,4.15vw,3.25rem); letter-
 .gallery-modal-media { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr)); align-content:start; gap:.8rem; max-height:84svh; overflow:auto; padding:1rem; }
 .gallery-modal-media img,.gallery-modal-media video { display:block; max-width:100%; max-height:74svh; object-fit:contain; cursor:zoom-in; }
 .gallery-modal-info { align-self:center; padding:2rem; }
-.gallery-modal-info h2 { font:clamp(2rem,4vw,3.5rem)/1.05 'Crosner','Comico',sans-serif; }
+.gallery-modal-info h2 { font:clamp(2rem,4vw,3.5rem)/1.05 'Comico',sans-serif; font-family:Comico,Arial,sans-serif!important;-webkit-text-stroke:0!important;letter-spacing:normal!important;line-height:1.3;}
 .gallery-image-viewer { position:fixed; inset:0; z-index:100; display:grid; place-items:center; padding:1rem; }
 .gallery-image-viewer-backdrop { position:absolute; inset:0; border:0; background:rgba(0,0,10,.9); }
 .gallery-image-viewer-panel { position:relative; z-index:1; width:min(100%,1400px); height:min(92svh,1000px); border:1px solid #8972c7; background:#070614; }
@@ -286,8 +287,8 @@ html[lang="en"] .home-intro h1 { font-size:clamp(2.3rem,4.15vw,3.25rem); letter-
 
 /* Barra de navegación compartida para las páginas internas. */
 .unified-site-header { position:sticky; top:0; z-index:100; display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:center; gap:1rem; width:calc(100% + clamp(2rem,8vw,8rem)); min-height:3.35rem; margin:-1.4rem 0 0 calc(-1 * clamp(1rem,4vw,4rem)); padding:.55rem clamp(1rem,4vw,4rem); border-bottom:1px solid rgba(154,135,219,.25); background:linear-gradient(90deg,rgba(4,4,21,.82),rgba(12,8,38,.78),rgba(4,4,21,.82)); box-shadow:0 4px 20px rgba(0,0,0,.12); backdrop-filter:blur(5px); }
-.unified-site-brand { display:flex; align-items:center; gap:.38em; justify-self:start; color:#f5f2ff; font:1.05rem/1 'Crosner','Comico',sans-serif; letter-spacing:.04em; text-decoration:none; text-shadow:0 0 12px rgba(111,220,255,.45); white-space:nowrap; }
-.unified-site-brand .brand-copy { display:inline-flex; align-items:baseline; gap:.4em; }
+.unified-site-brand { display:flex; align-items:center; gap:.38em; justify-self:start; color:#f5f2ff; font:1.05rem/1 'Comico',sans-serif; letter-spacing:.04em; text-decoration:none; text-shadow:0 0 12px rgba(111,220,255,.45); white-space:nowrap; font-family:Comico,Arial,sans-serif!important;-webkit-text-stroke:0!important;letter-spacing:normal!important;line-height:1.3;}
+.unified-site-brand .brand-copy { display:inline-flex; align-items:center; gap:.4em; }
 .unified-site-brand .brand-section { color:rgba(190,173,255,.72); font:8px/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.18em; text-transform:uppercase; }
 .unified-site-nav { display:flex; align-items:center; justify-content:center; gap:clamp(.8rem,2vw,1.8rem); }
 .unified-site-nav a { color:#ddd6f4; font:11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.12em; text-decoration:none; text-transform:uppercase; white-space:nowrap; transition:color .16s ease,text-shadow .16s ease; }
@@ -327,3 +328,6 @@ html[lang="en"] .home-intro h1 { font-size:clamp(2.3rem,4.15vw,3.25rem); letter-
     drop-shadow(0 0 13px var(--tv-image-glow-soft,rgba(74,202,255,.34)))
     drop-shadow(0 0 25px var(--tv-image-glow-soft,rgba(74,202,255,.34)));
 }
+
+/* Keep the signature and otter as one compact brand. */
+.home-brand { gap:0; }

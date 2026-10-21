@@ -23,7 +23,7 @@
 }
 .music-header, .music-hero, .music-section, .music-note, .music-footer { position: relative; z-index: 1; }
 .music-header { min-height: 2.7rem; gap: 1.25rem; }
-.music-brand { color: #fff; font: 1.12rem/1 'Crosner', 'Comico', sans-serif; letter-spacing: .025em; text-decoration: none; text-shadow: 0 0 15px rgba(111, 220, 255, .5); white-space: nowrap; }
+.music-brand { color: #fff; font: 1.12rem/1 'Comico', sans-serif; letter-spacing: .025em; text-decoration: none; text-shadow: 0 0 15px rgba(111, 220, 255, .5); white-space: nowrap; font-family:Comico,Arial,sans-serif!important;-webkit-text-stroke:0!important;letter-spacing:normal!important;line-height:1.3;}
 .music-brand span { color: rgba(207, 222, 255, .63); font: 9px/1 ui-monospace, monospace; letter-spacing: .15em; text-transform: uppercase; }
 .music-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(.7rem, 2vw, 1.7rem); }
 .music-nav a, .music-text-link, .music-footer a { color: #dbd1ff; font: 10px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .12em; text-decoration: none; text-transform: uppercase; transition: color .16s ease, text-shadow .16s ease; }
@@ -36,7 +36,7 @@
 .music-hero h1 { position: relative; width: fit-content; margin: .85rem 0 1.1rem; color: #fff; font: clamp(4.2rem, 9vw, 8.1rem)/.93 'Crosner', 'Comico', sans-serif; letter-spacing: -.025em; text-shadow: 3px 4px 0 rgba(20, 8, 62, .85), 0 0 34px rgba(133, 92, 255, .32); }
 .music-title-mark { position: absolute; top: .05em; right: -.6em; color: var(--music-cyan); font: .27em/1 'Comico', sans-serif; text-shadow: 0 0 14px rgba(125, 234, 255, .8); }
 .music-lead { max-width: 28rem; margin: 0; color: #e0e5ff; font: clamp(1rem, 1.35vw, 1.2rem)/1.75 'Comico', sans-serif; text-shadow: 0 2px 12px #030314; }
-.music-cta { display: inline-flex; align-items: center; justify-content: space-between; gap: 1.4rem; min-height: 2.9rem; margin-top: 1.7rem; padding: .65rem 1rem; border: 1px solid rgba(197, 160, 255, .72); color: #fff; background: linear-gradient(125deg, rgba(105, 61, 201, .48), rgba(10, 26, 74, .72)); box-shadow: inset 0 0 15px rgba(130, 94, 226, .18), 0 0 18px rgba(98, 67, 201, .2); font: 1rem/1.2 'Crosner', 'Comico', sans-serif; text-decoration: none; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+.music-cta { display: inline-flex; align-items: center; justify-content: space-between; gap: 1.4rem; min-height: 2.9rem; margin-top: 1.7rem; padding: .65rem 1rem; border: 1px solid rgba(197, 160, 255, .72); color: #fff; background: linear-gradient(125deg, rgba(105, 61, 201, .48), rgba(10, 26, 74, .72)); box-shadow: inset 0 0 15px rgba(130, 94, 226, .18), 0 0 18px rgba(98, 67, 201, .2); font: 1rem/1.2 'Comico', sans-serif; text-decoration: none; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; font-family:Comico,Arial,sans-serif!important;-webkit-text-stroke:0!important;letter-spacing:normal!important;line-height:1.3;}
 .music-cta:hover, .music-cta:focus-visible { transform: translateY(-2px); border-color: #fff; box-shadow: 0 0 24px rgba(122, 224, 255, .3); outline: 2px solid transparent; }
 .music-cta span { color: var(--music-cyan); font-family: 'Comico', sans-serif; }
 .music-console { position: relative; width: min(100%, 26rem); justify-self: center; padding: .8rem .85rem .7rem; border: 1px solid rgba(221, 216, 255, .36); border-radius: 7px 7px 4px 4px; background: linear-gradient(145deg, rgba(54, 49, 81, .97), rgba(14, 12, 32, .98) 42%, rgba(37, 31, 66, .96)); box-shadow: 0 28px 65px rgba(0, 0, 0, .58), inset 1px 1px 0 rgba(255,255,255,.22), inset -2px -2px 0 rgba(0,0,0,.7); transform: rotate(1.3deg); }
@@ -63,7 +63,7 @@
 .console-caption { margin: .7rem .35rem 0; color: rgba(206, 196, 235, .56); font: 7px/1.4 ui-monospace, monospace; letter-spacing: .15em; text-align: right; }
 .music-section { width: min(100%, 1120px); margin: 0 auto; padding: 0 0 4.7rem; }
 .music-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 1.5rem; padding-bottom: 1.15rem; border-bottom: 1px solid rgba(176, 149, 255, .3); }
-.music-section-heading h2, .music-note h2 { margin: .45rem 0 0; color: white; font: clamp(2rem, 4.2vw, 3.5rem)/1.03 'Crosner', 'Comico', sans-serif; text-shadow: 0 2px 0 rgba(13,5,45,.9), 0 0 20px rgba(137, 97, 255, .25); }
+.music-section-heading h2, .music-note h2 { margin: .45rem 0 0; color: white; font: clamp(2rem, 4.2vw, 3.5rem)/1.03 'Comico', sans-serif; text-shadow: 0 2px 0 rgba(13,5,45,.9), 0 0 20px rgba(137, 97, 255, .25); font-family:Comico,Arial,sans-serif!important;-webkit-text-stroke:0!important;letter-spacing:normal!important;line-height:1.3;}
 .music-text-link { display: inline-flex; align-items: center; gap: .7rem; padding-bottom: .2rem; }
 .music-text-link span { color: var(--music-cyan); font-size: 1.2em; }
 .music-section-intro { max-width: 44rem; margin: 1.15rem 0 1.6rem; color: #d1d8f5; font: 1rem/1.7 'Comico', sans-serif; }
@@ -77,7 +77,7 @@
 .cover-card img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; background: #090718; }
 .cover-card figcaption { display: grid; gap: .35rem; padding: .8rem .4rem .45rem; }
 .cover-index { color: var(--music-cyan); font: 8px/1.2 ui-monospace, monospace; letter-spacing: .17em; }
-.cover-card strong { color: #fff; font: clamp(1.05rem, 1.6vw, 1.4rem)/1.15 'Crosner', 'Comico', sans-serif; }
+.cover-card strong { color: #fff; font: clamp(1.05rem, 1.6vw, 1.4rem)/1.15 'Comico', sans-serif; font-family:Comico,Arial,sans-serif!important;-webkit-text-stroke:0!important;letter-spacing:normal!important;line-height:1.3;}
 .cover-note { color: rgba(210, 208, 234, .62); font: 10px/1.4 ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; }
 .music-note { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: clamp(1rem, 3vw, 2.5rem); width: min(100%, 1120px); margin: 0 auto 3rem; padding: clamp(1.2rem, 3vw, 2rem); border: 1px solid rgba(115, 209, 255, .35); background: linear-gradient(105deg, rgba(26, 16, 68, .86), rgba(4, 17, 49, .86)); box-shadow: inset 0 0 25px rgba(75, 80, 202, .11), 0 15px 36px rgba(0,0,0,.3); }
 .music-note-icon { display: grid; width: 3.2rem; aspect-ratio: 1; place-items: center; border: 1px solid rgba(180, 146, 255, .6); color: #dec9ff; background: rgba(116, 74, 195, .2); box-shadow: 0 0 22px rgba(134, 98, 227, .2); font: 2rem/1 'Comico', sans-serif; }
@@ -135,7 +135,7 @@
 .music-listening { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(18rem, .9fr); gap: clamp(1rem, 3vw, 2rem); width: min(100%, 1120px); margin: 0 auto 4rem; align-items: start; }
 .music-platform { min-width: 0; padding: clamp(1rem,2vw,1.4rem); border: 1px solid rgba(183,166,255,.38); background: rgba(7,8,31,.78); box-shadow: 0 16px 42px rgba(0,0,0,.28), inset 0 0 24px rgba(104,77,194,.12); backdrop-filter: blur(8px); }
 .music-platform-heading { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
-.music-platform-heading h2 { margin:.25rem 0 0; color:#fff; font:clamp(1.8rem,3vw,2.5rem)/1 'Crosner','Comico',sans-serif; }
+.music-platform-heading h2 { margin:.25rem 0 0; color:#fff; font:clamp(1.8rem,3vw,2.5rem)/1 'Comico',sans-serif; font-family:Comico,Arial,sans-serif!important;-webkit-text-stroke:0!important;letter-spacing:normal!important;line-height:1.3;}
 .music-platform-heading > a { color:#dcd2ff; font:10px/1.5 ui-monospace,monospace; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; }
 .music-platform-heading > a:hover,.music-platform-heading > a:focus-visible { color:#fff; text-shadow:0 0 12px #7deaff; }
 .music-platform iframe { display:block; min-height:400px; border:0; border-radius:12px; }
@@ -143,7 +143,7 @@
 .music-youtube-card:hover,.music-youtube-card:focus-visible { border-color:#ff82bb; box-shadow:0 0 24px rgba(255,75,158,.23); outline:none; }
 .music-youtube-play { display:grid; flex:0 0 3.2rem; aspect-ratio:1; place-items:center; border-radius:1rem; color:#fff; background:#fa315f; box-shadow:0 0 22px rgba(250,49,95,.38); }
 .music-youtube-card strong,.music-youtube-card small { display:block; }
-.music-youtube-card strong { font:1.35rem/1.3 'Crosner','Comico',sans-serif; }
+.music-youtube-card strong { font:1.35rem/1.3 'Comico',sans-serif; font-family:Comico,Arial,sans-serif!important;-webkit-text-stroke:0!important;letter-spacing:normal!important;line-height:1.3;}
 .music-youtube-card small { margin-top:.4rem; color:#d0cde6; font:10px/1.5 ui-monospace,monospace; letter-spacing:.04em; }
 .music-youtube-arrow { margin-left:auto; color:#ff9cc8; font-size:1.4rem; }
 @media(max-width:760px) { .music-listening { grid-template-columns:1fr; } .music-feature { margin-top:2.5rem; } }
