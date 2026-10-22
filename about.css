@@ -48,7 +48,5 @@
 .about-photo-arrow--previous{left:0}.about-photo-arrow--next{right:0}
 .about-photo-arrow:hover,.about-photo-arrow:focus-visible{background:#392252;box-shadow:0 0 20px #b566ff77}
 .about-photo-status{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-.about-portrait--extra .about-person{object-fit:contain;transform:scale(1.5)}
-.about-portrait--extra:hover .about-person{transform:scale(1.59) translateY(-.25rem)}
 @media(max-width:760px){.about-photo-carousel{width:auto;padding:0 30px}.about-photo-arrow{width:26px;height:26px;font-size:1.4rem}.about-photo-arrow--previous{left:0}.about-photo-arrow--next{right:0}}
 @media(prefers-reduced-motion:reduce){.about-photo-carousel .about-portrait,.about-photo-carousel .about-person{transition:none}}
