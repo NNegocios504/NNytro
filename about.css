@@ -34,3 +34,9 @@
  .about-screen .about-hint{display:none}
 }
 @media(max-height:600px) and (min-width:761px){.about-screen .about-title{font-size:2.7rem;margin-bottom:.4rem}.about-screen .about-intro{font-size:1rem;margin-bottom:.4rem}.about-accordion summary{padding:.4rem .6rem}.about-screen .about-description{font-size:.8rem}.about-topic-content{max-height:25svh}.about-screen .about-hint{display:none}}
+/* Halo lateral junto al control, como las luces del menú. */
+.about-accordion summary{position:relative;isolation:isolate;border-radius:8px;transition:color .2s ease}
+.about-accordion summary::before{content:'';position:absolute;z-index:-1;pointer-events:none;right:-.2rem;top:50%;width:48%;height:125%;transform:translateY(-50%);border-radius:50%;background:radial-gradient(ellipse at 88% 50%,rgba(226,91,255,.26),rgba(137,73,255,.17) 35%,transparent 73%);filter:blur(12px);opacity:.65;transition:opacity .22s ease}
+.about-accordion summary:hover::before,.about-accordion summary:focus-visible::before,.about-accordion details[open] summary::before{opacity:1;background:radial-gradient(ellipse at 88% 50%,rgba(226,91,255,.44),rgba(137,73,255,.27) 35%,transparent 73%)}
+.about-accordion summary::after{text-shadow:0 0 7px #8deaffaa,0 0 16px #ab65ff99}
+@media(prefers-reduced-motion:reduce){.about-accordion summary,.about-accordion summary::before{transition:none}}
