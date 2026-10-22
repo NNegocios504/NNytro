@@ -5,7 +5,7 @@
   const photo = portrait.querySelector('.about-person');
   const status = carousel.querySelector('.about-photo-status');
   const photos = [
-    { src: './assets/sobremi-personaje.webp', alt: 'Retrato de Ian delante de una ventana gráfica retro' },
+    { src: './assets/sobremi-foto-1.png?v=20261022', alt: 'Retrato de Ian delante de una ventana gráfica retro' },
     { src: './assets/sobremi-foto-2.png?v=framed-2', alt: 'Foto de Ian con efecto rosa y glitch' },
     { src: './assets/sobremi-foto-3.png?v=framed-3', alt: 'Foto de Ian con sombrero y una luz verde' }
   ];
