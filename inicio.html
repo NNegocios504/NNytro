@@ -10,8 +10,9 @@
     <link rel="stylesheet" href="./styles.css?v=tag-readable-20261021" />
       <link rel="stylesheet" href="./effects.css?v=tag-readable-20261021" />
       <link rel="stylesheet" href="./life.css" />
+      <link rel="stylesheet" href="./about.css?v=20261022" />
   </head>
-  <body>
+  <body class="about-screen">
     <video class="page-background-video about-background-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true"><source src="./assets/fondos/sobre%20mi.webm" type="video/webm" /></video>
     <main class="detail-shell about-page">
       
@@ -50,16 +51,13 @@
 
         <div class="about-copy">
           
-          <h1 class="about-title" id="about-title">Sobre<br />mí<span>.</span></h1>
+          <h1 class="about-title" id="about-title">Sobre mí<span>.</span></h1>
           <p class="about-intro">Hola, soy Ian / NNytro.</p>
-          <div class="about-description">
-            <p>Tengo 15 años, soy argentino y nací en Zárate. Me cuesta definirme en una sola disciplina: disfruto crear y probar cosas distintas.</p>
-            <p>En mi portfolio pueden ver dibujos, edición de imagen y video, portadas musicales, diseños de menús, renders, modelos 3D en Blockbench y Blender, skins. También hago música y escribo.</p>
-            <p>Me gusta estar haciendo algo, por más mínimo que sea; siempre busco algo para no aburrirme. Si me estreso haciendo algo, intento esforzarme más para terminarlo, aunque a veces me tarde un poco.</p>
-            <p>Me gusta mucho todo lo audiovisual. En mi Instagram se puede ver cuánto me gusta la fotografía.</p>
-            <p>Me gusta editar imágenes y videos, y disfruto mucho hacer de todo.</p>
-            <p>Me gustaría poder juntar el dinero para viajar a Argentina a finales de 2026.</p>
-            <p>Creo que esta página refleja un poco mi esencia y mi trabajo. Espero que les gusten mis trabajos.</p>
+          <div class="about-description about-accordion">
+            <details name="about-topics" open><summary>Sobre mí</summary><div class="about-topic-content"><p>Tengo 15 años, soy argentino y nací en Zárate. Me cuesta definirme en una sola disciplina: disfruto crear y probar cosas distintas.</p></div></details>
+            <details name="about-topics"><summary>Lo que hago</summary><div class="about-topic-content"><p>En mi portfolio pueden ver dibujos, edición de imagen y video, portadas musicales, diseños de menús, renders, modelos 3D en Blockbench y Blender, skins. También hago música y escribo.</p><p>Me gusta mucho todo lo audiovisual. En mi Instagram se puede ver cuánto me gusta la fotografía.</p><p>Me gusta editar imágenes y videos, y disfruto mucho hacer de todo.</p></div></details>
+            <details name="about-topics"><summary>Cómo trabajo</summary><div class="about-topic-content"><p>Me gusta estar haciendo algo, por más mínimo que sea; siempre busco algo para no aburrirme. Si me estreso haciendo algo, intento esforzarme más para terminarlo, aunque a veces me tarde un poco.</p></div></details>
+            <details name="about-topics"><summary>Objetivos y este espacio</summary><div class="about-topic-content"><p>Me gustaría poder juntar el dinero para viajar a Argentina a finales de 2026.</p><p>Creo que esta página refleja un poco mi esencia y mi trabajo. Espero que les gusten mis trabajos.</p></div></details>
           </div>
 
           <p class="about-hint">pasá sobre la imagen para acercarte</p>
