@@ -176,14 +176,13 @@
   toggle.addEventListener('click', async () => {
     if (!editingEnabled) {
       editingEnabled = true;
-      toolbar.hidden = false;
+      toolbar.hidden = page === 'galeria';
       document.body.classList.add('inline-editor-active');
       toggle.setAttribute('aria-pressed', 'true');
       document.dispatchEvent(new CustomEvent('site-editor-mode-change', { detail: { active: true } }));
       prepareNodes(); applyState(); updateHistoryButtons(); status.textContent = 'Modo edición activo.';
       return;
     }
-    if (toolbar.hidden) { toolbar.hidden = false; return; }
     toolbar.hidden = true;
     editingEnabled = false;
     document.body.classList.remove('inline-editor-active');
@@ -195,7 +194,7 @@
   });
   toolbar.addEventListener('click', event => {
     const action = event.target.closest('[data-action]')?.dataset.action;
-    if (action === 'close') toolbar.hidden = true;
+    if (action === 'close') toggle.click();
     if (action === 'news') document.dispatchEvent(new CustomEvent('nnytro:open-news-manager'));
     if (action === 'undo' || action === 'redo') void history(action);
     if (action === 'image' && selected instanceof HTMLImageElement) { fileField.accept = 'image/jpeg,image/png,image/webp,image/gif'; fileField.click(); }
@@ -230,14 +229,13 @@
     modal.setAttribute('role', 'dialog');
     modal.setAttribute('aria-modal', 'true');
     modal.setAttribute('aria-labelledby', 'inline-gallery-post-title');
-    modal.innerHTML = '<form class="inline-gallery-post-form"><div class="inline-gallery-post-heading"><div><small>NNYTRO / PORTFOLIO</small><h2 id="inline-gallery-post-title">Nueva publicación</h2></div><button type="button" data-post-close aria-label="Cerrar">×</button></div><label>Título<input name="title" maxlength="120" required placeholder="Nombre de la publicación"></label><label>Categoría<select name="category" required><option value="portadas">Portadas</option><option value="menus">Menús</option><option value="renders">Renders</option><option value="dibujos">Dibujos</option><option value="modeloss blockbench">Modelos Blockbench</option><option value="matt">Matt</option><option value="skins">Skins</option><option value="under news">Under News</option></select></label><label>Descripción<textarea name="description" maxlength="1200" rows="3" placeholder="Opcional"></textarea></label><label>Visores 3D de Sketchfab (opcional)<textarea name="sketchfab" maxlength="2400" rows="3" placeholder="Pegá un enlace por línea"></textarea></label><small class="inline-gallery-media-hint">Podés agregar varios modelos, uno por línea. Si tienen animaciones, se pueden controlar desde el visor. Borrá los enlaces para quitarlos.</small><section class="inline-gallery-current-media" data-media-list aria-label="Archivos de la publicación"></section><label>Agregar imágenes o videos<input name="media" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm" multiple></label><small class="inline-gallery-media-hint" data-media-hint>Podés agregar hasta 20 archivos JPG, PNG, WEBP, GIF, MP4 o WEBM de hasta 24 MB cada uno.</small><p class="inline-gallery-post-status" role="status" aria-live="polite"></p><div class="inline-gallery-post-actions"><button type="button" class="inline-gallery-delete" data-post-delete hidden>Borrar publicación</button><span></span><button type="button" data-post-cancel>Cancelar</button><button type="submit" data-post-save>Crear publicación</button></div></form>';
+    modal.innerHTML = '<form class="inline-gallery-post-form"><div class="inline-gallery-post-heading"><div><small>NNYTRO / PORTFOLIO</small><h2 id="inline-gallery-post-title">Nueva publicación</h2></div><button type="button" data-post-close aria-label="Cerrar">×</button></div><label>Título<input name="title" maxlength="120" required placeholder="Nombre de la publicación"></label><label>Categoría<select name="category" required><option value="portadas">Portadas</option><option value="menus">Menús</option><option value="renders">Renders</option><option value="dibujos">Dibujos</option><option value="modeloss blockbench">Modelos Blockbench</option><option value="matt">Matt</option><option value="skins">Skins</option><option value="under news">Under News</option></select></label><label>Descripción<textarea name="description" maxlength="1200" rows="3" placeholder="Opcional"></textarea></label><label>Visores 3D de Sketchfab (opcional)<textarea name="sketchfab" maxlength="2400" rows="3" placeholder="Pegá un enlace por línea"></textarea></label><small class="inline-gallery-media-hint">Podés agregar varios modelos, uno por línea. Si tienen animaciones, se pueden controlar desde el visor. Borrá los enlaces para quitarlos.</small><section class="inline-gallery-current-media" data-media-list aria-label="Archivos de la publicación"></section><label>Agregar imágenes o videos<input name="media" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm" multiple></label><small class="inline-gallery-media-hint" data-media-hint>Podés agregar hasta 100 archivos JPG, PNG, WEBP, GIF, MP4 o WEBM de hasta 24 MB cada uno.</small><p class="inline-gallery-post-status" role="status" aria-live="polite"></p><div class="inline-gallery-post-actions"><button type="button" class="inline-gallery-delete" data-post-delete hidden>Borrar publicación</button><span></span><button type="button" data-post-cancel>Cancelar</button><button type="submit" data-post-save>Crear publicación</button></div></form>';
     document.body.append(modal);
     const form = modal.querySelector('form');
     const postStatus = modal.querySelector('.inline-gallery-post-status');
     const mediaList = modal.querySelector('[data-media-list]');
     let editingPost = null;
     let activeProject = null;
-    let organizerGroups = [];
     const postApi = async (path, options = {}) => {
       const response = await fetch(`/api/${path}`, { credentials: 'same-origin', cache: 'no-store', ...options, headers: { ...(options.body && !(options.body instanceof FormData) ? { 'content-type': 'application/json' } : {}), ...(options.headers || {}) } });
       const data = await response.json().catch(() => ({}));
@@ -276,12 +274,39 @@
         remove.title = 'Quitar este archivo';
         remove.setAttribute('aria-label', `Quitar archivo ${index + 1}`);
         remove.addEventListener('click', () => { editingPost.mediaUrls.splice(index, 1); refreshMediaList(); });
-        item.append(preview, remove);
+        item.draggable = true;
+        item.title = 'Arrastrá para cambiar el orden';
+        item.addEventListener('dragstart', event => { event.dataTransfer.setData('text/plain', String(index)); event.dataTransfer.effectAllowed = 'move'; });
+        item.addEventListener('dragover', event => { event.preventDefault(); event.dataTransfer.dropEffect = 'move'; });
+        item.addEventListener('drop', event => {
+          event.preventDefault();
+          const from = Number(event.dataTransfer.getData('text/plain'));
+          if (!Number.isInteger(from) || from < 0 || from >= mediaUrls.length || from === index) return;
+          mediaUrls.splice(index, 0, mediaUrls.splice(from, 1)[0]); refreshMediaList();
+        });
+        const replace = document.createElement('button'); replace.type = 'button'; replace.className = 'inline-gallery-media-replace'; replace.textContent = '✎'; replace.setAttribute('aria-label', 'Reemplazar archivo ' + (index + 1));
+        replace.addEventListener('click', () => {
+          const input = document.createElement('input'); input.type = 'file'; input.accept = form.elements.media.accept;
+          input.addEventListener('change', async () => {
+            if (!input.files[0]) return;
+            replace.disabled = true; postStatus.textContent = 'Subiendo reemplazo…';
+            try { const oldUrl = mediaUrls[index]; mediaUrls[index] = await upload(input.files[0]); editingPost.replacements[new URL(oldUrl, location.href).pathname] = new URL(mediaUrls[index], location.href).pathname; refreshMediaList(); postStatus.textContent = 'Reemplazo listo. Guardá los cambios.'; }
+            catch (error) { postStatus.textContent = error.message; replace.disabled = false; }
+          }); input.click();
+        });
+        const move = direction => { const target = index + direction; if (target < 0 || target >= mediaUrls.length) return; [mediaUrls[index], mediaUrls[target]] = [mediaUrls[target], mediaUrls[index]]; refreshMediaList(); };
+        const previous = document.createElement('button'); previous.type = 'button'; previous.className = 'inline-gallery-media-previous'; previous.textContent = '←'; previous.setAttribute('aria-label', 'Mover archivo antes'); previous.disabled = index === 0; previous.onclick = () => move(-1);
+        const next = document.createElement('button'); next.type = 'button'; next.className = 'inline-gallery-media-next'; next.textContent = '→'; next.setAttribute('aria-label', 'Mover archivo después'); next.disabled = index === mediaUrls.length - 1; next.onclick = () => move(1);
+        item.append(preview, remove, replace, previous, next);
         mediaList.append(item);
       });
     };
     const openPost = post => {
-      editingPost = post ? { ...post, mediaUrls: [...post.mediaUrls] } : null;
+      const embedded = false;
+      modal.classList.toggle('is-embedded', embedded);
+      if (embedded) galleryInfo.append(modal);
+      else document.body.append(modal);
+      editingPost = post ? { ...post, mediaUrls: [...post.mediaUrls], originalMediaUrls: [...post.mediaUrls], replacements: {} } : null;
       form.reset();
       form.elements.title.value = editingPost?.title || '';
       form.elements.category.value = editingPost?.category || 'portadas';
@@ -290,13 +315,13 @@
       refreshMediaList();
       modal.querySelector('#inline-gallery-post-title').textContent = editingPost ? 'Editar publicación' : 'Nueva publicación';
       modal.querySelector('[data-post-save]').textContent = editingPost ? 'Guardar cambios' : 'Crear publicación';
-      modal.querySelector('[data-media-hint]').textContent = editingPost ? 'Quitá archivos con ×, agregá otros o dejá todo como está.' : 'Podés agregar hasta 20 imágenes o videos. Se mostrarán juntos en la publicación.';
+      modal.querySelector('[data-media-hint]').textContent = editingPost ? 'Arrastrá para ordenar, usá ✎ para reemplazar y × para quitar. Guardá para aplicar los cambios.' : 'Podés agregar hasta 100 imágenes o videos. Se mostrarán juntos en la publicación.';
       modal.querySelector('[data-post-delete]').hidden = !editingPost;
       modal.hidden = false;
       postStatus.textContent = '';
       modal.querySelector('[name="title"]').focus();
     };
-    const closePostModal = () => { modal.hidden = true; editingPost = null; form.reset(); };
+    const closePostModal = () => { modal.hidden = true; modal.classList.remove('is-embedded'); document.body.append(modal); editingPost = null; form.reset(); };
     const deletePost = async post => {
       if (post.id) return postApi(`admin/portfolio/${encodeURIComponent(post.id)}`, { method: 'DELETE' });
       if (post.sourceKey) return postApi('admin/portfolio', { method: 'POST', body: JSON.stringify({ sourceKey: post.sourceKey, deleted: true }) });
@@ -332,89 +357,114 @@
         card.append(tools);
       }
     };
+    let directDraft = null;
+    let originalMedia = [];
+    let draggedEntry = null;
+    const mediaArea = galleryModal?.querySelector('.gallery-modal-media');
+    const entryKey = entry => entry.type === 'model' ? 'model:' + entry.value.id : 'asset:' + new URL(entry.value.src, location.href).pathname;
+    const stopDirectEdit = () => {
+      if (!directDraft) return;
+      mediaArea.replaceChildren(...originalMedia);
+      mediaArea.classList.remove('is-direct-editing');
+      galleryInfo.querySelectorAll('[contenteditable]').forEach(node => { node.removeAttribute('contenteditable'); });
+      galleryInfo.querySelector('h2').textContent = activeProject.title;
+      const description = galleryInfo.querySelector('.gallery-modal-description');
+      description.textContent = activeProject.description || ''; description.hidden = !activeProject.description;
+      directDraft = null;
+    };
+    const renderDirectMedia = () => {
+      mediaArea.replaceChildren();
+      directDraft.groups.forEach(group => {
+        const section = document.createElement('section'); section.className = 'direct-edit-group';
+        const heading = document.createElement('h3'); heading.className = 'gallery-collection-heading'; heading.textContent = group.name;
+        const grid = document.createElement('div'); grid.className = 'direct-edit-grid';
+        const drop = (event, before = null) => {
+          event.preventDefault(); event.stopPropagation(); if (!draggedEntry || draggedEntry === before) return;
+          directDraft.groups.forEach(g => { g.entries = g.entries.filter(entry => entry !== draggedEntry); });
+          const index = before ? group.entries.indexOf(before) : group.entries.length;
+          group.entries.splice(index < 0 ? group.entries.length : index, 0, draggedEntry); draggedEntry = null; renderDirectMedia();
+        };
+        section.addEventListener('dragover', event => { event.preventDefault(); event.dataTransfer.dropEffect = 'move'; });
+        section.addEventListener('drop', event => drop(event));
+        group.entries.forEach(entry => {
+          const piece = document.createElement('figure'); piece.className = 'gallery-modal-piece direct-edit-piece'; piece.draggable = true;
+          piece.addEventListener('dragstart', event => { draggedEntry = entry; event.dataTransfer.setData('text/plain', entryKey(entry)); event.dataTransfer.effectAllowed = 'move'; piece.classList.add('is-dragging'); });
+          piece.addEventListener('dragend', () => { draggedEntry = null; piece.classList.remove('is-dragging'); });
+          piece.addEventListener('drop', event => drop(event, entry));
+          const media = document.createElement(entry.type === 'model' ? 'div' : entry.value.type === 'video' ? 'video' : 'img');
+          if (entry.type === 'model') media.textContent = entry.value.title || 'Modelo 3D';
+          else { media.src = entry.value.src; media.draggable = false; media.alt = entry.value.title || ''; }
+          const caption = document.createElement('figcaption'); caption.textContent = entry.value.title || 'Imagen nueva';
+          const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'direct-edit-remove'; remove.textContent = '×'; remove.setAttribute('aria-label', 'Borrar ' + caption.textContent);
+          remove.onclick = () => { if (!window.confirm('¿Borrar esta imagen de la publicación? El cambio se aplica al guardar.')) return; group.entries = group.entries.filter(item => item !== entry); renderDirectMedia(); };
+          piece.append(media, caption, remove); grid.append(piece);
+        });
+        if (!group.entries.length) { const hint = document.createElement('p'); hint.className = 'direct-edit-drop-hint'; hint.textContent = 'Arrastrá imágenes acá'; grid.append(hint); }
+        section.append(heading, grid); mediaArea.append(section);
+      });
+    };
     const syncDetailTools = () => {
+      stopDirectEdit();
       galleryInfo?.querySelector('.inline-gallery-detail-tools')?.remove();
-      galleryInfo?.querySelector('.inline-gallery-organizer')?.remove();
       if (!document.body.classList.contains('inline-editor-active') || !activeProject || galleryModal?.hidden || !galleryInfo) return;
-      const tools = document.createElement('div');
-      tools.className = 'inline-gallery-detail-tools';
-      const organize = document.createElement('button'); organize.type = 'button'; organize.dataset.galleryAction = 'organize-detail'; organize.className = 'inline-gallery-organize-button'; organize.textContent = '✎'; organize.title = 'Ordenar categorías y piezas'; organize.setAttribute('aria-label', 'Ordenar categorías y piezas');
-      const edit = document.createElement('button'); edit.type = 'button'; edit.className = 'inline-gallery-edit-button'; edit.dataset.galleryAction = 'edit-detail'; edit.textContent = 'Editar publicación';
-      const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'inline-gallery-delete-button'; remove.dataset.galleryAction = 'delete-detail'; remove.textContent = 'Borrar publicación';
-      tools.append(organize, edit, remove);
-      galleryInfo.append(tools);
-    };
-    const entryKey = entry => entry.type === 'model'
-      ? `model:${entry.value.id}`
-      : `asset:${new URL(entry.value.src, location.href).pathname}`;
-    const renderOrganizer = panel => {
-      panel.replaceChildren();
-      const heading = document.createElement('div'); heading.className = 'inline-gallery-organizer-heading';
-      const title = document.createElement('strong'); title.textContent = 'Ordenar contenido';
-      const add = document.createElement('button'); add.type = 'button'; add.textContent = '+ Categoría';
-      add.addEventListener('click', () => {
-        const name = window.prompt('Nombre de la nueva categoría:')?.trim();
-        if (!name || organizerGroups.some(group => group.name.toLowerCase() === name.toLowerCase())) return;
-        organizerGroups.push({ name, entries: [] }); renderOrganizer(panel);
-      });
-      heading.append(title, add); panel.append(heading);
-      for (const group of organizerGroups) {
-        const section = document.createElement('section'); section.className = 'inline-gallery-organizer-group';
-        const name = document.createElement('input'); name.type = 'text'; name.maxLength = 80; name.value = group.name; name.setAttribute('aria-label', 'Nombre de la categoría');
-        name.addEventListener('input', () => {
-          group.name = name.value;
-          panel.querySelectorAll('.inline-gallery-organizer-row select').forEach(select => {
-            const selectedGroup = organizerGroups[Number(select.dataset.groupIndex)];
-            [...select.options].forEach((option, index) => { option.value = organizerGroups[index]?.name || ''; option.textContent = organizerGroups[index]?.name || 'Categoría sin nombre'; });
-            if (selectedGroup) select.value = selectedGroup.name;
+      const tools = document.createElement('div'); tools.className = 'inline-gallery-detail-tools direct-edit-tools';
+      const pencil = document.createElement('button'); pencil.type = 'button'; pencil.className = 'direct-edit-pencil'; pencil.textContent = '✎'; pencil.title = 'Editar esta publicación'; pencil.setAttribute('aria-label', pencil.title); pencil.setAttribute('aria-pressed', 'false');
+      tools.append(pencil); galleryInfo.append(tools);
+      pencil.onclick = () => {
+        if (directDraft) { syncDetailTools(); return; }
+        directDraft = { groups: (activeProject.displayGroups || [{ name: 'Contenido', entries: activeProject.items.map(value => ({type:'item', value})) }]).map(group => ({ name: group.name, entries: [...group.entries] })) };
+        originalMedia = [...mediaArea.childNodes]; mediaArea.classList.add('is-direct-editing');
+        pencil.setAttribute('aria-pressed', 'true');
+        const title = galleryInfo.querySelector('h2');
+        const description = galleryInfo.querySelector('.gallery-modal-description');
+        [title, description].forEach(node => { node.contentEditable = 'true'; node.setAttribute('role', 'textbox'); }); description.hidden = false;
+        const controls = document.createElement('div'); controls.className = 'direct-edit-controls';
+        const hint = document.createElement('p'); hint.textContent = 'Editá el título y la descripción arriba. Arrastrá las imágenes para ordenarlas o moverlas a otra categoría.';
+        const categories = document.createElement('div'); categories.className = 'direct-edit-categories';
+        const renderCategories = () => {
+          categories.replaceChildren();
+          directDraft.groups.forEach(group => {
+            const row = document.createElement('div');
+            const name = document.createElement('input'); name.value = group.name; name.maxLength = 80; name.setAttribute('aria-label', 'Nombre de categoría');
+            name.oninput = () => { group.name = name.value; renderDirectMedia(); };
+            const remove = document.createElement('button'); remove.type = 'button'; remove.textContent = '×'; remove.title = 'Sacar categoría'; remove.onclick = () => {
+              if (directDraft.groups.length === 1) { message.textContent = 'Dejá al menos una categoría.'; return; }
+              if (!window.confirm('¿Sacar esta categoría? Sus imágenes pasarán a la primera categoría restante.')) return;
+              directDraft.groups = directDraft.groups.filter(item => item !== group); directDraft.groups[0].entries.push(...group.entries); renderCategories(); renderDirectMedia();
+            }; row.append(name, remove); categories.append(row);
           });
-        });
-        const removeGroup = document.createElement('button'); removeGroup.type = 'button'; removeGroup.textContent = '×'; removeGroup.title = 'Quitar categoría vacía'; removeGroup.disabled = group.entries.length > 0;
-        removeGroup.addEventListener('click', () => { if (!group.entries.length) { organizerGroups = organizerGroups.filter(item => item !== group); renderOrganizer(panel); } });
-        const groupHead = document.createElement('div'); groupHead.className = 'inline-gallery-organizer-group-heading'; groupHead.append(name, removeGroup); section.append(groupHead);
-        group.entries.forEach((entry, index) => {
-          const row = document.createElement('div'); row.className = 'inline-gallery-organizer-row';
-          const label = document.createElement('span'); label.textContent = entry.type === 'model' ? (entry.value.title || 'Modelo 3D') : (entry.value.title || entry.value.src.split('/').pop()); label.title = label.textContent;
-          const select = document.createElement('select'); select.dataset.groupIndex = String(organizerGroups.indexOf(group)); select.setAttribute('aria-label', `Categoría de ${label.textContent}`);
-          organizerGroups.forEach(target => { const option = document.createElement('option'); option.value = target.name; option.textContent = target.name || 'Categoría sin nombre'; option.selected = target === group; select.append(option); });
-          select.addEventListener('change', () => { const destination = organizerGroups.find(item => item.name === select.value); if (destination && destination !== group) { group.entries.splice(index, 1); destination.entries.push(entry); renderOrganizer(panel); } });
-          const up = document.createElement('button'); up.type = 'button'; up.textContent = '↑'; up.title = 'Subir'; up.disabled = index === 0;
-          up.addEventListener('click', () => { [group.entries[index - 1], group.entries[index]] = [group.entries[index], group.entries[index - 1]]; renderOrganizer(panel); });
-          const down = document.createElement('button'); down.type = 'button'; down.textContent = '↓'; down.title = 'Bajar'; down.disabled = index === group.entries.length - 1;
-          down.addEventListener('click', () => { [group.entries[index + 1], group.entries[index]] = [group.entries[index], group.entries[index + 1]]; renderOrganizer(panel); });
-          row.append(label, select, up, down); section.append(row);
-        });
-        panel.append(section);
-      }
-      const statusLine = document.createElement('p'); statusLine.className = 'inline-gallery-organizer-status'; statusLine.setAttribute('role', 'status'); panel.append(statusLine);
-      const save = document.createElement('button'); save.type = 'button'; save.className = 'inline-gallery-organizer-save'; save.textContent = 'Guardar organización';
-      save.addEventListener('click', async () => {
-        const names = organizerGroups.map(group => group.name.trim());
-        if (names.some(name => !name) || new Set(names.map(name => name.toLowerCase())).size !== names.length) { statusLine.textContent = 'Poné un nombre distinto en cada categoría.'; return; }
-        save.disabled = true; statusLine.textContent = 'Guardando…';
-        const organization = { groups: organizerGroups.map(group => ({ name: group.name.trim(), items: group.entries.map(entryKey) })) };
-        try {
+        };
+        const addCategory = document.createElement('button'); addCategory.type = 'button'; addCategory.textContent = '+ Categoría'; addCategory.onclick = () => { directDraft.groups.push({ name: 'Nueva categoría', entries: [] }); renderCategories(); renderDirectMedia(); categories.lastChild.querySelector('input').focus(); };
+        const uploadTarget = document.createElement('select'); uploadTarget.setAttribute('aria-label', 'Categoría para las imágenes nuevas');
+        const updateTargets = () => { const previous = uploadTarget.value; uploadTarget.replaceChildren(); directDraft.groups.forEach((g,index) => { const option = document.createElement('option'); option.value = index; option.textContent = g.name; uploadTarget.append(option); }); uploadTarget.value = previous || '0'; };
+        categories.addEventListener('input', updateTargets); categories.addEventListener('click', () => queueMicrotask(updateTargets)); addCategory.addEventListener('click', updateTargets);
+        const files = document.createElement('input'); files.type = 'file'; files.multiple = true; files.accept = 'image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm'; files.hidden = true;
+        const addImages = document.createElement('button'); addImages.type = 'button'; addImages.textContent = '+ Imágenes'; addImages.onclick = () => files.click();
+        files.onchange = async () => {
+          const target = directDraft.groups[Number(uploadTarget.value)] || directDraft.groups[0]; addImages.disabled = true; save.disabled = true;
+          try { for (const file of files.files) { message.textContent = 'Subiendo ' + file.name + '…'; const src = await upload(file); target.entries.push({ type:'item', value:{ src, title:file.name.replace(/\.[^.]+$/, ''), type:file.type.startsWith('video/') ? 'video' : 'image' } }); } renderDirectMedia(); message.textContent = 'Imágenes listas. Guardá los cambios.'; }
+          catch(error) { message.textContent = error.message; }
+          finally { addImages.disabled = false; save.disabled = false; files.value = ''; }
+        };
+        const message = document.createElement('p'); message.className = 'direct-edit-status'; message.setAttribute('role', 'status');
+        const save = document.createElement('button'); save.type = 'button'; save.textContent = 'Guardar cambios'; save.className = 'direct-edit-save';
+        save.onclick = async () => {
+          const names = directDraft.groups.map(g => g.name.trim());
+          if (!title.textContent.trim() || title.textContent.trim().length > 120 || description.textContent.length > 1200) { message.textContent = 'Revisá el título (hasta 120 caracteres) y la descripción (hasta 1200).'; return; }
+          if (names.some(name => !name) || new Set(names.map(n => n.toLowerCase())).size !== names.length) { message.textContent = 'Usá nombres distintos y completos para las categorías.'; return; }
+          const entries = directDraft.groups.flatMap(g => g.entries); const mediaUrls = entries.filter(e => e.type !== 'model').map(e => e.value.src);
+          if (!mediaUrls.length) { message.textContent = 'Dejá al menos una imagen o video.'; return; }
           const post = postFromProject(activeProject);
-          if (post.id) await postApi(`admin/portfolio/${encodeURIComponent(post.id)}/organization`, { method: 'PATCH', body: JSON.stringify({ organization }) });
-          else {
-            const payload = { title: post.title, category: post.category, description: post.description, mediaUrls: post.mediaUrls, sketchfabUrls: post.sketchfabModels.map(model => model.url || model.id), sourceKey: post.sourceKey, isPublished: true, organization };
-            await postApi('admin/portfolio', { method: 'POST', body: JSON.stringify(payload) });
-          }
-          activeProject.organization = organization;
-          activeProject.displayGroups = organizerGroups.map(group => ({ name: group.name.trim(), entries: group.entries }));
-          statusLine.textContent = 'Organización guardada.';
-          setTimeout(() => location.reload(), 500);
-        } catch (error) { statusLine.textContent = error.message; save.disabled = false; }
-      });
-      panel.append(save);
-    };
-    const openOrganizer = () => {
-      if (!activeProject || !galleryInfo) return;
-      galleryInfo.querySelector('.inline-gallery-organizer')?.remove();
-      organizerGroups = (activeProject.displayGroups || []).map(group => ({ name: group.name, entries: [...group.entries] }));
-      if (!organizerGroups.length) organizerGroups = [{ name: 'Contenido', entries: [...(activeProject.items || []).map(value => ({ type: 'item', value }))] }];
-      const panel = document.createElement('section'); panel.className = 'inline-gallery-organizer';
-      galleryInfo.append(panel); renderOrganizer(panel);
+          const payload = { title:title.textContent.trim(), description:description.textContent.trim(), category:post.category, mediaUrls, sketchfabUrls:entries.filter(e => e.type === 'model').map(e => e.value.url || e.value.id), organization:{ groups:directDraft.groups.map(g => ({ name:g.name.trim(), items:g.entries.map(entryKey) })) }, isPublished:true };
+          if (!post.id) payload.sourceKey = post.sourceKey;
+          save.disabled = true; message.textContent = 'Guardando…';
+          try { await postApi(post.id ? 'admin/portfolio/' + encodeURIComponent(post.id) : 'admin/portfolio', {method:post.id ? 'PATCH':'POST',body:JSON.stringify(payload)}); location.reload(); }
+          catch(error) { message.textContent = error.message; save.disabled = false; }
+        };
+        const cancel = document.createElement('button'); cancel.type = 'button'; cancel.textContent = 'Cancelar'; cancel.onclick = syncDetailTools;
+        controls.append(hint,categories,addCategory,uploadTarget,addImages,files,message,save,cancel); tools.append(controls);
+        renderCategories(); updateTargets(); renderDirectMedia();
+      };
     };
     const observer = grid ? new MutationObserver(setCardTools) : null;
     if (grid && observer) observer.observe(grid, { childList: true });
@@ -423,8 +473,8 @@
       else setCardTools();
       syncDetailTools();
     });
-    document.addEventListener('gallery:project-open', event => { activeProject = event.detail; syncDetailTools(); });
-    document.addEventListener('gallery:project-close', () => { activeProject = null; syncDetailTools(); });
+    document.addEventListener('gallery:project-open', event => { stopDirectEdit(); activeProject = event.detail; syncDetailTools(); });
+    document.addEventListener('gallery:project-close', () => { stopDirectEdit(); activeProject = null; syncDetailTools(); });
     document.addEventListener('site-editor-mode-change', syncDetailTools);
     document.addEventListener('click', async event => {
       const action = event.target.closest('[data-gallery-action]')?.dataset.galleryAction;
@@ -432,9 +482,9 @@
       event.preventDefault(); event.stopPropagation(); event.stopImmediatePropagation();
       const card = event.target.closest('.gallery-card[data-portfolio-project-key]');
       const post = card ? postFromCard(card) : postFromProject(activeProject);
-      if (action === 'edit' && card) openPost(post);
-      if (action === 'edit-detail' && activeProject) openPost(post);
-      if (action === 'organize-detail' && activeProject) openOrganizer();
+      if (action === 'edit' && card) { card.click(); galleryInfo.querySelector('.direct-edit-pencil')?.click(); }
+
+
       if ((action === 'delete' && card || action === 'delete-detail' && activeProject) && window.confirm(`¿Borrar “${post.title || 'esta publicación'}” del portfolio?`)) {
         try { await deletePost(post); location.reload(); }
         catch (error) { status.textContent = error.message; }
@@ -460,8 +510,17 @@
           mediaUrls.push(uploaded.url);
         }
         if (!mediaUrls.length) throw Error('La publicación necesita al menos una imagen o un video.');
-        if (mediaUrls.length > 20) throw Error('Una publicación puede tener hasta 20 archivos.');
+        if (mediaUrls.length > 100) throw Error('Una publicación puede tener hasta 100 archivos.');
         const payload = { title: form.elements.title.value.trim(), category: form.elements.category.value, description: form.elements.description.value.trim(), mediaUrls, sketchfabUrls: form.elements.sketchfab.value.split(/\r?\n/).map(value => value.trim()).filter(Boolean), isPublished: true };
+        if (editingPost && activeProject?.organization?.groups) {
+          const keys = mediaUrls.map(url => 'asset:' + new URL(url, location.href).pathname);
+          payload.organization = { groups: activeProject.organization.groups.map(group => ({ name: group.name, items: group.items.map(key => {
+            let path = key.startsWith('asset:') ? key.slice(6) : '';
+            const seen = new Set();
+            while (editingPost.replacements[path] && !seen.has(path)) { seen.add(path); path = editingPost.replacements[path]; }
+            return path ? 'asset:' + path : key;
+          }).filter(key => !key.startsWith('asset:') || keys.includes(key)).sort((a, b) => keys.indexOf(a) - keys.indexOf(b)) })) };
+        }
         if (editingPost?.sourceKey && !editingPost.id) payload.sourceKey = editingPost.sourceKey;
         postStatus.textContent = 'Guardando publicación…';
         if (editingPost?.id) await postApi(`admin/portfolio/${encodeURIComponent(editingPost.id)}`, { method: 'PATCH', body: JSON.stringify(payload) });

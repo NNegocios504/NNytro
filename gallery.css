@@ -141,3 +141,6 @@ body.modal-open{overflow:hidden}
 /* Featured publications retain the regular layout and lead every category. */
 .gallery-card--featured{border-color:#80dfff99;box-shadow:0 10px 28px #0006,0 0 16px #75e8ff18}
 .gallery-card-featured{position:absolute;top:.6rem;left:.6rem;z-index:2;padding:.4rem .6rem;border:1px solid #9deaff99;border-radius:3px;background:#071427eb;color:#b8f3ff;font:12px/1.3 Comico,Arial,sans-serif;box-shadow:0 0 12px #75e8ff26}
+
+/* Los controles quedan fuera del área que se desplaza con el zoom. */
+.gallery-image-viewer-frame{position:relative;flex:none;max-width:90vw;min-height:0}

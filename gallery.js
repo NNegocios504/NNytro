@@ -9,7 +9,7 @@ const galleryItems = [
     "category": "under news",
     "title": "UnderNews mural de periódicos",
     "type": "image",
-    "src": "./assets/gallery/under news/under news/UnderNews mural periodicos.webp"
+    "src": "./assets/gallery/under-news-mural.webp"
   },
   {
     "category": "dibujos",
@@ -808,6 +808,11 @@ document.body.append(imageViewer);
 const viewerImage = imageViewer.querySelector('img');
 const viewerViewport = imageViewer.querySelector('.gallery-image-viewer-viewport');
 const viewerStage = imageViewer.querySelector('.gallery-image-viewer-stage');
+const viewerFrame = document.createElement('div');
+viewerFrame.className = 'gallery-image-viewer-frame';
+viewerViewport.before(viewerFrame);
+viewerFrame.append(viewerViewport);
+viewerViewport.querySelectorAll('.gallery-image-viewer-nav,.gallery-image-viewer-count').forEach(control => viewerFrame.append(control));
 let viewerZoom = 0;
 let viewerItems = [];
 let viewerIndex = 0;
@@ -1155,7 +1160,11 @@ function openModal(project) {
         if (!organized.has(name)) organized.set(name, []);
         organized.get(name).push(entry);
       }
-      project.displayGroups = [...organized.entries()].map(([name, entries]) => ({ name, entries }));
+      project.displayGroups = [...organized.entries()].map(([name, entries]) => {
+        const order = organizationGroups.find(group => group.name === name)?.items || [];
+        entries.sort((a, b) => { const ai = order.indexOf(portfolioEntryKey(a)); const bi = order.indexOf(portfolioEntryKey(b)); return (ai < 0 ? order.length : ai) - (bi < 0 ? order.length : bi); });
+        return { name, entries };
+      });
     } else {
       project.displayGroups = defaultGroups.map(([name, entries]) => ({ name, entries }));
     }
