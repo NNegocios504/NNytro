@@ -40,3 +40,15 @@
 .about-accordion summary:hover::before,.about-accordion summary:focus-visible::before,.about-accordion details[open] summary::before{opacity:1;background:radial-gradient(ellipse at 88% 50%,rgba(226,91,255,.44),rgba(137,73,255,.27) 35%,transparent 73%)}
 .about-accordion summary::after{text-shadow:0 0 7px #8deaffaa,0 0 16px #ab65ff99}
 @media(prefers-reduced-motion:reduce){.about-accordion summary,.about-accordion summary::before{transition:none}}
+/* Las tres fotos comparten la misma rotación y ampliación. */
+.about-photo-carousel{position:relative;display:grid;place-items:center;width:100%;min-width:0}
+.about-photo-carousel .about-portrait{transform-origin:center;transition:transform 260ms ease}
+.about-photo-carousel .about-portrait:hover{transform:rotate(-1.5deg) scale(1.045) translateY(-.25rem)}
+.about-photo-arrow{position:absolute;top:50%;z-index:3;display:grid;place-items:center;width:36px;height:36px;padding:0;transform:translateY(-50%);border:1px solid #b9a4ff99;border-radius:50%;background:#100b2bd9;color:#a2edff;font:1.8rem/1 Arial,sans-serif;cursor:pointer;box-shadow:0 0 16px #a04cff33;transition:background .2s,box-shadow .2s}
+.about-photo-arrow--previous{left:0}.about-photo-arrow--next{right:0}
+.about-photo-arrow:hover,.about-photo-arrow:focus-visible{background:#392252;box-shadow:0 0 20px #b566ff77}
+.about-photo-status{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.about-portrait--extra .about-person{object-fit:contain;transform:scale(1.5)}
+.about-portrait--extra:hover .about-person{transform:scale(1.59) translateY(-.25rem)}
+@media(max-width:760px){.about-photo-carousel{width:auto;padding:0 30px}.about-photo-arrow{width:26px;height:26px;font-size:1.4rem}.about-photo-arrow--previous{left:0}.about-photo-arrow--next{right:0}}
+@media(prefers-reduced-motion:reduce){.about-photo-carousel .about-portrait,.about-photo-carousel .about-person{transition:none}}

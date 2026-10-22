@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="./styles.css?v=tag-readable-20261021" />
       <link rel="stylesheet" href="./effects.css?v=tag-readable-20261021" />
       <link rel="stylesheet" href="./life.css" />
-      <link rel="stylesheet" href="./about.css?v=20261022-glow" />
+      <link rel="stylesheet" href="./about.css?v=20261022-photos" />
   </head>
   <body class="about-screen">
     <video class="page-background-video about-background-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true"><source src="./assets/fondos/sobre%20mi.webm" type="video/webm" /></video>
@@ -29,9 +29,14 @@
 
       <section class="about-layout" aria-labelledby="about-title">
         <div class="about-portrait-stack">
+          <div class="about-photo-carousel" role="region" aria-label="Fotos de Ian" tabindex="0">
+          <button class="about-photo-arrow about-photo-arrow--previous" type="button" aria-label="Foto anterior">‹</button>
           <div class="about-portrait" aria-label="Retrato de Ian delante de una ventana gráfica retro">
             <img class="about-window" src="./assets/sobremi-marco.webp" alt="Marco de ventana digital retro" />
             <img class="about-person" src="./assets/sobremi-personaje.webp" alt="Retrato de Ian" />
+          </div>
+          <button class="about-photo-arrow about-photo-arrow--next" type="button" aria-label="Foto siguiente">›</button>
+          <span class="about-photo-status" role="status" aria-live="polite">Foto 1 de 3</span>
           </div>
           <nav class="about-socials" aria-label="Redes de NNytro">
             <a class="xp-social" href="https://guns.lol/nnytro_" target="_blank" rel="noopener noreferrer" aria-label="guns.lol de NNytro" title="guns.lol">
@@ -64,6 +69,7 @@
         </div>
       </section>
     </main>
+      <script src="./about.js?v=20261022-photos" defer></script>
       <script src="./i18n.js?v=support-ticket-chat-1" defer></script>
       <script src="./effects.js?v=inline-editor-news-1" defer></script>
   </body>
