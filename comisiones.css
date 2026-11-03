@@ -255,3 +255,10 @@ html[lang="pt-BR"] .commission-title-pt{display:inline}
 
 /* Compact headings use the readable UI face, including responsive greetings. */
 .commission-greeting h2 { font-family:Comico,Arial,sans-serif; -webkit-text-stroke:0!important; letter-spacing:normal!important; line-height:1.3; }
+
+
+/* Acomoda la navegación y evita cruces entre el carrito y los accesos del sitio. */
+@media(max-width:1050px){.commission-header{grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;row-gap:.65rem}.commission-brand-group{grid-column:1;grid-row:1}.commission-header-actions{grid-column:2;grid-row:1}.commission-header .unified-site-nav{grid-column:1/-1;grid-row:2;justify-self:stretch;justify-content:center;flex-wrap:wrap;padding-right:58px;gap:.55rem clamp(.75rem,2.2vw,1.4rem)}}
+@media(max-width:760px){.commission-header .unified-site-nav{padding-right:72px}.commission-cart-reopen{z-index:10030}.commission-footer{padding-right:108px}}
+@media(max-width:480px){.commission-header .unified-site-nav{gap:.45rem .7rem}.commission-header .unified-site-nav a{font-size:8px}}
+.commission-cart[data-open="true"]{z-index:11000!important}

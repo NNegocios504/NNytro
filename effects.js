@@ -258,9 +258,8 @@
     if (!reduceMotion) screen.classList.add('analog-tv-jitter');
   });
 
-  // Sound starts enabled on first visit; the visitor can mute it and keep that choice.
+  // Cada página nueva arranca con el sonido activado; el botón permite silenciar la visita actual.
   let enabled = true;
-  try { const savedSoundChoice=localStorage.getItem('portfolio-sound-enabled');if(savedSoundChoice!==null)enabled=savedSoundChoice==='true'; } catch { /* Storage can be disabled. */ }
 
   const toggle = document.createElement('button');
   toggle.type = 'button';
@@ -584,7 +583,6 @@
     toggle.setAttribute('aria-label', `${enabled ? 'Desactivar' : 'Activar'} sonidos de la página`);
     toggle.dataset.enabled = String(enabled);
     toggle.title = enabled ? 'Desactivar sonidos' : 'Activar sonidos';
-    try { localStorage.setItem('portfolio-sound-enabled', String(enabled)); } catch { /* Storage can be disabled. */ }
     if (enabled) {
       getAudioContext();
       sound('click');
@@ -698,4 +696,5 @@
     }
   }
 })();
+
 
