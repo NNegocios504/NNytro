@@ -66,6 +66,7 @@ button, input, textarea { font: inherit; }
 .archive-page::before { position:fixed; inset:0; z-index:-1; content:""; pointer-events:none; opacity:.48; background-image:linear-gradient(115deg,rgba(4,5,21,.2),rgba(8,5,31,.06)),radial-gradient(ellipse at 78% 18%,rgba(105,72,214,.2),transparent 42%),repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 4px); }
 .archive-header { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); justify-content:normal; gap:clamp(.55rem,1.4vw,1.25rem); width:calc(100% + clamp(2rem,10vw,11rem)); min-height:0; margin-inline:calc(0px - clamp(1rem,5vw,5.5rem)); padding:0 clamp(.5rem,5vw,5.5rem) .5rem clamp(1rem,5vw,5.5rem); border-bottom:1px solid var(--line); }
 .archive-header .brand { justify-self:start; font-size:1.05rem; }
+.archive-header .brand-tag { display:block; width:3.25em; height:auto; flex:0 0 auto; object-fit:contain; filter:drop-shadow(2px 2px 0 #203476) drop-shadow(0 0 7px rgba(115,211,255,.58)); }
 .archive-header .brand-section { font-size:8px; }
 .archive-header nav { grid-column:2; justify-self:center; gap:clamp(.8rem,2vw,1.8rem); }
 .archive-header nav a { font-size:9px; letter-spacing:.12em; }
@@ -372,3 +373,4 @@ footer {
 body{background-image:radial-gradient(ellipse at 82% 18%,#174d8b30 0,transparent 38rem),radial-gradient(ellipse at 8% 36%,#43247535 0,transparent 42rem);background-size:auto,auto;background-position:82% 18%,8% 36%;animation:nnytro-archive-drift 48s ease-in-out infinite alternate}
 @keyframes nnytro-archive-drift{from{background-position:46% 54%,82% 18%,8% 36%}to{background-position:54% 46%,82% 18%,8% 36%}}
 @media(prefers-reduced-motion:reduce){body{animation:none!important}}
+

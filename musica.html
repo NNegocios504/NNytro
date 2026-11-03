@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="./styles.css?v=tag-readable-20261021" />
     <link rel="stylesheet" href="./effects.css?v=tag-readable-20261021" />
     <link rel="stylesheet" href="./life.css" />
-    <link rel="stylesheet" href="./music.css?v=tag-readable-20261021" />
+    <link rel="stylesheet" href="./music.css?v=scheduled-video-feed-6" />
   </head>
   <body>
     <video class="page-background-video music-background-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1">
@@ -46,18 +46,28 @@
             <div><p class="music-eyebrow">Videoclips y más</p><h2>YouTube</h2></div>
             <a href="https://www.youtube.com/@nnytrooo/videos" target="_blank" rel="noopener noreferrer">Ver videos ↗</a>
           </div>
-          <a class="music-youtube-card" href="https://www.youtube.com/@nnytrooo/videos" target="_blank" rel="noopener noreferrer" aria-label="Abrir los videos de NNytro en YouTube">
-            <span class="music-youtube-play" aria-hidden="true">▶</span>
-            <span><strong>NNytro en YouTube</strong><small>Videoclips, proyectos y lanzamientos</small></span>
-            <span class="music-youtube-arrow" aria-hidden="true">↗</span>
-          </a>
+          <div class="music-youtube-player">
+            <iframe id="youtube-channel-player" title="Video del canal de NNytro" allow="accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <div id="youtube-file-notice" class="music-youtube-file-notice" hidden>
+              <p>Esta página está abierta como archivo local. YouTube solo permite reproducir el video incrustado cuando Música se abre desde una dirección web.</p>
+              <a id="youtube-file-link" href="https://www.youtube.com/@nnytrooo/videos" target="_blank" rel="noopener noreferrer">Ver este video en YouTube ↗</a>
+            </div>
+            <div class="music-youtube-controls" aria-label="Controles de videos">
+              <button type="button" id="youtube-previous" aria-label="Video anterior">←</button>
+              <span id="youtube-video-status" aria-live="polite">Cargando videos del canal…</span>
+              <button type="button" id="youtube-next" aria-label="Video siguiente">→</button>
+              <a id="youtube-current-video" href="https://www.youtube.com/@nnytrooo/videos" target="_blank" rel="noopener noreferrer" aria-label="Abrir este video en YouTube">↗</a>
+            </div>
+          </div>
         </article>
       </section>
 
       <script src="./i18n.js?v=support-ticket-chat-1" defer></script>
       <script src="./effects.js?v=inline-editor-news-1" defer></script>
+      <script src="./music.js?v=scheduled-video-feed-6" defer></script>
     </main>
   </body>
 </html>
+
 
 
